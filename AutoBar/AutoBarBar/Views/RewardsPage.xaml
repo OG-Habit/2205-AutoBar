@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:AutoBarBar.ViewModels"
+             xmlns:model="clr-namespace:AutoBarBar.Models"
+             x:Class="AutoBarBar.Views.RewardsPage"
+             Title="{Binding Title}">
+
+    <ContentPage.BindingContext>
+        <vm:RewardsViewModel />
+    </ContentPage.BindingContext>
+
+    <ContentPage.Content>
+        <Grid>
+            <StackLayout>
+                <SearchBar Placeholder="Search"/>
+                <RefreshView x:DataType="vm:RewardsViewModel" Command="{Binding LoadRewardsCommand}" 
+                             IsRefreshing="{Binding IsBusy, Mode=TwoWay}" Padding="30,10">
+                    <CollectionView x:Name="ListView" ItemsSource="{Binding Rewards}" SelectionMode="None"
+                                    ItemsLayout="VerticalGrid, 5">
+                        <CollectionView.Header>
+                            <StackLayout Padding="0,5">
+                                <Label Text="REWARDS" LineBreakMode="NoWrap" FontSize="25" TextDecorations="Underline"
+                                   Style="{DynamicResource ListItemTextStyle}"/>
+                            </StackLayout>
+                        </CollectionView.Header>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <StackLayout Padding="10,10" x:DataType="model:Item">
+                                    <Frame HasShadow="True" CornerRadius="20">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="20" />
+                                                <RowDefinition Height="25" />
+                                            </Grid.RowDefinitions>
+                                            <Frame Padding="0" HorizontalOptions="Center" CornerRadius="200" WidthRequest="100" 
+                                                   HasShadow="False" IsClippedToBounds="True" Grid.Row="0">
+                                                <Image x:Name="ProfilePic" Source="default_pic" Aspect="AspectFit"/>
+                                            </Frame>
+                                            <Label Text="{Binding Description}" LineBreakMode="NoWrap" FontSize="16" Grid.Row="1"
+                                                   Style="{DynamicResource ListItemDetailTextStyle}"/>
+                                            <Label Text="{Binding Text}" LineBreakMode="NoWrap" FontSize="16" Grid.Row="2"
+                                                   Style="{DynamicResource ListItemTextStyle}"/>
+                                            <Button Text="Edit" CornerRadius="100" Grid.Row="3"/>
+                                        </Grid>
+                                    </Frame>
+                                </StackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </RefreshView>
+            </StackLayout>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

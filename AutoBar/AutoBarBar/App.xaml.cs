@@ -17,7 +17,7 @@ namespace AutoBarBar
             InitializeComponent();
 
             DependencyService.Register<MockDataStore>();
-            MainPage = new LoginPage();
+            MainPage = new AppShell();
         }
 
         protected override void OnStart()

@@ -142,4 +142,7 @@
       <Name>AutoBarBar</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\default_pic.png" />
+  </ItemGroup>
 </Project>

@@ -3,15 +3,15 @@ using Xamarin.Forms;
 
 namespace AutoBarBar.Views
 {
-    public partial class ItemsPage : ContentPage
+    public partial class RewardsPage : ContentPage
     {
-        ItemsViewModel _viewModel;
+        RewardsViewModel _viewModel;
 
-        public ItemsPage()
+        public RewardsPage()
         {
             InitializeComponent();
 
-            BindingContext = _viewModel = new ItemsViewModel();
+            BindingContext = _viewModel = new RewardsViewModel();
         }
 
         protected override void OnAppearing()

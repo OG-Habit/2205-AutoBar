@@ -4,7 +4,7 @@
              x:Class="AutoBarBar.Views.ItemsPage"
              Title="{Binding Title}"
              xmlns:local="clr-namespace:AutoBarBar.ViewModels"  
-             xmlns:model="clr-namespace:AutoBarBar.Models"  
+             xmlns:model="clr-namespace:AutoBarBar.Models" x:DataType="local:ItemsViewModel"
              x:Name="BrowseItemsPage">
 
     <ContentPage.ToolbarItems>
