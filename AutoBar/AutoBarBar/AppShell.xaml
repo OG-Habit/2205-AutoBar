@@ -19,7 +19,7 @@
         </ResourceDictionary>
     </Shell.Resources>
 
-    <!--<ShellContent Route="LoginPage" ContentTemplate="{DataTemplate login:LoginPage}" />-->
+    <ShellContent Route="LoginPage" ContentTemplate="{DataTemplate login:LoginPage}" />
 
     <TabBar>
         <ShellContent Route="LoginPage" ContentTemplate="{DataTemplate login:LoginPage}" />
