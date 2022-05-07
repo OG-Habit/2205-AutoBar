@@ -13,20 +13,37 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\BarAdmin\" />
+    <Compile Update="Views\AHomePage.xaml.cs">
+      <DependentUpon>AHomePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\ABartenderPage.xaml.cs">
+      <DependentUpon>ABartenderPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\AMenuPage.xaml.cs">
+      <DependentUpon>AMenuPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\ARewardsPage.xaml.cs">
+      <DependentUpon>ARewardsPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Views\Bartender\BartenderHomePage.xaml">
+    <EmbeddedResource Update="Views\AOrderDetailPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\Bartender\BartenderMenuPage.xaml">
+    <EmbeddedResource Update="Views\ABartenderPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\Bartender\BartenderProfilePage.xaml">
+    <EmbeddedResource Update="Views\AHomePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\ScanPage.xaml">
+    <EmbeddedResource Update="Views\AMenuPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\ProfilePage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\ARewardsPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

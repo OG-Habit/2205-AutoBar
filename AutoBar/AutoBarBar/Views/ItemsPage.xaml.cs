@@ -1,24 +1,23 @@
 ﻿using AutoBarBar.ViewModels;
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 namespace AutoBarBar.Views
 {
-    [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class LoginPage : ContentPage
+    public partial class ItemsPage : ContentPage
     {
-        LoginViewModel _viewModel;
+        ItemsViewModel _viewModel;
 
-        public LoginPage()
+        public ItemsPage()
         {
             InitializeComponent();
-            BindingContext = _viewModel = new LoginViewModel();
+
+            BindingContext = _viewModel = new ItemsViewModel();
         }
 
         protected override void OnAppearing()
         {
             base.OnAppearing();
             _viewModel.OnAppearing();
-        } 
+        }
     }
 }

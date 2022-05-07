@@ -27,9 +27,17 @@
         <ShellContent Title="Profile" Icon="icon_feed.png" Route="BartenderProfilePage" ContentTemplate="{DataTemplate local:BartenderProfilePage}" />
     </TabBar>
 
-    <!--
-        If you would like to navigate to this content you can do so by calling
-        await Shell.Current.GoToAsync("//LoginPage");
-    -->
+    <TabBar Title="Admin">
+        <ShellContent Title="Home" Icon="icon_about.png" Route="AHomePage" ContentTemplate="{DataTemplate local:AHomePage}" />
+        <ShellContent Title="Bartender" Icon="icon_about.png" Route="ABartenderPage" ContentTemplate="{DataTemplate local:ABartenderPage}" />
+        <ShellContent Title="Menu" Icon="icon_about.png" Route="AMenuPage" ContentTemplate="{DataTemplate local:AMenuPage}" />
+        <ShellContent Title="Rewards" Icon="icon_about.png" Route="ARewardsPage" ContentTemplate="{DataTemplate local:ARewardsPage}" />
+        <ShellContent Title="Profile" Icon="icon_about.png" Route="ProfilePage" ContentTemplate="{DataTemplate local:ProfilePage}" />
+    </TabBar>
+
+    <TabBar Title="Bartender">
+        <ShellContent Title="Items" Icon="icon_feed.png" Route="ItemsPage" ContentTemplate="{DataTemplate local:ItemsPage}" />
+        <ShellContent Title="Profile" Icon="icon_about.png" Route="ProfilePage" ContentTemplate="{DataTemplate local:ProfilePage}" />
+    </TabBar>
 
 </Shell>

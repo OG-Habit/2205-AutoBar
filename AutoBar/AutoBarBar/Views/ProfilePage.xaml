@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             mc:Ignorable="d"
+             x:Class="AutoBarBar.Views.ProfilePage"
+             Shell.NavBarIsVisible="False"
+             xmlns:viewmodels="clr-namespace:AutoBarBar.ViewModels" x:DataType="viewmodels:ProfileViewModel">
+    <ContentPage.Content>
+        <StackLayout Padding="10,0,10,0" VerticalOptions="Center">
+            <Frame Padding="0" HorizontalOptions="Center" CornerRadius="200" HeightRequest="250" WidthRequest="250" 
+                   HasShadow="False" IsClippedToBounds="True">
+                <Image x:Name="ProfilePic" Source="default_pic" Aspect="AspectFit"/>
+            </Frame>
+            <Label x:Name="NameLabel" VerticalOptions="CenterAndExpand" HorizontalTextAlignment="Center" FontSize="30"
+                   Text="{Binding Name}"/>
+            <Label x:Name="EmailLabel" VerticalOptions="CenterAndExpand" HorizontalTextAlignment="Center" FontSize="25"
+                   Text="{Binding Email}"/>
+            <Button HorizontalOptions="Center" Text="Log out" WidthRequest="250" CornerRadius="100"
+                    Command="{Binding LogoutCommand}"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
