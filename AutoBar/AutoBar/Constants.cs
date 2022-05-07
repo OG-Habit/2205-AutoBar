@@ -6,6 +6,6 @@ namespace AutoBar
 {
     public static class Constants
     {
-
+        public static readonly int IMG_QR_LENGTH = 10;
     }
 }

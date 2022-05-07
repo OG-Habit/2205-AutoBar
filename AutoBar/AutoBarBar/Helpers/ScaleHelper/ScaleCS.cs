@@ -12,7 +12,7 @@ namespace AutoBarBar
             if(iOS.HasValue && Device.RuntimePlatform == Device.iOS)
                 number = iOS.Value;
 
-            return (float)(number * (App.screenHeight / 568.0));
+            return (float)(number * (App.ScreenHeight / 568.0));
         }
 
         public static float ScaleHeight(this double number, double? iOS = null)
@@ -20,7 +20,7 @@ namespace AutoBarBar
             if (iOS.HasValue && Device.RuntimePlatform == Device.iOS)
                 number = iOS.Value;
 
-            return (float)(number * (App.screenHeight / 568.0));
+            return (float)(number * (App.ScreenHeight / 568.0));
         }
 
         public static float ScaleHeight(this float number, float? iOS = null)
@@ -28,7 +28,7 @@ namespace AutoBarBar
             if (iOS.HasValue && Device.RuntimePlatform != Device.iOS)
                 number = iOS.Value;
 
-            return (float)(number * (App.screenHeight / 568.0));
+            return (float)(number * (App.ScreenHeight / 568.0));
         }
 
         public static float ScaleWidth(this int number, int? iOS = null)
@@ -36,7 +36,7 @@ namespace AutoBarBar
             if (iOS.HasValue && Device.RuntimePlatform == Device.iOS)
                 number = iOS.Value;
 
-            return (float)(number * (App.screenWidth / 568.0));
+            return (float)(number * (App.ScreenWidth / 568.0));
         }
 
         public static float ScaleWidth(this double number, double? iOS = null)
@@ -44,7 +44,7 @@ namespace AutoBarBar
             if (iOS.HasValue && Device.RuntimePlatform == Device.iOS)
                 number = iOS.Value;
 
-            return (float)(number * (App.screenWidth / 568.0));
+            return (float)(number * (App.ScreenWidth / 568.0));
         }
 
         public static float ScaleWidth(this float number, float? iOS = null)
@@ -52,7 +52,7 @@ namespace AutoBarBar
             if (iOS.HasValue && Device.RuntimePlatform != Device.iOS)
                 number = iOS.Value;
 
-            return (float)(number * (App.screenWidth / 568.0));
+            return (float)(number * (App.ScreenWidth / 568.0));
         }
     }
 }
