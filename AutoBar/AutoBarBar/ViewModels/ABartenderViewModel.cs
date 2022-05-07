@@ -2,17 +2,18 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace AutoBarBar.ViewModels
 {
-    public class BartenderViewModel : BaseViewModel
+    public class ABartenderViewModel : BaseViewModel
     {
         public ObservableCollection<Item> Bartender { get; }
         public Command LoadBartenderCommand { get; }
 
-        public BartenderViewModel()
+        public ABartenderViewModel()
         {
             Title = "Bartender";
             Bartender = new ObservableCollection<Item>();
@@ -45,6 +46,28 @@ namespace AutoBarBar.ViewModels
         public void OnAppearing()
         {
             IsBusy = true;
+        }
+
+        public async void SearchBar_Change(object sender, TextChangedEventArgs e)
+        {
+            var searchTerm = e.NewTextValue;
+            searchTerm = searchTerm.ToLowerInvariant();
+
+            await ExecuteLoadItemsCommand();
+
+            var items = Bartender.Where(x => x.B_Name.ToLowerInvariant().Contains(searchTerm)).ToList();
+
+            foreach (var item in Bartender.ToList())
+            {
+                if (!items.Contains(item))
+                {
+                    Bartender.Remove(item);
+                }
+                else if (!Bartender.Contains(item))
+                {
+                    Bartender.Add(item);
+                }
+            }
         }
     }
 }

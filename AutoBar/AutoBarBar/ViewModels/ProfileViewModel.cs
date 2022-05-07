@@ -2,7 +2,7 @@
 
 namespace AutoBarBar.ViewModels
 {
-    public class ProfileViewModel : BaseViewModel
+    public class ProfileViewModel
     {
         public Command LogoutCommand { get; }
         public string Name { get; }

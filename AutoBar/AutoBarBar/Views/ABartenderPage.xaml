@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:AutoBarBar.ViewModels"
+             xmlns:model="clr-namespace:AutoBarBar.Models"
+             x:Class="AutoBarBar.Views.ABartenderPage"
+             Shell.NavBarIsVisible="False">
+
+    <ContentPage.BindingContext>
+        <vm:ABartenderViewModel />
+    </ContentPage.BindingContext>
+
+    <ContentPage.Content>
+        <StackLayout>
+            <Grid BackgroundColor="#2196F3" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand"
+                  ColumnDefinitions="2" Padding="20">
+                <Label Text="{Binding Title}" FontSize="25" Grid.Column="1" TextColor="White"
+                       Style="{DynamicResource ListItemDetailTextStyle}"/>
+                <SearchBar Placeholder="Search" Grid.Column="2" BackgroundColor="White"
+                           TextChanged="SearchBarChange"/>
+            </Grid>
+            <RefreshView x:DataType="vm:ABartenderViewModel" Command="{Binding LoadBartenderCommand}" 
+                         IsRefreshing="{Binding IsBusy, Mode=TwoWay}" Padding="30,10">
+                <CollectionView x:Name="ListView" ItemsSource="{Binding Bartender}" SelectionMode="None"
+                                ItemsLayout="VerticalGrid, 5">
+                    <CollectionView.Header>
+                        <StackLayout Padding="0,5">
+                            <Label Text="BARTENDER" LineBreakMode="NoWrap" FontSize="25" TextDecorations="Underline"
+                                   Style="{DynamicResource ListItemTextStyle}"/>
+                        </StackLayout>
+                    </CollectionView.Header>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout Padding="10,10" x:DataType="model:Item">
+                                <Frame HasShadow="True" CornerRadius="20">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="20" />
+                                            <RowDefinition Height="25" />
+                                        </Grid.RowDefinitions>
+                                        <Frame Padding="0" HorizontalOptions="Center" CornerRadius="200" WidthRequest="100" 
+                                               HasShadow="False" IsClippedToBounds="True" Grid.Row="0">
+                                            <Image x:Name="ProfilePic" Source="{Binding Image}" Aspect="AspectFit"/>
+                                        </Frame>
+                                        <Label Text="{Binding B_Name}" LineBreakMode="NoWrap" FontSize="16" Grid.Row="1"
+                                               Style="{DynamicResource ListItemDetailTextStyle}"/>
+                                        <Label Text="{Binding Email}" LineBreakMode="NoWrap" FontSize="16" Grid.Row="2"
+                                               Style="{DynamicResource ListItemTextStyle}"/>
+                                        <Button Text="Edit" CornerRadius="100" Grid.Row="3"/>
+                                    </Grid>
+                                </Frame>
+                            </StackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </RefreshView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

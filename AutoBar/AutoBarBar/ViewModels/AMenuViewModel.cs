@@ -2,17 +2,18 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace AutoBarBar.ViewModels
 {
-    public class MenuViewModel : BaseViewModel
+    public class AMenuViewModel : BaseViewModel
     {
         public ObservableCollection<Item> Item { get; }
         public Command LoadItemCommand { get; }
 
-        public MenuViewModel()
+        public AMenuViewModel()
         {
             Title = "Menu";
             Item = new ObservableCollection<Item>();
@@ -45,6 +46,28 @@ namespace AutoBarBar.ViewModels
         public void OnAppearing()
         {
             IsBusy = true;
+        }
+
+        public async void SearchBar_Change(object sender, TextChangedEventArgs e)
+        {
+            var searchTerm = e.NewTextValue;
+            searchTerm = searchTerm.ToLowerInvariant();
+
+            await ExecuteLoadItemsCommand();
+
+            var items = Item.Where(x => x.Drink.ToLowerInvariant().Contains(searchTerm)).ToList();
+
+            foreach (var item in Item.ToList())
+            {  
+                if (!items.Contains(item))
+                {
+                    Item.Remove(item);
+                }
+                else if (!Item.Contains(item))
+                {
+                    Item.Add(item);
+                }    
+            }
         }
     }
 }
