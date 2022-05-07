@@ -13,7 +13,6 @@ namespace AutoBarBar
             InitializeComponent();
             Routing.RegisterRoute(nameof(ScanPage), typeof(ScanPage));
             //Routing.RegisterRoute(nameof(NewItemPage), typeof(NewItemPage));
-            //Routing.RegisterRoute(nameof(ItemDetailPage), typeof(ItemDetailPage));
             Routing.RegisterRoute(nameof(AOrderDetailPage), typeof(AOrderDetailPage));
         }
 
