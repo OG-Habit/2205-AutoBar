@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace AutoBarBar.Views.Bartender
+namespace AutoBarBar.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class BartenderProfilePage : ContentPage

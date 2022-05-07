@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Security.Cryptography;
 using static AutoBar.Constants;
+using System.IO;
 
 namespace AutoBar.ViewModels
 {
@@ -9,22 +11,27 @@ namespace AutoBar.ViewModels
     {
         public QRCodeViewModel()
         {
-            AdjustedQRLength = (int)ScaleCS.ScaleHeight(IMG_QR_LENGTH);
-            Hash = "email";
+            AdjustedQRLength = (int)ScaleCS.ScaleWidth(IMG_QR_LENGTH);
+            Hash = "ivan@gmail.com";
         }
 
-        private int adjustedQRLengthValue;
+        private int adjustedQRLength;
         public int AdjustedQRLength
         {
-            get { return adjustedQRLengthValue; }
-            set { SetProperty(ref adjustedQRLengthValue, value); }
+            get { return adjustedQRLength; }
+            set { SetProperty(ref adjustedQRLength, value); }
         }
 
-        private string hashValue;
+        private string hash;
         public string Hash
         {
-            get { return hashValue; }
-            set { SetProperty(ref hashValue, value); }
+            get { return hash; }
+            set 
+            {
+                SHA256 sha = new SHA256Managed();
+                byte[] b = Encoding.ASCII.GetBytes(value);
+                SetProperty(ref hash, Convert.ToBase64String(sha.ComputeHash(b)));
+            }
         }
     }
 }

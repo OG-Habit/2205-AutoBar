@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Shell xmlns="http://xamarin.com/schemas/2014/forms" 
        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-       xmlns:local="clr-namespace:AutoBarBar.Views.Bartender"
-       xmlns:login="clr-namespace:AutoBarBar.Views"
+       xmlns:bartender="clr-namespace:AutoBarBar.Views"
+       xmlns:shared="clr-namespace:AutoBarBar.Views"
        Title="AutoBarBar"
        x:Class="AutoBarBar.AppShell">
 
@@ -19,20 +19,20 @@
         </ResourceDictionary>
     </Shell.Resources>
 
-    <ShellContent Route="LoginPage" ContentTemplate="{DataTemplate login:LoginPage}" />
+    <ShellContent Route="LoginPage" ContentTemplate="{DataTemplate shared:LoginPage}" />
 
     <TabBar Title="Bartender">
-        <ShellContent Title="Home" Icon="icon_about.png" Route="BartenderHomePage" ContentTemplate="{DataTemplate local:BartenderHomePage}" />
-        <ShellContent Title="Menu" Icon="icon_feed.png" Route="BartenderMenuPage" ContentTemplate="{DataTemplate local:BartenderMenuPage}" />
-        <ShellContent Title="Profile" Icon="icon_feed.png" Route="BartenderProfilePage" ContentTemplate="{DataTemplate local:BartenderProfilePage}" />
+        <ShellContent Title="Home" Icon="icon_about.png" Route="BartenderHomePage" ContentTemplate="{DataTemplate bartender:BartenderHomePage}" />
+        <ShellContent Title="Menu" Icon="icon_feed.png" Route="BartenderMenuPage" ContentTemplate="{DataTemplate bartender:BartenderMenuPage}" />
+        <ShellContent Title="Profile" Icon="icon_feed.png" Route="BartenderProfilePage" ContentTemplate="{DataTemplate bartender:BartenderProfilePage}" />
     </TabBar>
 
     <TabBar Title="Admin">
-        <ShellContent Title="Home" Icon="icon_about.png" Route="AHomePage" ContentTemplate="{DataTemplate local:AHomePage}" />
-        <ShellContent Title="Bartender" Icon="icon_about.png" Route="ABartenderPage" ContentTemplate="{DataTemplate local:ABartenderPage}" />
-        <ShellContent Title="Menu" Icon="icon_about.png" Route="AMenuPage" ContentTemplate="{DataTemplate local:AMenuPage}" />
-        <ShellContent Title="Rewards" Icon="icon_about.png" Route="ARewardsPage" ContentTemplate="{DataTemplate local:ARewardsPage}" />
-        <ShellContent Title="Profile" Icon="icon_about.png" Route="ProfilePage" ContentTemplate="{DataTemplate local:ProfilePage}" />
+        <ShellContent Title="Home" Icon="icon_about.png" Route="AHomePage" ContentTemplate="{DataTemplate shared:AHomePage}" />
+        <ShellContent Title="Bartender" Icon="icon_about.png" Route="ABartenderPage" ContentTemplate="{DataTemplate shared:ABartenderPage}" />
+        <ShellContent Title="Menu" Icon="icon_about.png" Route="AMenuPage" ContentTemplate="{DataTemplate shared:AMenuPage}" />
+        <ShellContent Title="Rewards" Icon="icon_about.png" Route="ARewardsPage" ContentTemplate="{DataTemplate shared:ARewardsPage}" />
+        <ShellContent Title="Profile" Icon="icon_about.png" Route="ProfilePage" ContentTemplate="{DataTemplate shared:ProfilePage}" />
     </TabBar>
 
 </Shell>
