@@ -19,9 +19,9 @@
         </ResourceDictionary>
     </Shell.Resources>
 
-    <!--<ShellContent Route="LoginPage" ContentTemplate="{DataTemplate login:LoginPage}" />-->
+    <ShellContent Route="LoginPage" ContentTemplate="{DataTemplate login:LoginPage}" />
 
-    <TabBar>
+    <TabBar Title="Bartender">
         <ShellContent Title="Home" Icon="icon_about.png" Route="BartenderHomePage" ContentTemplate="{DataTemplate local:BartenderHomePage}" />
         <ShellContent Title="Menu" Icon="icon_feed.png" Route="BartenderMenuPage" ContentTemplate="{DataTemplate local:BartenderMenuPage}" />
         <ShellContent Title="Profile" Icon="icon_feed.png" Route="BartenderProfilePage" ContentTemplate="{DataTemplate local:BartenderProfilePage}" />
@@ -32,11 +32,6 @@
         <ShellContent Title="Bartender" Icon="icon_about.png" Route="ABartenderPage" ContentTemplate="{DataTemplate local:ABartenderPage}" />
         <ShellContent Title="Menu" Icon="icon_about.png" Route="AMenuPage" ContentTemplate="{DataTemplate local:AMenuPage}" />
         <ShellContent Title="Rewards" Icon="icon_about.png" Route="ARewardsPage" ContentTemplate="{DataTemplate local:ARewardsPage}" />
-        <ShellContent Title="Profile" Icon="icon_about.png" Route="ProfilePage" ContentTemplate="{DataTemplate local:ProfilePage}" />
-    </TabBar>
-
-    <TabBar Title="Bartender">
-        <ShellContent Title="Items" Icon="icon_feed.png" Route="ItemsPage" ContentTemplate="{DataTemplate local:ItemsPage}" />
         <ShellContent Title="Profile" Icon="icon_about.png" Route="ProfilePage" ContentTemplate="{DataTemplate local:ProfilePage}" />
     </TabBar>
 
