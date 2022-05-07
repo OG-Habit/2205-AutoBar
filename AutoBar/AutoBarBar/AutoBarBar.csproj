@@ -13,42 +13,43 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Views\AHomePage.xaml.cs">
+    <Compile Update="Views\BarAdmin\AHomePage.xaml.cs">
       <DependentUpon>AHomePage.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\ABartenderPage.xaml.cs">
+    <Compile Update="Views\BarAdmin\ABartenderPage.xaml.cs">
       <DependentUpon>ABartenderPage.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\AMenuPage.xaml.cs">
+    <Compile Update="Views\BarAdmin\AMenuPage.xaml.cs">
       <DependentUpon>AMenuPage.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\ARewardsPage.xaml.cs">
+    <Compile Update="Views\BarAdmin\ARewardsPage.xaml.cs">
       <DependentUpon>ARewardsPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Views\AOrderDetailPage.xaml">
+    <EmbeddedResource Update="Views\BarAdmin\AOrderDetailPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\ABartenderPage.xaml">
+    <EmbeddedResource Update="Views\BarAdmin\ABartenderPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\AHomePage.xaml">
+    <EmbeddedResource Update="Views\BarAdmin\AHomePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\AMenuPage.xaml">
+    <EmbeddedResource Update="Views\BarAdmin\AMenuPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\ProfilePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\ARewardsPage.xaml">
+    <EmbeddedResource Update="Views\BarAdmin\ARewardsPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\BarAdmin\" />
+    <Folder Include="ViewModels\Bartender\" />
+    <Folder Include="Views\Bartender\" />
   </ItemGroup>
 </Project>
