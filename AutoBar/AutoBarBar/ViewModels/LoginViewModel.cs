@@ -41,7 +41,7 @@ namespace AutoBarBar.ViewModels
             }
             else if (isLoogged == "2")
             {
-                await Shell.Current.GoToAsync($"//{nameof(ItemsPage)}");
+                await Shell.Current.GoToAsync($"//{nameof(ProfilePage)}");
             }
         }
     }

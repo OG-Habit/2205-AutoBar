@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Shell xmlns="http://xamarin.com/schemas/2014/forms" 
        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-       xmlns:local="clr-namespace:AutoBarBar.Views.Bartender"
+       xmlns:local="clr-namespace:AutoBarBar.Views"
        xmlns:login="clr-namespace:AutoBarBar.Views"
        Title="AutoBarBar"
        x:Class="AutoBarBar.AppShell">
@@ -22,9 +22,7 @@
     <!--<ShellContent Route="LoginPage" ContentTemplate="{DataTemplate login:LoginPage}" />-->
 
     <TabBar>
-        <ShellContent Title="Home" Icon="icon_about.png" Route="BartenderHomePage" ContentTemplate="{DataTemplate local:BartenderHomePage}" />
-        <ShellContent Title="Menu" Icon="icon_feed.png" Route="BartenderMenuPage" ContentTemplate="{DataTemplate local:BartenderMenuPage}" />
-        <ShellContent Title="Profile" Icon="icon_feed.png" Route="BartenderProfilePage" ContentTemplate="{DataTemplate local:BartenderProfilePage}" />
+        <ShellContent Route="LoginPage" ContentTemplate="{DataTemplate login:LoginPage}" />
     </TabBar>
 
     <TabBar Title="Admin">
@@ -36,7 +34,8 @@
     </TabBar>
 
     <TabBar Title="Bartender">
-        <ShellContent Title="Items" Icon="icon_feed.png" Route="ItemsPage" ContentTemplate="{DataTemplate local:ItemsPage}" />
+        <ShellContent Title="Home" Icon="icon_about.png" Route="BartenderHomePage" ContentTemplate="{DataTemplate local:BartenderHomePage}" />
+        <ShellContent Title="Menu" Icon="icon_feed.png" Route="BartenderMenuPage" ContentTemplate="{DataTemplate local:BartenderMenuPage}" />
         <ShellContent Title="Profile" Icon="icon_about.png" Route="ProfilePage" ContentTemplate="{DataTemplate local:ProfilePage}" />
     </TabBar>
 
