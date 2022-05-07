@@ -26,12 +26,22 @@ namespace AutoBar
                 if(paramType.Contains("height"))
                 {
                     if (double.TryParse(param, NumberStyles.Number, CultureInfo.InvariantCulture, out convertedValue))
-                        return convertedValue.ScaleHeight();
+                    {
+                        if(paramType.Contains("Int"))
+                            return (int)convertedValue.ScaleHeight();
+                        else
+                            return convertedValue.ScaleHeight();
+                    }
                 }
                 else if(paramType.Contains("width"))
                 {
                     if (double.TryParse(param, NumberStyles.Number, CultureInfo.InvariantCulture, out convertedValue))
-                        return convertedValue.ScaleWidth();
+                    {
+                        if (paramType.Contains("Int"))
+                            return (int)convertedValue.ScaleWidth();
+                        else
+                            return convertedValue.ScaleWidth();
+                    }
                 }
                 else if(paramType.Contains("thickness"))
                 {
@@ -51,7 +61,7 @@ namespace AutoBar
                 return ConverToThicknessProperty(parameter.ToString());
             }
 
-            return (double.Parse(parameter.ToString()) * (App.screenHeight / 568.0));
+            return (double.Parse(parameter.ToString()) * (App.ScreenHeight / 568.0));
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -71,14 +81,14 @@ namespace AutoBar
                     double.TryParse(thickness[2], NumberStyles.Number, CultureInfo.InvariantCulture, out r) &&
                     double.TryParse(thickness[3], NumberStyles.Number, CultureInfo.InvariantCulture, out b))
                 {
-                    return new Thickness(l * (App.screenWidth / 320.0), t * (App.screenHeight / 568.0), r * (App.screenWidth / 320.0), b * (App.screenHeight / 568.0));
+                    return new Thickness(l * (App.ScreenWidth / 320.0), t * (App.ScreenHeight / 568.0), r * (App.ScreenWidth / 320.0), b * (App.ScreenHeight / 568.0));
                 }   
             } else if (thickness.Length == 2)
             {
                 if(double.TryParse(thickness[0], NumberStyles.Number, CultureInfo.InvariantCulture, out l) &&
                     double.TryParse(thickness[1], NumberStyles.Number, CultureInfo.InvariantCulture, out t))
                 {
-                    return new Thickness(l * (App.screenWidth / 320.0), t * (App.screenHeight / 568.0));
+                    return new Thickness(l * (App.ScreenWidth / 320.0), t * (App.ScreenHeight / 568.0));
                 }
             }
             throw new InvalidOperationException("Cannot convert thickness");
@@ -97,7 +107,7 @@ namespace AutoBar
                     double.TryParse(thickness[2], NumberStyles.Number, CultureInfo.InvariantCulture, out r) &&
                     double.TryParse(thickness[3], NumberStyles.Number, CultureInfo.InvariantCulture, out b))
                 {
-                    return new Thickness(l * (App.screenWidth / 320.0), t * (App.screenHeight / 568.0), r * (App.screenWidth / 320.0), b * (App.screenHeight / 568.0));
+                    return new Thickness(l * (App.ScreenWidth / 320.0), t * (App.ScreenHeight / 568.0), r * (App.ScreenWidth / 320.0), b * (App.ScreenHeight / 568.0));
                 }
             }
 

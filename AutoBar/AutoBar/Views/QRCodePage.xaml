@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:zxing="clr-namespace:ZXing.Net.Mobile.Forms;assembly=ZXing.Net.Mobile.Forms"
+             xmlns:zxingcommon="clr-namespace:ZXing.Common;assembly=zxing.portable"
+             xmlns:viewModel="clr-namespace:AutoBar.ViewModels"
+             x:Class="AutoBar.Views.QRCodePage"
+             Shell.TabBarIsVisible="False">
+    <ContentPage.BindingContext>
+        <viewModel:QRCodeViewModel/>
+    </ContentPage.BindingContext>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <x:String x:Key="LengthQR">height=300</x:String>
+            <x:String x:Key="LengthQRInt">heightInt=200</x:String>
+            <x:Int32 x:Key="length">100</x:Int32>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <StackLayout>
+            <zxing:ZXingBarcodeImageView x:Name="ImgQR" BarcodeFormat="QR_CODE" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
+                BarcodeValue="{Binding Hash}">
+            </zxing:ZXingBarcodeImageView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

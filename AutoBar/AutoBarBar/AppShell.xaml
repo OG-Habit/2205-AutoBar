@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Shell xmlns="http://xamarin.com/schemas/2014/forms" 
        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-       xmlns:local="clr-namespace:AutoBarBar.Views"
+       xmlns:local="clr-namespace:AutoBarBar.Views.Bartender"
+       xmlns:login="clr-namespace:AutoBarBar.Views"
        Title="AutoBarBar"
        x:Class="AutoBarBar.AppShell">
 
@@ -13,34 +14,22 @@
 
     <Shell.Resources>
         <ResourceDictionary>
-            <Style x:Key="BaseStyle" TargetType="Element">
-                <Setter Property="Shell.BackgroundColor" Value="{StaticResource Primary}" />
-                <Setter Property="Shell.ForegroundColor" Value="White" />
-                <Setter Property="Shell.TitleColor" Value="White" />
-                <Setter Property="Shell.DisabledColor" Value="#B4FFFFFF" />
-                <Setter Property="Shell.UnselectedColor" Value="#95FFFFFF" />
-                <Setter Property="Shell.TabBarBackgroundColor" Value="{StaticResource Primary}" />
-                <Setter Property="Shell.TabBarForegroundColor" Value="White"/>
-                <Setter Property="Shell.TabBarUnselectedColor" Value="#95FFFFFF"/>
-                <Setter Property="Shell.TabBarTitleColor" Value="White"/>
-            </Style>
-            <Style TargetType="TabBar" BasedOn="{StaticResource BaseStyle}" />
-            <Style TargetType="FlyoutItem" BasedOn="{StaticResource BaseStyle}" />
+            <!--<Style TargetType="TabBar" BasedOn="{StaticResource BaseStyle}" />
+            <Style TargetType="FlyoutItem" BasedOn="{StaticResource BaseStyle}" />-->
         </ResourceDictionary>
     </Shell.Resources>
 
+    <!--<ShellContent Route="LoginPage" ContentTemplate="{DataTemplate login:LoginPage}" />-->
+
     <TabBar>
-        <ShellContent Title="About" Icon="icon_about.png" Route="AboutPage" ContentTemplate="{DataTemplate local:AboutPage}" />
-        <ShellContent Title="Browse" Icon="icon_feed.png" ContentTemplate="{DataTemplate local:ItemsPage}" />
+        <ShellContent Title="Home" Icon="icon_about.png" Route="BartenderHomePage" ContentTemplate="{DataTemplate local:BartenderHomePage}" />
+        <ShellContent Title="Menu" Icon="icon_feed.png" Route="BartenderMenuPage" ContentTemplate="{DataTemplate local:BartenderMenuPage}" />
+        <ShellContent Title="Profile" Icon="icon_feed.png" Route="BartenderProfilePage" ContentTemplate="{DataTemplate local:BartenderProfilePage}" />
     </TabBar>
 
     <!--
         If you would like to navigate to this content you can do so by calling
         await Shell.Current.GoToAsync("//LoginPage");
     -->
-    <TabBar>
-        <ShellContent Route="LoginPage" ContentTemplate="{DataTemplate local:LoginPage}" />
-    </TabBar>
-
 
 </Shell>
