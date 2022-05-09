@@ -7,7 +7,7 @@ using ZXing.Net.Mobile.Forms;
 using ZXing.Common;
 using static AutoBar.Constants;
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+using Xamarin.Forms.Xaml;   
 
 namespace AutoBar.Views
 {
@@ -17,8 +17,8 @@ namespace AutoBar.Views
         public QRCodePage()
         {
             InitializeComponent();
-            ImgQR.BarcodeOptions.Height = (int) ScaleCS.ScaleHeight(IMG_QR_LENGTH);
-            ImgQR.BarcodeOptions.Width = (int) ScaleCS.ScaleHeight(IMG_QR_LENGTH);
+            ImgQR.BarcodeOptions.Height = (int) ScaleCS.ScaleWidth(IMG_QR_LENGTH);
+            ImgQR.BarcodeOptions.Width = (int) ScaleCS.ScaleWidth(IMG_QR_LENGTH);
         }
     }
 }

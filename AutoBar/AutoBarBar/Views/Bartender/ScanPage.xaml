@@ -5,9 +5,11 @@
              x:Class="AutoBarBar.Views.ScanPage"
              Shell.TabBarIsVisible="False">
     <ContentPage.Content>
-        <Grid RowDefinitions="*">
-            <zxing:ZXingScannerView Grid.Row="0" IsScanning="True" VerticalOptions="FillAndExpand" OnScanResult="DecodeQR"/>
-            <zxing:ZXingDefaultOverlay TopText="Scan QR now..." />
+        <Grid RowDefinitions="1*, 1*, 8*">
+            <Label x:Name="LabelQRResult" Text="Result..." TextColor="Black" Grid.Row="0" />
+            <Label x:Name="LabelSha" Grid.Row="1"/>
+            <zxing:ZXingScannerView x:Name="scan" Grid.Row="2" IsScanning="True" VerticalOptions="FillAndExpand"/>
+            <zxing:ZXingDefaultOverlay Grid.Row="2" TopText="Scan QR now..." />
         </Grid>
     </ContentPage.Content>
 </ContentPage>

@@ -9,17 +9,13 @@
     <ContentPage.BindingContext>
         <viewModel:QRCodeViewModel/>
     </ContentPage.BindingContext>
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <x:String x:Key="LengthQR">height=300</x:String>
-            <x:String x:Key="LengthQRInt">heightInt=200</x:String>
-            <x:Int32 x:Key="length">100</x:Int32>
-        </ResourceDictionary>
-    </ContentPage.Resources>
     <ContentPage.Content>
         <StackLayout>
-            <zxing:ZXingBarcodeImageView x:Name="ImgQR" BarcodeFormat="QR_CODE" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
-                BarcodeValue="{Binding Hash}">
+            <Label Text="{Binding Hash}"/>
+            <zxing:ZXingBarcodeImageView x:Name="ImgQR" BarcodeFormat="QR_CODE"
+                                         VerticalOptions="CenterAndExpand"
+                                         HeightRequest="{Binding AdjustedQRLength}" WidthRequest="{Binding AdjustedQRLength}"
+                                        BarcodeValue="{Binding Hash}">
             </zxing:ZXingBarcodeImageView>
         </StackLayout>
     </ContentPage.Content>

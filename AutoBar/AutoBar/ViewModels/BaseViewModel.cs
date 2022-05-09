@@ -9,22 +9,42 @@ namespace AutoBar.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
-        #region INotifyPropertyChanged
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "")
+        bool isBusy = false;
+        public bool IsBusy
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            get { return isBusy; }
+            set { SetProperty(ref isBusy, value); }
         }
-        protected bool SetProperty<T>(ref T storage, T value,
-            [CallerMemberName] string propertyName = "")
+
+        string title = string.Empty;
+        public string Title
         {
-            if (EqualityComparer<T>.Default.Equals(storage, value))
+            get { return title; }
+            set { SetProperty(ref title, value); }
+        }
+
+        protected bool SetProperty<T>(ref T backingStore, T value,
+            [CallerMemberName] string propertyName = "",
+            Action onChanged = null)
+        {
+            if (EqualityComparer<T>.Default.Equals(backingStore, value))
                 return false;
 
-            storage = value;
+            backingStore = value;
+            onChanged?.Invoke();
             OnPropertyChanged(propertyName);
-
             return true;
+        }
+
+        #region INotifyPropertyChanged
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            var changed = PropertyChanged;
+            if (changed == null)
+                return;
+
+            changed.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
     }
