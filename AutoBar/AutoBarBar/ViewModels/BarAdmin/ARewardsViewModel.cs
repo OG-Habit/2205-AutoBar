@@ -1,4 +1,5 @@
 ﻿using AutoBarBar.Models;
+using AutoBarBar.Views;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -10,14 +11,24 @@ namespace AutoBarBar.ViewModels
 {
     public class ARewardsViewModel : BaseViewModel
     {
+        private Item _selectedReward;
         public ObservableCollection<Item> Rewards { get; }
         public Command LoadRewardsCommand { get; }
+        public Command<Item> RewardTapped { get; }
+        public Command<Item> RewardEdit { get; }
+        public DateTime Today { get; set; }
 
         public ARewardsViewModel()
         {
             Title = "Rewards";
+            Today = DateTime.Today;
             Rewards = new ObservableCollection<Item>();
+            
             LoadRewardsCommand = new Command(async () => await ExecuteLoadItemsCommand());
+
+            RewardTapped = new Command<Item>(OnRewardSelected);
+
+            RewardEdit = new Command<Item>(OnRewardEdit);
         }
 
         async Task ExecuteLoadItemsCommand()
@@ -46,6 +57,44 @@ namespace AutoBarBar.ViewModels
         public void OnAppearing()
         {
             IsBusy = true;
+        }
+
+        public Item SelectedReward
+        {
+            get => _selectedReward;
+            set
+            {
+                SetProperty(ref _selectedReward, value);
+                OnRewardSelected(value);
+            }
+        }
+
+        async void OnRewardSelected(Item item)
+        {
+            if (item == null)
+                return;
+
+            // This will push the ItemDetailPage onto the navigation stack
+            await Shell.Current.GoToAsync($"{nameof(ARewardsDetailPage)}?{nameof(ARewardsDetailViewModel.ItemId)}={item.Id}");
+        }
+
+        public Item EditReward
+        {
+            get => _selectedReward;
+            set
+            {
+                SetProperty(ref _selectedReward, value);
+                OnRewardEdit(value);
+            }
+        }
+
+        async void OnRewardEdit(Item item)
+        {
+            if (item == null)
+                return;
+
+            // This will push the ItemDetailPage onto the navigation stack
+            await Shell.Current.GoToAsync($"{nameof(ARewardsEditPage)}?{nameof(ARewardsDetailViewModel.ItemId)}={item.Id}");
         }
 
         public async void SearchBar_Change(object sender, TextChangedEventArgs e)

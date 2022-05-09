@@ -5,10 +5,19 @@ namespace AutoBarBar.Views
 {
     public partial class AOrderDetailPage : ContentPage
     {
+        AOrderDetailViewModel _viewModel;
+
         public AOrderDetailPage()
         {
             InitializeComponent();
-            BindingContext = new AOrderDetailViewModel();
+            
+            BindingContext = _viewModel = new AOrderDetailViewModel();
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            _viewModel.OnAppearing();
         }
     }
 }

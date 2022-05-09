@@ -8,17 +8,14 @@
              Shell.NavBarIsVisible="False"
              xmlns:viewmodels="clr-namespace:AutoBarBar.ViewModels" x:DataType="viewmodels:ProfileViewModel">
     <ContentPage.Content>
-        <StackLayout Padding="10,0,10,0" VerticalOptions="Center">
+        <StackLayout Padding="10,0,10,0" VerticalOptions="Center" HorizontalOptions="Center">
             <Frame Padding="0" HorizontalOptions="Center" CornerRadius="200" HeightRequest="250" WidthRequest="250" 
-                   HasShadow="False" IsClippedToBounds="True">
+                   HasShadow="False" IsClippedToBounds="True" BackgroundColor="Transparent">
                 <Image x:Name="ProfilePic" Source="default_pic" Aspect="AspectFit"/>
             </Frame>
-            <Label x:Name="NameLabel" VerticalOptions="CenterAndExpand" HorizontalTextAlignment="Center" FontSize="30"
-                   Text="{Binding Name}"/>
-            <Label x:Name="EmailLabel" VerticalOptions="CenterAndExpand" HorizontalTextAlignment="Center" FontSize="25"
-                   Text="{Binding Email}"/>
-            <Button HorizontalOptions="Center" Text="Log out" WidthRequest="250" CornerRadius="100"
-                    Command="{Binding LogoutCommand}"/>
+            <Label x:Name="NameLabel" HorizontalTextAlignment="Center" FontSize="30" Text="{Binding Name}"/>
+            <Label x:Name="EmailLabel" HorizontalTextAlignment="Center" FontSize="25" Text="{Binding Email}"/>
+            <Button Text="Log out" WidthRequest="250" CornerRadius="100" Command="{Binding LogoutCommand}"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

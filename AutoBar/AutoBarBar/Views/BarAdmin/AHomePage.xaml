@@ -2,7 +2,6 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
              xmlns:vm="clr-namespace:AutoBarBar.ViewModels"
-             xmlns:local="clr-namespace:AutoBarBar.ViewModels"
              xmlns:model="clr-namespace:AutoBarBar.Models"
              x:Class="AutoBarBar.Views.AHomePage"
              Shell.NavBarIsVisible="False">
@@ -15,44 +14,67 @@
         <StackLayout>
             <Grid BackgroundColor="#2196F3" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand"
                   ColumnDefinitions="2" Padding="20">
-                <Label Text="{Binding Today}" FontSize="25" Grid.Column="1" TextColor="White"
-                       Style="{DynamicResource ListItemDetailTextStyle}"/>
+                <Label Text="{Binding Today, StringFormat='{0:MMMM dd, yyyy}'}" FontSize="25" Grid.Column="1" TextColor="White"/>
                 <SearchBar Placeholder="Search" Grid.Column="2" BackgroundColor="White"
                            TextChanged="SearchBarChange"/>
             </Grid>
+            <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="StartAndExpand" Padding="30,0">
+                <Label Text="Order Report" LineBreakMode="NoWrap" FontSize="30"/>
+                <Grid RowDefinitions="Auto">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="260"/>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition Width="145"/>
+                        <ColumnDefinition Width="200"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Text="Customer" LineBreakMode="NoWrap" FontSize="20" Grid.Column="1" />
+                    <Label Text="Menu" LineBreakMode="NoWrap" FontSize="20" Grid.Column="2"/>
+                    <Label Text="Date" LineBreakMode="NoWrap" FontSize="20" Grid.Column="3"/>
+                    <Label Text="Total Payment" LineBreakMode="NoWrap" FontSize="20" Grid.Column="4"/>
+                    <Label Text="Status" LineBreakMode="NoWrap" FontSize="20" Grid.Column="5"/>
+                </Grid>
+            </StackLayout>
             <RefreshView x:DataType="vm:AHomeViewModel" Command="{Binding LoadCustomerCommand}" 
                          IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
                 <CollectionView x:Name="ListView" ItemsSource="{Binding Customer}" SelectionMode="None">
-                    <CollectionView.Header>
-                        <StackLayout Padding="30,15">
-                            <Label Text="Order Report" LineBreakMode="NoWrap" FontSize="30" 
-                                   Style="{DynamicResource ListItemTextStyle}"/>
-                        </StackLayout>
-                    </CollectionView.Header>
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <StackLayout Padding="30,10" x:DataType="model:Item">
-                                <Frame HasShadow="True" CornerRadius="20">
-                                    <Grid ColumnDefinitions="Auto">
-                                        <Frame Padding="0" HorizontalOptions="Center" CornerRadius="200" WidthRequest="30" 
-                                               HasShadow="False" IsClippedToBounds="True" Grid.Column="0">
+                                <Frame HasShadow="True" CornerRadius="20" Padding="7">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="60"/>
+                                            <ColumnDefinition Width="200"/>
+                                            <ColumnDefinition Width="200"/>
+                                            <ColumnDefinition Width="150"/>
+                                            <ColumnDefinition Width="200"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Frame Padding="0" HorizontalOptions="Center" CornerRadius="200" WidthRequest="50" 
+                                               HasShadow="False" IsClippedToBounds="True" Grid.Column="0" BackgroundColor="Transparent">
                                             <Image x:Name="ProfilePic" Source="{Binding Image}" Aspect="AspectFit"/>
                                         </Frame>
                                         <Label Text="{Binding C_Name}" LineBreakMode="NoWrap" FontSize="16" Grid.Column="1"
-                                               Style="{DynamicResource ListItemDetailTextStyle}"/>
+                                               VerticalOptions="Center"/>
                                         <Label Text="{Binding Drink}" LineBreakMode="NoWrap" FontSize="16" Grid.Column="2"
-                                               Style="{DynamicResource ListItemTextStyle}"/>
-                                        <Label Text="{Binding Time}" LineBreakMode="NoWrap" FontSize="16" Grid.Column="3"
-                                               Style="{DynamicResource ListItemDetailTextStyle}"/>
+                                               VerticalOptions="Center"/>
+                                        <Grid Grid.Column="3" RowDefinitions="2" VerticalOptions="Center">
+                                            <Label Text="{Binding Time, StringFormat='{0:MMMM dd, yyyy}'}" LineBreakMode="NoWrap" 
+                                               FontSize="16" Grid.Row="1"/>
+                                            <Label Text="{Binding Time, StringFormat='{0:h:mm tt}'}" LineBreakMode="NoWrap" 
+                                               FontSize="12" Grid.Row="2"/>
+                                        </Grid>
                                         <Label Text="{Binding Price}" LineBreakMode="NoWrap" FontSize="16" Grid.Column="4"
-                                               Style="{DynamicResource ListItemTextStyle}"/>
+                                               VerticalOptions="Center"/>
                                         <Label Text="{Binding Status}" LineBreakMode="NoWrap" FontSize="16" Grid.Column="5"
-                                               Style="{DynamicResource ListItemDetailTextStyle}"/>
+                                               VerticalOptions="Center"/>
                                     </Grid>
                                 </Frame>
                                 <StackLayout.GestureRecognizers>
                                     <TapGestureRecognizer NumberOfTapsRequired="1" CommandParameter="{Binding .}"
-                                                          Command="{Binding Source={RelativeSource AncestorType={x:Type local:AHomeViewModel}}, Path=CustomerTapped}">
+                                                          Command="{Binding Source={RelativeSource 
+                                                                    AncestorType={x:Type vm:AHomeViewModel}},
+                                                                    Path=CustomerTapped}">
                                     </TapGestureRecognizer>
                                 </StackLayout.GestureRecognizers>
                             </StackLayout>
