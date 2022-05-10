@@ -42,7 +42,7 @@
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
-                <Button Grid.Row="1" Grid.Column="2"
+                <Button Grid.Row="1" Grid.Column="2" 
                     Text="SCAN CARD" Command="{Binding ShowScanCommand}"/>
             </Grid>
             <Grid Grid.Row="1" 
@@ -94,7 +94,7 @@
                     <Label Grid.Row="1" Grid.Column="1" Text="{Binding CurrentOrder.TotalPrice}"/>
                     <Label Grid.Row="2" Grid.Column="1" Text="Points Received"/>
                     <Label Grid.Row="3" Grid.Column="1" Text="{Binding CurrentOrder.PointsEarned}"/>
-                    <Button Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Text="Reload Balance" Clicked="ShowReloadBalancePopup"/>
+                    <Button Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Text="Reload Balance" Command="{Binding GetReloadBalanceAmountCommand}"/>
                     <Button Grid.Row="2" Grid.RowSpan="2" Grid.Column="2" Text="End Transaction"/>
                 </Grid>
             </Grid>

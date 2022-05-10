@@ -1,6 +1,5 @@
 ﻿using AutoBarBar.Models;
 using AutoBarBar.Views;
-using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -16,20 +15,8 @@ namespace AutoBarBar.ViewModels
     public class BartenderHomePageViewModel : BaseViewModel
     {
         public ICommand SwitchUserCommand { get; }
-        public ICommand AddBalanceCommand { get; }
         public ICommand ShowScanCommand { get; }
-        public Customer dummy = new Customer()
-        {
-            Id = Guid.NewGuid().ToString(),
-            Name = "XXX",
-            Birthday = "Jan 1, ",
-            CardIssued = "Jan 2, ",
-            Contact = "091232946",
-            CurrentBalance = 100,
-            Email = "adamsmith@.com",
-            Sex = "Mle",
-            TotalPoints = "10"
-        };
+        public ICommand GetReloadBalanceAmountCommand { get; }
 
         public BartenderHomePageViewModel()
         {
@@ -40,11 +27,11 @@ namespace AutoBarBar.ViewModels
             Orders = new ObservableCollection<Order>();
 
             PopulateData();
-            SwitchUser(Customers.FirstOrDefault());
+            SwitchUser(Customers[1]);
 
             SwitchUserCommand = new Command<object>(SwitchUser);
-            AddBalanceCommand = new Command<object>(AddBalance);
             ShowScanCommand = new Command(ShowScan);
+            GetReloadBalanceAmountCommand = new Command(GetReloadBalanceAmount);
         }
 
         async void PopulateData()
@@ -88,41 +75,32 @@ namespace AutoBarBar.ViewModels
             CurrentOrder = Orders.First(o => String.Equals(o.CustomerName, SelectedCustomer.Name));
         }
 
-        async void AddBalance(object o)
-        {   
-            var e = o as Entry;
-            //float num;
-            //if (string.IsNullOrEmpty(e.Text))
-            //{
-            //    await App.Current.MainPage.DisplayAlert("Error", "You have not entered any amount.", "Ok");
-            //    return;
-            //}
-
-            //if(!float.TryParse(e.Text, out num))
-            //{
-            //    await App.Current.MainPage.DisplayAlert("Error", "Amount is not a valid number.", "Ok");
-            //    return;
-            //}
-
-            //foreach (var c in Customers)
-            //{
-            //    if(c.Name == SelectedCustomer.Name)
-            //    {
-            //        c.CurrentBalance += num;
-            //        SelectedCustomer = Customers[1];
-            //        await App.Current.MainPage.DisplayAlert("Success", "Amount has been added to customer balance.", "Ok");
-            //        await PopupNavigation.Instance.PopAsync();
-            //        break;
-            //    }
-            //}
-            SelectedCustomer = Customers[1];
-        } 
-
         async void ShowScan()
         {
             await Shell.Current.GoToAsync($"{nameof(ScanPage)}");
         }
 
+        async void GetReloadBalanceAmount()
+        {
+            Customer temp;
+            string ans = await Application.Current.MainPage.DisplayPromptAsync("Balance", "Enter amount:", "Add", "Cancel", null, -1, Keyboard.Numeric, "");
+            if(float.TryParse(ans, out float num))
+            {
+                foreach(var c in Customers)
+                {
+                    if(c.Name == SelectedCustomer.Name)
+                    {
+                        c.CurrentBalance += num;
+                        await Application.Current.MainPage.DisplayAlert("Success", "Balance has been added.", "Ok");
+                        temp = SelectedCustomer;
+                        selectedCustomer = null;
+                        SelectedCustomer = temp;
+                    }
+                }
+            }
+        }
+
+        #region Getters setters
         ObservableCollection<Customer> customers;
         public ObservableCollection<Customer> Customers
         {
@@ -171,5 +149,6 @@ namespace AutoBarBar.ViewModels
             get { return currentOrderLine; }
             set { SetProperty(ref currentOrderLine, value); }
         }
+        #endregion
     }
 }

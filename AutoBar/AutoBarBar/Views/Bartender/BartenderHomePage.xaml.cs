@@ -1,6 +1,4 @@
-﻿using AutoBarBar.Popups;
-using Rg.Plugins.Popup.Services;
-using System;
+﻿
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +6,7 @@ using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using AutoBarBar.ViewModels;
 
 namespace AutoBarBar.Views
 {
@@ -17,11 +16,6 @@ namespace AutoBarBar.Views
         public BartenderHomePage()
         {
             InitializeComponent();
-        }
-
-        private void ShowReloadBalancePopup(object sender, EventArgs e)
-        {
-            PopupNavigation.Instance.PushAsync(new ReloadBalancePopup());
         }
     }
 }
