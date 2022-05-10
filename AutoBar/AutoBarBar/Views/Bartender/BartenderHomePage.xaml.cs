@@ -1,4 +1,6 @@
-﻿using System;
+﻿using AutoBarBar.Popups;
+using Rg.Plugins.Popup.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,9 +19,9 @@ namespace AutoBarBar.Views
             InitializeComponent();
         }
 
-        private async void ShowScanUI(object sender, EventArgs e)
+        private void ShowReloadBalancePopup(object sender, EventArgs e)
         {
-            await Shell.Current.GoToAsync($"{nameof(ScanPage)}");
+            PopupNavigation.Instance.PushAsync(new ReloadBalancePopup());
         }
     }
 }

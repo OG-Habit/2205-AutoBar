@@ -11,6 +11,10 @@ namespace AutoBarBar.ViewModels
     public class BaseViewModel : INotifyPropertyChanged
     {
         public IDataStore<Item> DataStore => DependencyService.Get<IDataStore<Item>>();
+        public IDataStore<Customer> CustomerDataStore => DependencyService.Get<IDataStore<Customer>>();
+        public IDataStore<Product> ProductDataStore => DependencyService.Get<IDataStore<Product>>();
+        public IDataStore<OrderLine> OrderLineDataStore => DependencyService.Get<IDataStore<OrderLine>>();
+        public IDataStore<Order> OrderDataStore => DependencyService.Get<IDataStore<Order>>();
 
         bool isBusy = false;
         public bool IsBusy
@@ -43,11 +47,7 @@ namespace AutoBarBar.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
-            var changed = PropertyChanged;
-            if (changed == null)
-                return;
-
-            changed.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
     }

@@ -1,13 +1,103 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="AutoBarBar.Views.BartenderHomePage">
+             xmlns:models="clr-namespace:AutoBarBar.Models"
+             xmlns:vm="clr-namespace:AutoBarBar.ViewModels"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             x:Name="HomePage"
+             x:Class="AutoBarBar.Views.BartenderHomePage"
+             x:DataType="vm:BartenderHomePageViewModel"
+             Shell.TabBarBackgroundColor="Aqua"
+             Shell.NavBarIsVisible="False">
+    <ContentPage.BindingContext>
+        <vm:BartenderHomePageViewModel/>
+    </ContentPage.BindingContext>
+    
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <xct:ItemSelectedEventArgsConverter x:Key="ItemSelectedEventArgsConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Bartender Home Page"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-            <Button Text="Scan" FontSize="Large" Clicked="ShowScanUI"/>
-        </StackLayout>
+        <Grid RowDefinitions="*, 4.5*">
+            <Grid Grid.Row="0" Padding="{Binding Converter={StaticResource scale}, ConverterParameter='thickness=15,10'}"
+                RowDefinitions="*, *" ColumnDefinitions="4*, *, *">
+                <StackLayout Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+                    <Label Text="LOGO"/>
+                    <Label Text="Nov 7, 2022"/>
+                </StackLayout>
+                <SearchBar Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"
+                    Placeholder="Search"/>
+                <CollectionView x:Name="CVCustomer" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" 
+                                SelectionMode="Single" SelectedItem="{Binding SelectedCustomer}"
+                                SelectionChangedCommand="{Binding SwitchUserCommand}"
+                                SelectionChangedCommandParameter="{Binding SelectedItem, Source={x:Reference CVCustomer}}"
+                                ItemsLayout="HorizontalList" ItemsSource="{Binding Customers}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:Customer">
+                            <Label Text="{Binding Name}" FontSize="Large" 
+                                   Margin="{Binding Converter={StaticResource scale}, ConverterParameter='thickness=0,0,10,0'}">
+                            </Label>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+                <Button Grid.Row="1" Grid.Column="2"
+                    Text="SCAN CARD" Command="{Binding ShowScanCommand}"/>
+            </Grid>
+            <Grid Grid.Row="1" 
+                  RowDefinitions="*, 3*, 1.5*">
+                <Grid Grid.Row="0" ColumnSpacing="{Binding Converter={StaticResource scale}, ConverterParameter='height=30'}" 
+                      RowSpacing="{Binding Converter={StaticResource scale}, ConverterParameter='width=10'}"
+                    HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" x:DataType="vm:BartenderHomePageViewModel"
+                  RowDefinitions="*, *, *" 
+                  ColumnDefinitions="*, *, *, *">
+                    <Image Grid.Row="0" Grid.RowSpan="3"
+                       Grid.Column="0"  
+                    Source="default_pic.png"/>
+                    <Label Grid.Row="0" Grid.Column="1" Text="{Binding SelectedCustomer.Name, StringFormat='Name: {0}'}"/>
+                    <Label Grid.Row="1" Grid.Column="1" Text="Status: Member"/>
+                    <Label Grid.Row="2" Grid.Column="1" Text="{Binding SelectedCustomer.Email, StringFormat='Email: {0}'}"/>
+                    <Label Grid.Row="0" Grid.Column="2" Text="{Binding SelectedCustomer.Contact, StringFormat='Contact: {0}'}"/>
+                    <Label Grid.Row="1" Grid.Column="2" Text="{Binding SelectedCustomer.Birthday, StringFormat='Birthday: {0}'}"/>
+                    <Label Grid.Row="2" Grid.Column="2" Text="{Binding SelectedCustomer.Sex, StringFormat='Sex: {0}'}"/>
+                    <Label Grid.Row="0" Grid.Column="3" Text="{Binding SelectedCustomer.CardIssued, StringFormat='Card Issued: {0}'}"/>
+                    <Label Grid.Row="1" Grid.Column="3" Text="{Binding SelectedCustomer.CurrentBalance, StringFormat='Current Balance: {0}'}"/>
+                    <Label Grid.Row="2" Grid.Column="3" Text="{Binding SelectedCustomer.TotalPoints, StringFormat='Total Points: {0}'}"/>
+                </Grid>
+                <CollectionView Grid.Row="1" 
+                                ItemsSource="{Binding CurrentOrderLine}" BackgroundColor="blue"
+                                    ItemsLayout="VerticalList"
+                                    Margin="{Binding Converter={StaticResource scale}, ConverterParameter='thickness=15,0'}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:OrderLine" >
+                            <Frame BorderColor="Black" HeightRequest="50" HorizontalOptions="StartAndExpand" VerticalOptions="Start">
+                                <StackLayout HorizontalOptions="Center" VerticalOptions="Center" 
+                                         BackgroundColor="Yellow">
+                                    <Label Text="{Binding CreatedOn}"/>
+                                    <Label Text="{Binding ProductName}"/>
+                                    <Label Text="{Binding Price}"/>
+                                    <Label Text="{Binding Quantity}"/>
+                                </StackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+                <Grid Grid.Row="2" BackgroundColor="LightGray"
+                      RowDefinitions="*, *, *, *"  x:DataType="vm:BartenderHomePageViewModel"
+                      ColumnDefinitions="*, *, *">
+                    <Label Grid.Row="0" Grid.Column="0" Text="Time Opened: "/>
+                    <Label Grid.Row="1" Grid.Column="0" Text="{Binding CurrentOrder.OpenedOn}"/>
+                    <Label Grid.Row="2" Grid.Column="0" Text="Select Reward"/>
+                    <Button Grid.Row="3" Grid.Column="0" Text="Select Reward"/>
+                    <Label Grid.Row="0" Grid.Column="1" Text="Total"/>
+                    <Label Grid.Row="1" Grid.Column="1" Text="{Binding CurrentOrder.TotalPrice}"/>
+                    <Label Grid.Row="2" Grid.Column="1" Text="Points Received"/>
+                    <Label Grid.Row="3" Grid.Column="1" Text="{Binding CurrentOrder.PointsEarned}"/>
+                    <Button Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Text="Reload Balance" Clicked="ShowReloadBalancePopup"/>
+                    <Button Grid.Row="2" Grid.RowSpan="2" Grid.Column="2" Text="End Transaction"/>
+                </Grid>
+            </Grid>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>
