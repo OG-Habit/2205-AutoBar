@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:AutoBarBar.ViewModels"
+             x:DataType="viewmodels:ARewardsDetailViewModel"
+             x:Class="AutoBarBar.Views.ARewardsEditPage"
+             Shell.NavBarIsVisible="False">
+    <ContentPage.Content>
+        <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+            <Frame Padding="0" HorizontalOptions="Center" CornerRadius="200" WidthRequest="150" 
+                   HasShadow="False" IsClippedToBounds="True" Grid.Row="0">
+                <Image x:Name="ProfilePic" Source="{Binding Image}" Aspect="AspectFit"/>
+            </Frame>
+            <Grid Padding="0,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="350"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="45"/>
+                    <RowDefinition Height="45"/>
+                    <RowDefinition Height="45"/>
+                </Grid.RowDefinitions>
+                <Label Text="Name: " FontSize="20" VerticalOptions="Center" Grid.Column="0" Grid.Row="0"/>
+                <Entry Placeholder="{Binding Reward}" FontSize="20" VerticalOptions="Center" Grid.Column="1" Grid.Row="0"/>
+                <Label Text="Points: " FontSize="20" VerticalOptions="Center" Grid.Column="0" Grid.Row="1"/>
+                <Entry Placeholder="{Binding Point}" FontSize="20" VerticalOptions="Center" Grid.Column="1" Grid.Row="1"/>
+                <Label Text="Description: " FontSize="20" VerticalOptions="Center" Grid.Column="0" Grid.Row="2"/>
+                <Entry Placeholder="{Binding Description}" FontSize="20" VerticalOptions="Center" Grid.Column="1" Grid.Row="2"/>
+            </Grid>
+            <StackLayout Orientation="Horizontal">
+                <Button Text="Cancel" WidthRequest="250" CornerRadius="100" Command="{Binding CancelCommand}"/>
+                <Button Text="Save" WidthRequest="250" CornerRadius="100"/>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

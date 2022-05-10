@@ -1,14 +1,110 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:viewmodels="clr-namespace:AutoBarBar.ViewModels" 
+             xmlns:model="clr-namespace:AutoBarBar.Models"
+             x:DataType="viewmodels:AOrderDetailViewModel"
              x:Class="AutoBarBar.Views.AOrderDetailPage"
-             Title="{Binding Title}">
+             Title="{Binding Title}"
+             Shell.NavBarIsVisible="False">
+    
+    <ContentPage.BindingContext>
+        <viewmodels:AOrderDetailViewModel />
+    </ContentPage.BindingContext>
+    
     <ContentPage.Content>
-        <StackLayout Spacing="20" Padding="15">
-            <Label Text="Name:" FontSize="Medium" />
-            <Label Text="{Binding Text}" FontSize="Small"/>
-            <Label Text="Description:" FontSize="Medium" />
-            <Label Text="{Binding Description}" FontSize="Small"/>
+        <StackLayout>
+            <Grid VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand" Padding="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="250"/>
+                    <ColumnDefinition Width="250"/>
+                    <ColumnDefinition Width="250"/>
+                    <ColumnDefinition Width="10"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="20"/>
+                </Grid.RowDefinitions>
+                <Frame Padding="0" HorizontalOptions="Center" CornerRadius="100" WidthRequest="80" HasShadow="False"
+                       IsClippedToBounds="True" Grid.Column="1" Grid.RowSpan="3">
+                    <Image x:Name="ProfilePic" Source="{Binding Image}" Aspect="AspectFit"/>
+                </Frame>
+                <Label Text="{Binding C_Name}" FontSize="20" FontAttributes="Bold" Grid.Column="2" Grid.Row="0" 
+                       VerticalOptions="End"/>
+                <Label Text="{Binding Status, StringFormat='Status: {0:F0}'}" FontSize="16" Grid.Column="2" Grid.Row="1"/>
+                <Label Text="Email:test@email.com" FontSize="16" Grid.Column="2" Grid.Row="2"/>
+                <Label Text="Mobile #: 09123456789" FontSize="16" Grid.Column="3" Grid.Row="0" 
+                       VerticalOptions="End"/>
+                <Label Text="{Binding Time, StringFormat='Birthday: {0:MMM dd, yyyy}'}" FontSize="16" Grid.Column="3"
+                       Grid.Row="1"/>
+                <Label Text="Sex:" FontSize="16" Grid.Column="3" Grid.Row="2"/>
+                <Label Text="{Binding Time, StringFormat='Card Issued: {0:MMM dd, yyyy}'}" FontSize="16" Grid.Column="4"
+                       Grid.Row="0" VerticalOptions="End"/>
+            </Grid>
+            <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="Center">
+                <Label Text="ORDERS" FontSize="25" FontAttributes="Bold"/>
+            </StackLayout>
+            <RefreshView x:DataType="viewmodels:AOrderDetailViewModel" Command="{Binding LoadItemsCommand}" 
+                         IsRefreshing="{Binding IsBusy, Mode=TwoWay}" Padding="30,10">
+                <CollectionView x:Name="ListView" ItemsSource="{Binding Items}" SelectionMode="None"
+                                ItemsLayout="VerticalGrid, 5">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout Padding="10,10" x:DataType="model:Item">
+                                <Frame HasShadow="True" CornerRadius="20">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="20" />
+                                            <RowDefinition Height="25" />
+                                        </Grid.RowDefinitions>
+                                        <Frame Padding="0" HorizontalOptions="Center" CornerRadius="200" WidthRequest="100" 
+                                               HasShadow="False" IsClippedToBounds="True" Grid.Row="0">
+                                            <Image x:Name="MenuPic" Source="{Binding Image}" Aspect="AspectFit"/>
+                                        </Frame>
+                                        <Label Text="{Binding Price}" LineBreakMode="NoWrap" FontSize="18" Grid.Row="1"
+                                               FontAttributes="Bold"/>
+                                        <Label Text="{Binding Drink}" LineBreakMode="NoWrap" FontSize="16" Grid.Row="2"/>
+                                    </Grid>
+                                </Frame>
+                            </StackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </RefreshView>
+            <Grid BackgroundColor="Gray" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Padding="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="250"/>
+                    <ColumnDefinition Width="250"/>
+                    <ColumnDefinition Width="250"/>
+                    <ColumnDefinition Width="150"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="25"/>
+                </Grid.RowDefinitions>
+                <Label Text="Date" FontSize="16" TextColor="White" Grid.Column="1" Grid.Row="0"/>
+                <Label Text="{Binding Time, StringFormat='{0:MMM dd, yyyy}'}" FontSize="20" TextColor="White" 
+                       Grid.Column="1" Grid.Row="1"/>
+                <Label Text="Time" FontSize="16" TextColor="White" Grid.Column="1" Grid.Row="2"/>
+                <Label Text="{Binding Time, StringFormat='{0:h:mm tt}'}" FontSize="20" TextColor="White"
+                       Grid.Column="1" Grid.Row="3"/>
+                <Label Text="Points Received" FontSize="16" TextColor="White" Grid.Column="2" Grid.Row="0"/>
+                <Label Text="10.00" FontSize="20" TextColor="White" Grid.Column="2" Grid.Row="1"/>
+                <Label Text="Bartender" FontSize="16" TextColor="White" Grid.Column="2" Grid.Row="2"/>
+                <Label Text="Zxy Wvu" FontSize="20" TextColor="White" Grid.Column="2" Grid.Row="3"/>
+                <Label Text="Reward" FontSize="16" TextColor="White" Grid.Column="3" Grid.Row="0"/>
+                <Label Text="No Reward" FontSize="20" TextColor="White" Grid.Column="3" Grid.Row="1"/>
+                <Label Text="Total" FontSize="16" TextColor="White" Grid.Column="3" Grid.Row="2"/>
+                <Label Text="{Binding Price}" FontSize="20" TextColor="White"
+                       Grid.Column="3" Grid.Row="3"/>
+            </Grid>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

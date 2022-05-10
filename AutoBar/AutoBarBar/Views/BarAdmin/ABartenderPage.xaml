@@ -14,21 +14,17 @@
         <StackLayout>
             <Grid BackgroundColor="#2196F3" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand"
                   ColumnDefinitions="2" Padding="20">
-                <Label Text="{Binding Title}" FontSize="25" Grid.Column="1" TextColor="White"
-                       Style="{DynamicResource ListItemDetailTextStyle}"/>
+                <Label Text="{Binding Today, StringFormat='{0:MMMM dd, yyyy}'}" FontSize="25" Grid.Column="1" TextColor="White"/>
                 <SearchBar Placeholder="Search" Grid.Column="2" BackgroundColor="White"
                            TextChanged="SearchBarChange"/>
             </Grid>
+            <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="StartAndExpand" Padding="30,5">
+                <Label Text="BARTENDER" LineBreakMode="NoWrap" FontSize="25" TextDecorations="Underline"/>
+            </StackLayout>
             <RefreshView x:DataType="vm:ABartenderViewModel" Command="{Binding LoadBartenderCommand}" 
                          IsRefreshing="{Binding IsBusy, Mode=TwoWay}" Padding="30,10">
                 <CollectionView x:Name="ListView" ItemsSource="{Binding Bartender}" SelectionMode="None"
                                 ItemsLayout="VerticalGrid, 5">
-                    <CollectionView.Header>
-                        <StackLayout Padding="0,5">
-                            <Label Text="BARTENDER" LineBreakMode="NoWrap" FontSize="25" TextDecorations="Underline"
-                                   Style="{DynamicResource ListItemTextStyle}"/>
-                        </StackLayout>
-                    </CollectionView.Header>
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <StackLayout Padding="10,10" x:DataType="model:Item">
@@ -43,13 +39,20 @@
                                                HasShadow="False" IsClippedToBounds="True" Grid.Row="0">
                                             <Image x:Name="ProfilePic" Source="{Binding Image}" Aspect="AspectFit"/>
                                         </Frame>
-                                        <Label Text="{Binding B_Name}" LineBreakMode="NoWrap" FontSize="16" Grid.Row="1"
-                                               Style="{DynamicResource ListItemDetailTextStyle}"/>
-                                        <Label Text="{Binding Email}" LineBreakMode="NoWrap" FontSize="16" Grid.Row="2"
-                                               Style="{DynamicResource ListItemTextStyle}"/>
-                                        <Button Text="Edit" CornerRadius="100" Grid.Row="3"/>
+                                        <Label Text="{Binding B_Name}" LineBreakMode="NoWrap" FontSize="18" Grid.Row="1"
+                                               FontAttributes="Bold"/>
+                                        <Label Text="{Binding Email}" LineBreakMode="NoWrap" FontSize="16" Grid.Row="2"/>
+                                        <Button Text="Edit" CornerRadius="100" Grid.Row="3" CommandParameter="{Binding .}"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ABartenderViewModel}},
+                                                          Path=BartenderEdit}"/>
                                     </Grid>
                                 </Frame>
+                                <StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer NumberOfTapsRequired="1" CommandParameter="{Binding .}"
+                                                          Command="{Binding Source={RelativeSource 
+                                                                    AncestorType={x:Type vm:ABartenderViewModel}},
+                                                                    Path=BartenderTapped}"/>
+                                </StackLayout.GestureRecognizers>
                             </StackLayout>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
