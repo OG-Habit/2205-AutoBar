@@ -65,13 +65,87 @@
                     <Label Grid.Row="1" Grid.Column="3" Text="{Binding SelectedCustomer.CurrentBalance, StringFormat='Current Balance: {0}'}"/>
                     <Label Grid.Row="2" Grid.Column="3" Text="{Binding SelectedCustomer.TotalPoints, StringFormat='Total Points: {0}'}"/>
                 </Grid>
-                <CollectionView Grid.Row="1" 
+                <CollectionView Grid.Row="1"
+                                ItemsLayout="VerticalList" ItemsSource="{Binding Timeline}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:SortedOrderLine">
+                            <StackLayout Orientation="Horizontal" BackgroundColor="Green"
+                                         VerticalOptions="Start" HeightRequest="100"
+                                         Margin="20">
+                                <Label Text="{Binding Time}" BackgroundColor="Red"
+                                       VerticalTextAlignment="Start" HorizontalOptions="FillAndExpand" VerticalOptions="Start"/>
+                                <StackLayout HorizontalOptions="CenterAndExpand"
+                                    Spacing="{Binding Converter={StaticResource scale}, ConverterParameter='width=7.5'}">
+                                    <CollectionView ItemsSource="{Binding OrderLineList}">
+                                        <CollectionView.ItemTemplate>
+                                            <DataTemplate x:DataType="models:OrderLine">
+                                                <FlexLayout BackgroundColor="Yellow" JustifyContent="SpaceEvenly">
+                                                    <Label Text="{Binding ProductName}"/>
+                                                    <Label Text="{Binding Quantity}"/>
+                                                    <Label Text="{Binding Price}"/>
+                                                </FlexLayout>
+                                            </DataTemplate>
+                                        </CollectionView.ItemTemplate>
+                                    </CollectionView>
+                                </StackLayout>
+                            </StackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+                <!--<StackLayout Grid.Row="1" 
+                             VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" BackgroundColor="Green"
+                             Spacing="{Binding Converter={StaticResource scale}, ConverterParameter='width=20'}">
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="12:00PM" VerticalTextAlignment="Center"/>
+                        <StackLayout HorizontalOptions="FillAndExpand"
+                                    Spacing="{Binding Converter={StaticResource scale}, ConverterParameter='width=7.5'}">
+                            <FlexLayout BackgroundColor="Yellow" JustifyContent="SpaceEvenly">
+                                <Label Text="Fried"/>
+                                <Label Text="12"/>
+                                <Label Text="150.00"/>
+                            </FlexLayout>
+                            <FlexLayout BackgroundColor="Yellow" JustifyContent="SpaceEvenly">
+                                <Label Text="Fried"/>
+                                <Label Text="12"/>
+                                <Label Text="150.00"/>
+                            </FlexLayout>
+                            <FlexLayout BackgroundColor="Yellow" JustifyContent="SpaceEvenly">
+                                <Label Text="Fried"/>
+                                <Label Text="12"/>
+                                <Label Text="150.00"/>
+                            </FlexLayout>
+                        </StackLayout>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="12:00PM" VerticalTextAlignment="Center"/>
+                        <StackLayout HorizontalOptions="FillAndExpand"
+                                    Spacing="{Binding Converter={StaticResource scale}, ConverterParameter='width=7.5'}">
+                            <FlexLayout BackgroundColor="Yellow" JustifyContent="SpaceEvenly">
+                                <Label Text="Fried"/>
+                                <Label Text="12"/>
+                                <Label Text="150.00"/>
+                            </FlexLayout>
+                            <FlexLayout BackgroundColor="Yellow" JustifyContent="SpaceEvenly">
+                                <Label Text="Fried"/>
+                                <Label Text="12"/>
+                                <Label Text="150.00"/>
+                            </FlexLayout>
+                            <FlexLayout BackgroundColor="Yellow" JustifyContent="SpaceEvenly">
+                                <Label Text="Fried"/>
+                                <Label Text="12"/>
+                                <Label Text="150.00"/>
+                            </FlexLayout>
+                        </StackLayout>
+                    </StackLayout>
+                </StackLayout>-->
+                <!--<CollectionView Grid.Row="1" 
                                 ItemsSource="{Binding CurrentOrderLine}" BackgroundColor="blue"
                                     ItemsLayout="VerticalList"
                                     Margin="{Binding Converter={StaticResource scale}, ConverterParameter='thickness=15,0'}">
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="models:OrderLine" >
-                            <Frame BorderColor="Black" HeightRequest="50" HorizontalOptions="StartAndExpand" VerticalOptions="Start">
+                            <Frame BorderColor="Black"
+                                   BackgroundColor="Green" Padding="0">
                                 <StackLayout HorizontalOptions="Center" VerticalOptions="Center" 
                                          BackgroundColor="Yellow">
                                     <Label Text="{Binding CreatedOn}"/>
@@ -82,14 +156,19 @@
                             </Frame>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
-                </CollectionView>
-                <Grid Grid.Row="2" BackgroundColor="LightGray"
+                </CollectionView>-->
+                <Grid Grid.Row="2" BackgroundColor="LightGray" RowSpacing="0" ColumnSpacing="10"
                       RowDefinitions="*, *, *, *"  x:DataType="vm:BartenderHomePageViewModel"
                       ColumnDefinitions="*, *, *">
                     <Label Grid.Row="0" Grid.Column="0" Text="Time Opened: "/>
                     <Label Grid.Row="1" Grid.Column="0" Text="{Binding CurrentOrder.OpenedOn}"/>
                     <Label Grid.Row="2" Grid.Column="0" Text="Select Reward"/>
-                    <Button Grid.Row="3" Grid.Column="0" Text="Select Reward"/>
+                    <Picker Grid.Row="3" Grid.Column="0"
+                            Title="Select a reward" FontSize="Small"
+                            ItemsSource="{Binding Rewards}"
+                            SelectedItem="{Binding SelectedReward}"
+                            ItemDisplayBinding="{Binding Name}">
+                    </Picker>
                     <Label Grid.Row="0" Grid.Column="1" Text="Total"/>
                     <Label Grid.Row="1" Grid.Column="1" Text="{Binding CurrentOrder.TotalPrice}"/>
                     <Label Grid.Row="2" Grid.Column="1" Text="Points Received"/>

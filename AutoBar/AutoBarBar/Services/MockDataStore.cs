@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 
 namespace AutoBarBar.Services
 {
-    public class MockDataStore : IDataStore<Item>, IDataStore<Customer>, IDataStore<Product>, IDataStore<OrderLine>, IDataStore<Order>
+    public class MockDataStore : IDataStore<Item>, IDataStore<Customer>, IDataStore<Product>, IDataStore<OrderLine>, IDataStore<Order>, IDataStore<Reward>
     {
         readonly List<Item> items;
         readonly List<Customer> customers;
         readonly List<Product> products;
         readonly List<OrderLine> orderLines;
         readonly List<Order> orders;
+        readonly List<Reward> rewards;
 
         public MockDataStore()
         {
@@ -73,6 +74,12 @@ namespace AutoBarBar.Services
             {
                 new Order { Id = Guid.NewGuid().ToString(), OpenedOn = "7:25 PM", CustomerName="Adam Smith", TotalPrice=1236.25, PointsEarned = 100},
                 new Order { Id = Guid.NewGuid().ToString(), OpenedOn = "8:25 PM", CustomerName="Bam Carousel", TotalPrice=227.5, PointsEarned = 0}
+            };
+
+            rewards = new List<Reward>()
+            {
+                new Reward { Id = Guid.NewGuid().ToString(), Name="Summer sale."},
+                new Reward { Id = Guid.NewGuid().ToString(), Name="Winter sale."}
             };
         }
         #region Item
@@ -198,6 +205,28 @@ namespace AutoBarBar.Services
         async Task<IEnumerable<Order>> IDataStore<Order>.GetItemsAsync(bool forceRefresh)
         {
             return await Task.FromResult(orders);
+        }
+        #endregion
+
+        #region Reward
+        public Task<bool> AddItemAsync(Reward item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> UpdateItemAsync(Reward item)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<Reward> IDataStore<Reward>.GetItemAsync(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        async Task<IEnumerable<Reward>> IDataStore<Reward>.GetItemsAsync(bool forceRefresh)
+        {
+            return await Task.FromResult(rewards);
         }
         #endregion
     }
