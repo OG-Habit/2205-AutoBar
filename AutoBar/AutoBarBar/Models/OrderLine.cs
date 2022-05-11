@@ -15,5 +15,6 @@ namespace AutoBarBar.Models
 
         public string CustomerName { get; set; }
         public string ProductName { get; set; }
+        public double SubTotal { get; set; }
     }
 }

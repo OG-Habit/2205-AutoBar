@@ -106,8 +106,11 @@ namespace AutoBarBar.ViewModels
                 {
                     Timeline.Add(new SortedOrderLine());
                     Timeline[x].OrderLineList = new List<OrderLine>();
+                    Timeline[x].Total = 0;
                 }
 
+                col.SubTotal = col.Quantity * col.Price;
+                Timeline[x].Total += col.SubTotal;
                 Timeline[x].Time = col.CreatedOn;
                 Timeline[x].OrderLineList.Add(col);
             }
