@@ -65,7 +65,37 @@
                     <Label Grid.Row="1" Grid.Column="3" Text="{Binding SelectedCustomer.CurrentBalance, StringFormat='Current Balance: {0}'}"/>
                     <Label Grid.Row="2" Grid.Column="3" Text="{Binding SelectedCustomer.TotalPoints, StringFormat='Total Points: {0}'}"/>
                 </Grid>
-                <CollectionView Grid.Row="1" Margin="10,0"
+                <ListView 
+                    Grid.Row="1"
+                    HasUnevenRows="True"
+                    CachingStrategy="RecycleElement"
+                    ItemsSource="{Binding CurrentOrderLineGroup}"
+                    IsGroupingEnabled="True"
+                    GroupDisplayBinding="{Binding Key}"
+                    SelectionMode="None"
+                    Footer="Foasdfasdfoter">
+                    <ListView.GroupHeaderTemplate>
+                        <DataTemplate x:DataType="{x:Null}">
+                            <ViewCell>
+                                <Label Text="{Binding Key}" FontSize="Large" TextColor="Green"/>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.GroupHeaderTemplate>
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="models:OrderLine">
+                            <ViewCell>
+                                <Grid ColumnDefinitions="*,*,*,*" VerticalOptions="Center"  
+                                    BackgroundColor="Yellow">
+                                    <Label Grid.Column="0" Text="{Binding ProductName}"/>
+                                    <Label Grid.Column="1" Text="{Binding Quantity}"/>
+                                    <Label Grid.Column="2" Text="{Binding Price}"/>
+                                    <Label Grid.Column="3" Text="{Binding SubTotal}"/>
+                                </Grid>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <!--<CollectionView Grid.Row="1" Margin="10,0"
                           BackgroundColor="Green" VerticalOptions="Start"
                           ItemsSource="{Binding Timeline}">
                     <CollectionView.ItemTemplate>
@@ -99,7 +129,7 @@
                                         </DataTemplate>
                                     </CollectionView.ItemTemplate>
                                 </CollectionView>
-                                <!--<StackLayout Grid.Column="1" 
+                                --><!--<StackLayout Grid.Column="1" 
                                              VerticalOptions="Start"
                                         HorizontalOptions="Start">
                                     <CollectionView ItemsSource="{Binding OrderLineList}" 
@@ -124,60 +154,14 @@
                                             </DataTemplate>
                                         </CollectionView.ItemTemplate>
                                     </CollectionView>
-                                </StackLayout>-->
+                                </StackLayout>--><!--
                                 <Label Grid.Column="2"
                                         HorizontalOptions="CenterAndExpand" 
                                            Text="{Binding Total}"/>
                             </Grid>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
-                </CollectionView>
-                <!--<StackLayout Grid.Row="1" 
-                             VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" BackgroundColor="Green"
-                             Spacing="{Binding Converter={StaticResource scale}, ConverterParameter='width=20'}">
-                    <StackLayout Orientation="Horizontal">
-                        <Label Text="12:00PM" VerticalTextAlignment="Center"/>
-                        <StackLayout HorizontalOptions="FillAndExpand"
-                                    Spacing="{Binding Converter={StaticResource scale}, ConverterParameter='width=7.5'}">
-                            <FlexLayout BackgroundColor="Yellow" JustifyContent="SpaceEvenly">
-                                <Label Text="Fried"/>
-                                <Label Text="12"/>
-                                <Label Text="150.00"/>
-                            </FlexLayout>
-                            <FlexLayout BackgroundColor="Yellow" JustifyContent="SpaceEvenly">
-                                <Label Text="Fried"/>
-                                <Label Text="12"/>
-                                <Label Text="150.00"/>
-                            </FlexLayout>
-                            <FlexLayout BackgroundColor="Yellow" JustifyContent="SpaceEvenly">
-                                <Label Text="Fried"/>
-                                <Label Text="12"/>
-                                <Label Text="150.00"/>
-                            </FlexLayout>
-                        </StackLayout>
-                    </StackLayout>
-                    <StackLayout Orientation="Horizontal">
-                        <Label Text="12:00PM" VerticalTextAlignment="Center"/>
-                        <StackLayout HorizontalOptions="FillAndExpand"
-                                    Spacing="{Binding Converter={StaticResource scale}, ConverterParameter='width=7.5'}">
-                            <FlexLayout BackgroundColor="Yellow" JustifyContent="SpaceEvenly">
-                                <Label Text="Fried"/>
-                                <Label Text="12"/>
-                                <Label Text="150.00"/>
-                            </FlexLayout>
-                            <FlexLayout BackgroundColor="Yellow" JustifyContent="SpaceEvenly">
-                                <Label Text="Fried"/>
-                                <Label Text="12"/>
-                                <Label Text="150.00"/>
-                            </FlexLayout>
-                            <FlexLayout BackgroundColor="Yellow" JustifyContent="SpaceEvenly">
-                                <Label Text="Fried"/>
-                                <Label Text="12"/>
-                                <Label Text="150.00"/>
-                            </FlexLayout>
-                        </StackLayout>
-                    </StackLayout>
-                </StackLayout>-->
+                </CollectionView>-->
                 <!--<CollectionView Grid.Row="1" 
                                 ItemsSource="{Binding CurrentOrderLine}" BackgroundColor="blue"
                                     ItemsLayout="VerticalList"

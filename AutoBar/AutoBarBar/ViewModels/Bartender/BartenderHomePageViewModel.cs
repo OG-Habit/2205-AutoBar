@@ -33,7 +33,6 @@ namespace AutoBarBar.ViewModels
             OrderLines = new ObservableCollection<OrderLine>();
             Orders = new ObservableCollection<Order>();
             Rewards = new ObservableCollection<Reward>();
-            Timeline = new ObservableCollection<SortedOrderLine>();
 
             PopulateData();
             SwitchUser(Customers[0]);
@@ -81,42 +80,32 @@ namespace AutoBarBar.ViewModels
             {
                 Rewards.Add(a);
             }
-        } 
+        }
 
         void SwitchUser(object c)
         {
             if (c == null)
                 return;
-                
+
             SelectedCustomer = c as Customer;
-            CurrentOrderLine = new ObservableCollection<OrderLine>(OrderLines.Where(o => o.CustomerName == SelectedCustomer.Name));
+            CurrentOrderLine = new ObservableCollection<OrderLine>(OrderLines.Where(ol => ol.CustomerName == SelectedCustomer.Name));
             CurrentOrder = Orders.First(o => String.Equals(o.CustomerName, SelectedCustomer.Name));
-            PopulateTimeline();
-        }
 
-        void PopulateTimeline()
-        {
-            Timeline.Clear();
-            int x;
-            foreach(var col in CurrentOrderLine)
+            var group = from ol in CurrentOrderLine
+                        group ol by ol.CreatedOn into newGroup
+
+                        orderby newGroup.Key
+                        select newGroup;
+            CurrentOrderLineGroup = new ObservableCollection<IGrouping<string, OrderLine>>(group);
+            foreach(var colg in CurrentOrderLineGroup)
             {
-                for (x = 0; x < Timeline.Count && !string.Equals(Timeline[x].Time, col.CreatedOn); x++) { }
-
-                if(x == Timeline.Count)
+                double total = 0;
+                foreach(var ol in colg)
                 {
-                    Timeline.Add(new SortedOrderLine());
-                    Timeline[x].OrderLineList = new List<OrderLine>();
-                    Timeline[x].Total = 0;
+                    total += ol.SubTotal;
                 }
-
-                col.SubTotal = col.Quantity * col.Price;
-                Timeline[x].Total += col.SubTotal;
-                Timeline[x].Time = col.CreatedOn;
-                Timeline[x].OrderLineList.Add(col);
+                
             }
-            ObservableCollection<SortedOrderLine> temp = Timeline;
-            timeline = new ObservableCollection<SortedOrderLine>();
-            Timeline = temp;
         }
 
         async void ShowScan()
@@ -194,11 +183,11 @@ namespace AutoBarBar.ViewModels
             set { SetProperty(ref currentOrderLine, value); }
         }
 
-        ObservableCollection<SortedOrderLine> timeline;
-        public ObservableCollection<SortedOrderLine> Timeline
+        ObservableCollection<IGrouping<string, OrderLine>> currentOrderLineGroup;
+        public ObservableCollection<IGrouping<string, OrderLine>> CurrentOrderLineGroup
         {
-            get { return timeline; }
-            set { SetProperty(ref timeline, value); }
+            get { return currentOrderLineGroup; }
+            set { SetProperty(ref currentOrderLineGroup, value); }
         }
 
         ObservableCollection<Reward> rewards;
