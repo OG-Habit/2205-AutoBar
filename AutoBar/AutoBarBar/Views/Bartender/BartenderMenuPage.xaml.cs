@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutoBarBar.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,7 @@ namespace AutoBarBar.Views
         public BartenderMenuPage()
         {
             InitializeComponent();
+            accGrid.BindingContext = BartenderHomePageViewModel.Instance;
         }
     }
 }

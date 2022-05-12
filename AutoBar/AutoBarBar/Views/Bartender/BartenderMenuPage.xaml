@@ -1,12 +1,130 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="AutoBarBar.Views.BartenderMenuPage">
+             xmlns:vm="clr-namespace:AutoBarBar.ViewModels"
+             xmlns:model="clr-namespace:AutoBarBar.Models"
+             xmlns:custom="clr-namespace:AutoBarBar.CustomRenderers"
+             x:Class="AutoBarBar.Views.BartenderMenuPage"
+             Shell.NavBarIsVisible="False">
+    <ContentPage.BindingContext>
+        <vm:BartenderMenuPageViewModel/>
+    </ContentPage.BindingContext>
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Bartender Menu Page"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
+        <Grid 
+            RowDefinitions="*, 9*"
+            ColumnDefinitions="2*, *">
+            <FlexLayout Grid.Column="0" Grid.Row="0"
+                        Direction="Row" JustifyContent="SpaceBetween">
+                <StackLayout>
+                    <Label Text="LOGO"/>
+                    <Label Text="Nov 7, 2022"/>
+                </StackLayout>
+                <SearchBar Grid.Row="0" Grid.RowSpan="2" BackgroundColor="Blue"
+                           Grid.Column="1"
+                           Placeholder="Search"/>
+            </FlexLayout>
+
+            <StackLayout Grid.Row="1"
+                         Grid.Column="0"
+                         BackgroundColor="Green">
+                <CollectionView
+                    ItemsSource="{Binding Products}"
+                    Footer="footer">
+                    <CollectionView.Header>
+                        <Label Text="Menu"
+                               FontSize="Large"
+                               FontAttributes="Bold"
+                               TextDecorations="Underline"/>
+                    </CollectionView.Header>
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical" VerticalItemSpacing="20" HorizontalItemSpacing="20"
+                                         Span="3"/>
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Frame BorderColor="Black"
+                                   Padding="10">
+                                <StackLayout>
+                                    <Image WidthRequest="100" 
+                                           HeightRequest="{Binding Source={x:RelativeSource Self}, Path=WidthRequest}"
+                                        HorizontalOptions="Center" VerticalOptions="Center"
+                                        Source="{Binding ImageLink}"/>
+                                    <Label Text="{Binding Price, StringFormat='PHP {0:F2}'}"/>
+                                    <Label Text="{Binding Name}"/>
+                                </StackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </StackLayout>
+
+            <Grid Grid.Row="0" Grid.RowSpan="2"
+                  Grid.Column="1"
+                  RowDefinitions="*,0.8*,5*, 0.7*" RowSpacing="0">
+                <Grid Grid.Row="0" x:Name="accGrid"
+                    RowDefinitions="*, *" RowSpacing="0"
+                    ColumnDefinitions="*, *, *"
+                          x:DataType="vm:BartenderHomePageViewModel">
+                    <Image Grid.Row="0" Grid.RowSpan="2" 
+                           Grid.Column="0"
+                           Source="default_pic.png"
+                           WidthRequest="100"
+                           HeightRequest="{Binding Source={x:RelativeSource Self}, Path=WidthRequest}"/>
+                    <Label Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" 
+                           Text="{Binding SelectedCustomer.Name}" VerticalOptions="Center"/>
+                    <Label Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" 
+                           Text="{Binding SelectedCustomer.CurrentBalance, StringFormat='Current Balance: PHP {0:F2}'}" VerticalOptions="Center"/>
+                </Grid>
+                <FlexLayout Grid.Row="1" 
+                            Direction="Column"
+                            JustifyContent="Center">
+                    <Label Text="New Order" VerticalOptions="Center"/>
+                    <Label Text="Time: 11:58PM" VerticalOptions="Center"/>
+                </FlexLayout>
+                <ListView Grid.Row="2"  BackgroundColor="Red"
+                          CachingStrategy="RecycleElement"
+                          HasUnevenRows="True"
+                          ItemsSource="{Binding NewOrderLine}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="model:OrderLine">
+                            <ViewCell>
+                                <Frame BackgroundColor="LightBlue"
+                                    BorderColor="Black"
+                                    Padding="10">
+                                    <Grid RowDefinitions="*,*,*" 
+                                      ColumnDefinitions="*,*,*">
+                                        <Image Grid.Row="0" Grid.RowSpan="3"
+                                           Grid.Column="0"
+                                        Source="{Binding ProductImgUrl}"/>
+                                        <Label Grid.Row="0"
+                                           Grid.Column="1" 
+                                           Text="{Binding ProductName}"/>
+                                        <Label Grid.Row="1"
+                                           Grid.Column="1" 
+                                           Text="{Binding Price, StringFormat='PHP {0:F2}'}"/>
+                                        <Label Grid.Row="0"
+                                           Grid.Column="2" 
+                                           Text="Quantity"/>
+                                        <StackLayout Grid.Row="1"
+                                                 Grid.Column="2" BackgroundColor="Violet"
+                                        Orientation="Horizontal">
+                                            <custom:CustomButton Text="-" HorizontalOptions="Start"/>
+                                            <Label Text="{Binding Quantity}"/>
+                                            <custom:CustomButton Text="+" HorizontalOptions="Center"/>
+                                        </StackLayout>
+                                        <Label Grid.Row="2"
+                                           Grid.Column="1" Grid.ColumnSpan="2"
+                                           Text="{Binding SubTotal, StringFormat='Total: {0:F2}'}"
+                                               HorizontalOptions="Center"/>
+                                    </Grid>
+                                </Frame>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <Button Grid.Row="3"
+                    Text="Add Order"/>
+            </Grid>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

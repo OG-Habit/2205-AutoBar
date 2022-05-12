@@ -17,6 +17,7 @@ namespace AutoBarBar.ViewModels
         public ICommand SwitchUserCommand { get; }
         public ICommand ShowScanCommand { get; }
         public ICommand GetReloadBalanceAmountCommand { get; }
+        public ICommand Test { get; }
 
         Reward DummyReward = new Reward()
         {
@@ -41,6 +42,13 @@ namespace AutoBarBar.ViewModels
             SwitchUserCommand = new Command<object>(SwitchUser);
             ShowScanCommand = new Command(ShowScan);
             GetReloadBalanceAmountCommand = new Command(GetReloadBalanceAmount);
+
+            Test = new Command(TestMe);
+        }
+
+        void TestMe()
+        {
+            var a = SelectedCustomer;
         }
 
         async void PopulateData()
@@ -202,6 +210,21 @@ namespace AutoBarBar.ViewModels
         {
             get { return selectedReward; }
             set { SetProperty(ref selectedReward, value); }
+        }
+        #endregion
+
+        #region Singleton
+        static BartenderHomePageViewModel instance;
+        public static BartenderHomePageViewModel Instance
+        {
+            get 
+            {
+                if(instance == null)
+                {
+                    instance = new BartenderHomePageViewModel();
+                }
+                return instance;
+            }
         }
         #endregion
     }

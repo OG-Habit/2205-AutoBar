@@ -16,6 +16,7 @@ namespace AutoBarBar.Views
         public BartenderHomePage()
         {
             InitializeComponent();
+            BindingContext = BartenderHomePageViewModel.Instance;
         }
     }
 }

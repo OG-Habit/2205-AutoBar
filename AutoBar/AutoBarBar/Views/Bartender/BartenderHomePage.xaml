@@ -9,10 +9,6 @@
              x:DataType="vm:BartenderHomePageViewModel"
              Shell.TabBarBackgroundColor="Aqua"
              Shell.NavBarIsVisible="False">
-    <ContentPage.BindingContext>
-        <vm:BartenderHomePageViewModel/>
-    </ContentPage.BindingContext>
-    
     <ContentPage.Resources>
         <ResourceDictionary>
             <xct:ItemSelectedEventArgsConverter x:Key="ItemSelectedEventArgsConverter"/>
@@ -62,7 +58,7 @@
                     <Label Grid.Row="1" Grid.Column="2" Text="{Binding SelectedCustomer.Birthday, StringFormat='Birthday: {0}'}"/>
                     <Label Grid.Row="2" Grid.Column="2" Text="{Binding SelectedCustomer.Sex, StringFormat='Sex: {0}'}"/>
                     <Label Grid.Row="0" Grid.Column="3" Text="{Binding SelectedCustomer.CardIssued, StringFormat='Card Issued: {0}'}"/>
-                    <Label Grid.Row="1" Grid.Column="3" Text="{Binding SelectedCustomer.CurrentBalance, StringFormat='Current Balance: {0}'}"/>
+                    <Label Grid.Row="1" Grid.Column="3" Text="{Binding SelectedCustomer.CurrentBalance, StringFormat='Current Balance: PHP {0:F2}'}"/>
                     <Label Grid.Row="2" Grid.Column="3" Text="{Binding SelectedCustomer.TotalPoints, StringFormat='Total Points: {0}'}"/>
                 </Grid>
                 <ListView 
