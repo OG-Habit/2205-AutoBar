@@ -58,7 +58,7 @@
                     <Label Grid.Row="1" Grid.Column="2" Text="{Binding SelectedCustomer.Birthday, StringFormat='Birthday: {0}'}"/>
                     <Label Grid.Row="2" Grid.Column="2" Text="{Binding SelectedCustomer.Sex, StringFormat='Sex: {0}'}"/>
                     <Label Grid.Row="0" Grid.Column="3" Text="{Binding SelectedCustomer.CardIssued, StringFormat='Card Issued: {0}'}"/>
-                    <Label Grid.Row="1" Grid.Column="3" Text="{Binding SelectedCustomer.CurrentBalance, StringFormat='Current Balance: PHP {0:F2}'}"/>
+                    <Label Grid.Row="1" Grid.Column="3" Text="{Binding CurrentBalance, StringFormat='Current Balance: PHP {0:F2}'}"/>
                     <Label Grid.Row="2" Grid.Column="3" Text="{Binding SelectedCustomer.TotalPoints, StringFormat='Total Points: {0}'}"/>
                 </Grid>
                 <ListView 
@@ -84,8 +84,8 @@
                                     BackgroundColor="Yellow">
                                     <Label Grid.Column="0" Text="{Binding ProductName}"/>
                                     <Label Grid.Column="1" Text="{Binding Quantity}"/>
-                                    <Label Grid.Column="2" Text="{Binding Price}"/>
-                                    <Label Grid.Column="3" Text="{Binding SubTotal}"/>
+                                    <Label Grid.Column="2" Text="{Binding Price, StringFormat='PHP {0:F2}'}}"/>
+                                    <Label Grid.Column="3" Text="{Binding SubTotal, StringFormat='PHP {0:F2}'}"/>
                                 </Grid>
                             </ViewCell>
                         </DataTemplate>
@@ -159,7 +159,7 @@
                     </CollectionView.ItemTemplate>
                 </CollectionView>-->
                 <!--<CollectionView Grid.Row="1" 
-                                ItemsSource="{Binding CurrentOrderLine}" BackgroundColor="blue"
+                                ItemsSource="{Binding CurrentOrderLines}" BackgroundColor="blue"
                                     ItemsLayout="VerticalList"
                                     Margin="{Binding Converter={StaticResource scale}, ConverterParameter='thickness=15,0'}">
                     <CollectionView.ItemTemplate>
@@ -189,12 +189,12 @@
                             SelectedItem="{Binding SelectedReward}"
                             ItemDisplayBinding="{Binding Name}">
                     </Picker>
-                    <Label Grid.Row="0" Grid.Column="1" Text="Total"/>
-                    <Label Grid.Row="1" Grid.Column="1" Text="{Binding CurrentOrder.TotalPrice}"/>
+                    <Label Grid.Row="0" Grid.Column="1" Text="Total Paid:"/>
+                    <Label Grid.Row="1" Grid.Column="1" Text="{Binding TotalOrderPrice, StringFormat='PHP {0:F2}'}"/>
                     <Label Grid.Row="2" Grid.Column="1" Text="Points Received"/>
-                    <Label Grid.Row="3" Grid.Column="1" Text="{Binding CurrentOrder.PointsEarned}"/>
+                    <Label Grid.Row="3" Grid.Column="1" Text="{Binding PointsEarned}"/>
                     <Button Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Text="Reload Balance" Command="{Binding GetReloadBalanceAmountCommand}"/>
-                    <Button Grid.Row="2" Grid.RowSpan="2" Grid.Column="2" Text="End Transaction"/>
+                    <Button Grid.Row="2" Grid.RowSpan="2" Grid.Column="2" Text="End Transaction" Command="{Binding EndTransactionCommand}"/>
                 </Grid>
             </Grid>
         </Grid>

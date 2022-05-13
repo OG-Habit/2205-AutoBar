@@ -7,31 +7,31 @@ namespace AutoBarBar.CustomRenderers
 {
     public class CustomButton : Button
     {
-        public static readonly BindableProperty PaddingTopProperty = BindableProperty.Create(nameof(PaddingTopProperty), typeof(float), typeof(CustomButton), 0);
-        public float PaddingTop
+        public static readonly BindableProperty PaddingTopProperty = BindableProperty.Create(nameof(PaddingTopProperty), typeof(int), typeof(CustomButton), 0);
+        public int PaddingTop
         {
-            get => (float)GetValue(PaddingTopProperty);
+            get => (int)GetValue(PaddingTopProperty);
             set => SetValue(PaddingTopProperty, value);
         }
 
-        public static readonly BindableProperty PaddingLeftProperty = BindableProperty.Create(nameof(PaddingLeftProperty), typeof(float), typeof(CustomButton), 0);
-        public float PaddingLeft
+        public static readonly BindableProperty PaddingLeftProperty = BindableProperty.Create(nameof(PaddingLeftProperty), typeof(int), typeof(CustomButton), 0);
+        public int PaddingLeft
         {
-            get => (float)GetValue(PaddingLeftProperty);
+            get => (int)GetValue(PaddingLeftProperty);
             set => SetValue(PaddingLeftProperty, value);
         }
 
-        public static readonly BindableProperty PaddingRightProperty = BindableProperty.Create(nameof(PaddingRightProperty), typeof(float), typeof(CustomButton), 0);
-        public float PaddingRight
+        public static readonly BindableProperty PaddingRightProperty = BindableProperty.Create(nameof(PaddingRightProperty), typeof(int), typeof(CustomButton), 0);
+        public int PaddingRight
         {
-            get => (float)GetValue(PaddingRightProperty);
+            get => (int)GetValue(PaddingRightProperty);
             set => SetValue(PaddingRightProperty, value);
         }
 
-        public static readonly BindableProperty PaddingBottomProperty = BindableProperty.Create(nameof(PaddingBottomProperty), typeof(float), typeof(CustomButton), 0);
-        public float PaddingBottom
+        public static readonly BindableProperty PaddingBottomProperty = BindableProperty.Create(nameof(PaddingBottomProperty), typeof(int), typeof(CustomButton), 0);
+        public int PaddingBottom
         {
-            get => (float)GetValue(PaddingBottomProperty);
+            get => (int)GetValue(PaddingBottomProperty);
             set => SetValue(PaddingBottomProperty, value);
         }
     }

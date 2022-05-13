@@ -1,4 +1,5 @@
 ﻿using AutoBarBar.Models;
+using AutoBarBar.Services;
 using AutoBarBar.Views;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,12 @@ namespace AutoBarBar.ViewModels
         public ICommand SwitchUserCommand { get; }
         public ICommand ShowScanCommand { get; }
         public ICommand GetReloadBalanceAmountCommand { get; }
+        public ICommand EndTransactionCommand { get; }
+        public ICommand AddProductToOrderLineCommand { get; }
+        public ICommand IncreaseQuantityCommand { get; }
+        public ICommand DecreaseQuantityCommand { get; }
+        public ICommand AddOrderLineCommand { get; }
+
         public ICommand Test { get; }
 
         Reward DummyReward = new Reward()
@@ -34,6 +41,10 @@ namespace AutoBarBar.ViewModels
             OrderLines = new ObservableCollection<OrderLine>();
             Orders = new ObservableCollection<Order>();
             Rewards = new ObservableCollection<Reward>();
+            NewOrderLines = new ObservableCollection<OrderLine>();
+            SelectedProduct = null;
+            TotalOrderLinesCost = 0;
+            CanAddNewOrderLine = false;
 
             PopulateData();
             SwitchUser(Customers[0]);
@@ -42,6 +53,11 @@ namespace AutoBarBar.ViewModels
             SwitchUserCommand = new Command<object>(SwitchUser);
             ShowScanCommand = new Command(ShowScan);
             GetReloadBalanceAmountCommand = new Command(GetReloadBalanceAmount);
+            EndTransactionCommand = new Command(EndTransaction);
+            AddProductToOrderLineCommand = new Command<Product>(AddProductToOrderLine);
+            IncreaseQuantityCommand = new Command<OrderLine>(IncreaseQuantity);
+            DecreaseQuantityCommand = new Command<OrderLine>(DecreaseQuantity);
+            AddOrderLineCommand = new Command(AddOrderLine);
 
             Test = new Command(TestMe);
         }
@@ -71,6 +87,7 @@ namespace AutoBarBar.ViewModels
             var orderlines = await OrderLineDataStore.GetItemsAsync();
             foreach (var a in orderlines)
             {
+                a.SubTotal = a.Quantity * a.Price;
                 OrderLines.Add(a);
             }
 
@@ -96,15 +113,19 @@ namespace AutoBarBar.ViewModels
                 return;
 
             SelectedCustomer = c as Customer;
-            CurrentOrderLine = new ObservableCollection<OrderLine>(OrderLines.Where(ol => ol.CustomerName == SelectedCustomer.Name));
-            CurrentOrder = Orders.First(o => String.Equals(o.CustomerName, SelectedCustomer.Name));
+            CurrentBalance = selectedCustomer.CurrentBalance;
+            CurrentOrderLines = new ObservableCollection<OrderLine>(OrderLines.Where(ol => ol.CustomerName == SelectedCustomer.Name));
+            CurrentOrder = Orders.First(o => String.Equals(o.CustomerName, SelectedCustomer.Name) &&
+                                            o.OrderStatus == false);
+            PointsEarned = CurrentOrder.PointsEarned;
+            TotalOrderPrice = CurrentOrder.TotalPrice;
 
-            var group = from ol in CurrentOrderLine
+            var group = from ol in CurrentOrderLines
                         group ol by ol.CreatedOn into newGroup
-
-                        orderby newGroup.Key
+                        orderby newGroup.Key 
                         select newGroup;
             CurrentOrderLineGroup = new ObservableCollection<IGrouping<string, OrderLine>>(group);
+            NewOrderLines.Clear();
             foreach(var colg in CurrentOrderLineGroup)
             {
                 double total = 0;
@@ -112,7 +133,6 @@ namespace AutoBarBar.ViewModels
                 {
                     total += ol.SubTotal;
                 }
-                
             }
         }
 
@@ -123,7 +143,6 @@ namespace AutoBarBar.ViewModels
         
         async void GetReloadBalanceAmount()
         {
-            Customer temp;
             string ans = await Application.Current.MainPage.DisplayPromptAsync("Balance", "Enter amount:", "Add", "Cancel", null, -1, Keyboard.Numeric, "");
             if(float.TryParse(ans, out float num))
             {
@@ -131,17 +150,125 @@ namespace AutoBarBar.ViewModels
                 {
                     if(c.Name == SelectedCustomer.Name)
                     {
-                        c.CurrentBalance += num;
                         await Application.Current.MainPage.DisplayAlert("Success", "Balance has been added.", "Ok");
-                        temp = SelectedCustomer;
-                        selectedCustomer = null;
-                        SelectedCustomer = temp;
+                        CurrentBalance = c.CurrentBalance += num;
                     }
                 }
             }
         }
 
+        async void EndTransaction()
+        {
+            await App.Current.MainPage.DisplayAlert("Success", "Customer transaction has ended.", "Ok");
+
+            CurrentOrder.OrderStatus = true;
+            Orders.Add(CurrentOrder);
+            Customers.Remove(SelectedCustomer);
+        }
+
+        void AddProductToOrderLine (Product p)
+        {
+            SelectedProduct = null;
+
+            if (CanAddNewOrderLine == false)
+                CanAddNewOrderLine = true;
+
+            var newTotalCost = p.Price + TotalOrderLinesCost;
+            if(newTotalCost > CurrentBalance)
+            {
+                DependencyService.Get<IToastService>().ShowLongMessage("Insufficient balance.");
+                return;
+            }
+
+            int x;
+            for(x = 0; x < NewOrderLines.Count && NewOrderLines[x].ProductName != p.Name; x++) { }
+            if(x == NewOrderLines.Count)
+            {
+                NewOrderLines.Add(new OrderLine
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    CustomerName = SelectedCustomer.Name,
+                    ProductName = p.Name,
+                    Price = p.Price,
+                    Quantity = 1,
+                    ProductImgUrl = p.ImageLink,
+                    CreatedOn = "9:10PM",
+                    SubTotal = p.Price
+                });
+                TotalOrderLinesCost = (float)newTotalCost;
+            } 
+            else
+            {
+                DependencyService.Get<IToastService>().ShowShortMessage($"{p.Name} is already in the order.");
+            }
+        }
+
+        void IncreaseQuantity(OrderLine Ol)
+        {
+            var newTotal = TotalOrderLinesCost + Ol.Price;
+            if (newTotal > SelectedCustomer.CurrentBalance)
+            {
+                DependencyService.Get<IToastService>().ShowLongMessage("Insufficient balance.");
+                return;
+            }
+
+            foreach(var nol in NewOrderLines)
+            {
+                if (string.Equals(Ol.Id, nol.Id))
+                {
+                    nol.Quantity++;
+                    nol.SubTotal += Ol.Price;
+                    TotalOrderLinesCost = (float)newTotal;
+                    break;
+                }
+            }
+        }
+
+        void DecreaseQuantity(OrderLine Ol)
+        {
+            foreach(var nol in NewOrderLines)
+            {
+                if(string.Equals(Ol.Id, nol.Id))
+                {
+                    if(--nol.Quantity == 0)
+                    {   
+                        NewOrderLines.Remove(nol);
+                        if (NewOrderLines.Count == 0 && CanAddNewOrderLine == true)
+                            CanAddNewOrderLine = false;
+                    } else
+                    {
+                        nol.SubTotal -= nol.Price;
+                    }
+
+                    TotalOrderLinesCost -= (float)Ol.Price;
+                    break;
+                }
+            }
+        }
+
+        async void AddOrderLine()
+        {
+            await App.Current.MainPage.DisplayAlert("Success", "You have successfully ordered.", "Thanks");
+            string time = "9:45PM"; 
+            int pe;
+            var group = from ol in NewOrderLines
+                        group ol by time into newOl
+                        select newOl;
+            CurrentOrderLineGroup.Add(group.ElementAt(0));
+            foreach (var ol in NewOrderLines)
+            {
+                OrderLines.Add(ol);
+
+            }
+            CurrentBalance = SelectedCustomer.CurrentBalance -= TotalOrderLinesCost;
+            NewOrderLines.Clear();
+            TotalOrderPrice =  CurrentOrder.TotalPrice += TotalOrderLinesCost;
+            PointsEarned = CurrentOrder.PointsEarned += (pe = (int)CurrentOrder.TotalPrice / 1000) != 0 ? pe * 100 : 0;
+            TotalOrderLinesCost = 0;
+        }
+
         #region Getters setters
+        #region Customers
         ObservableCollection<Customer> customers;
         public ObservableCollection<Customer> Customers
         {
@@ -156,6 +283,15 @@ namespace AutoBarBar.ViewModels
             set { SetProperty(ref selectedCustomer, value); }
         }
 
+        double currentBalance;
+        public double CurrentBalance
+        {
+            get => currentBalance;
+            set => SetProperty(ref currentBalance, value);
+        }
+        #endregion
+
+        #region Products
         ObservableCollection<Product> products;
         public ObservableCollection<Product> Products
         {
@@ -163,6 +299,15 @@ namespace AutoBarBar.ViewModels
             set { SetProperty(ref products, value); }
         }
 
+        Product selectedProduct;
+        public Product SelectedProduct
+        {
+            get => selectedProduct;
+            set => SetProperty(ref selectedProduct, value);
+        }
+        #endregion
+
+        #region Orders
         ObservableCollection<Order> orders;
         public ObservableCollection<Order> Orders
         {
@@ -177,6 +322,22 @@ namespace AutoBarBar.ViewModels
             set { SetProperty(ref currentOrder, value); }
         }
 
+        double totalOrderPrice;
+        public double TotalOrderPrice
+        {
+            get => totalOrderPrice;
+            set => SetProperty(ref totalOrderPrice, value);
+        }
+
+        int pointsEarned;
+        public int PointsEarned
+        {
+            get => pointsEarned;
+            set => SetProperty(ref pointsEarned, value);
+        }
+        #endregion
+
+        #region OrderLines
         ObservableCollection<OrderLine> orderLines;
         public ObservableCollection<OrderLine> OrderLines
         {
@@ -184,11 +345,18 @@ namespace AutoBarBar.ViewModels
             set { SetProperty(ref orderLines, value); }
         }
 
-        ObservableCollection<OrderLine> currentOrderLine;
-        public ObservableCollection<OrderLine> CurrentOrderLine
+        ObservableCollection<OrderLine> currentOrderLines;
+        public ObservableCollection<OrderLine> CurrentOrderLines
         {
-            get { return currentOrderLine; }
-            set { SetProperty(ref currentOrderLine, value); }
+            get { return currentOrderLines; }
+            set { SetProperty(ref currentOrderLines, value); }
+        }
+
+        ObservableCollection<OrderLine> newOrderLines;
+        public ObservableCollection<OrderLine> NewOrderLines
+        {
+            get => newOrderLines;
+            set => SetProperty(ref newOrderLines, value);
         }
 
         ObservableCollection<IGrouping<string, OrderLine>> currentOrderLineGroup;
@@ -198,6 +366,22 @@ namespace AutoBarBar.ViewModels
             set { SetProperty(ref currentOrderLineGroup, value); }
         }
 
+        bool canAddNewOrderLine;
+        public bool CanAddNewOrderLine
+        {
+            get => canAddNewOrderLine;
+            set => SetProperty(ref canAddNewOrderLine, value);
+        }
+
+        float totalOrderLinesCost;
+        public float TotalOrderLinesCost
+        {
+            get => totalOrderLinesCost;
+            set => SetProperty(ref totalOrderLinesCost, value);
+        }
+        #endregion
+
+        #region Rewards
         ObservableCollection<Reward> rewards;
         public ObservableCollection<Reward> Rewards
         {
@@ -211,6 +395,7 @@ namespace AutoBarBar.ViewModels
             get { return selectedReward; }
             set { SetProperty(ref selectedReward, value); }
         }
+        #endregion
         #endregion
 
         #region Singleton

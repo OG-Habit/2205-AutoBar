@@ -76,8 +76,8 @@ namespace AutoBarBar.Services
 
             orders = new List<Order>()
             {
-                new Order { Id = Guid.NewGuid().ToString(), OpenedOn = "7:25 PM", CustomerName="Adam Smith", TotalPrice=1236.25, PointsEarned = 100},
-                new Order { Id = Guid.NewGuid().ToString(), OpenedOn = "8:25 PM", CustomerName="Bam Carousel", TotalPrice=227.5, PointsEarned = 0}
+                new Order { Id = Guid.NewGuid().ToString(), OpenedOn = "7:25 PM", CustomerName="Adam Smith", TotalPrice=1236.25, PointsEarned = 100, OrderStatus=false},
+                new Order { Id = Guid.NewGuid().ToString(), OpenedOn = "8:25 PM", CustomerName="Bam Carousel", TotalPrice=227.5, PointsEarned = 0, OrderStatus=false}
             };
 
             rewards = new List<Reward>()

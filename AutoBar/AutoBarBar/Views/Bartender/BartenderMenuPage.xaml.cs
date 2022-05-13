@@ -16,7 +16,7 @@ namespace AutoBarBar.Views
         public BartenderMenuPage()
         {
             InitializeComponent();
-            accGrid.BindingContext = BartenderHomePageViewModel.Instance;
+            BindingContext = BartenderHomePageViewModel.Instance;
         }
     }
 }
