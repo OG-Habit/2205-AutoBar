@@ -11,24 +11,27 @@ namespace AutoBarBar.ViewModels
 {
     public class ABartenderViewModel : BaseViewModel
     {
-        private Item _selectedBartender;
-        public ObservableCollection<Item> Bartender { get; }
+        private Bartender _selectedBartender;
+        public ObservableCollection<Bartender> Bartender { get; }
         public Command LoadBartenderCommand { get; }
-        public Command<Item> BartenderTapped { get; }
-        public Command<Item> BartenderEdit { get; }
+        public Command BartenderAdd { get; }
+        public Command<Bartender> BartenderTapped { get; }
+        public Command<Bartender> BartenderEdit { get; }
         public DateTime Today { get; set; }
 
         public ABartenderViewModel()
         {
             Title = "Bartender";
             Today = DateTime.Today;
-            Bartender = new ObservableCollection<Item>();
+            Bartender = new ObservableCollection<Bartender>();
             
             LoadBartenderCommand = new Command(async () => await ExecuteLoadItemsCommand());
 
-            BartenderTapped = new Command<Item>(OnBartenderSelected);
+            BartenderAdd = new Command(OnAddSelected);
 
-            BartenderEdit = new Command<Item>(OnEditSelected);
+            BartenderTapped = new Command<Bartender>(OnBartenderSelected);
+
+            BartenderEdit = new Command<Bartender>(OnEditSelected);
         }
 
         async Task ExecuteLoadItemsCommand()
@@ -38,7 +41,7 @@ namespace AutoBarBar.ViewModels
             try
             {
                 Bartender.Clear();
-                var items = await DataStore.GetItemsAsync(true);
+                var items = await BartenderDataStore.GetItemsAsync(true);
                 foreach (var item in items)
                 {
                     Bartender.Add(item);
@@ -59,7 +62,12 @@ namespace AutoBarBar.ViewModels
             IsBusy = true;
         }
 
-        public Item SelectedBartender
+        async void OnAddSelected()
+        {
+            await Shell.Current.GoToAsync($"{nameof(ABartenderAddPage)}");
+        }
+
+        public Bartender SelectedBartender
         {
             get => _selectedBartender;
             set
@@ -69,16 +77,15 @@ namespace AutoBarBar.ViewModels
             }
         }
 
-        async void OnBartenderSelected(Item item)
+        async void OnBartenderSelected(Bartender item)
         {
             if (item == null)
                 return;
 
-            // This will push the ABartenderDetailPage onto the navigation stack
             await Shell.Current.GoToAsync($"{nameof(ABartenderDetailPage)}?{nameof(ABartenderDetailViewModel.ItemId)}={item.Id}");
         }
 
-        public Item EditBartender
+        public Bartender EditBartender
         {
             get => _selectedBartender;
             set
@@ -88,12 +95,11 @@ namespace AutoBarBar.ViewModels
             }
         }
 
-        async void OnEditSelected(Item item)
+        async void OnEditSelected(Bartender item)
         {
             if (item == null)
                 return;
 
-            // This will push the ABartenderEditPage onto the navigation stack
             await Shell.Current.GoToAsync($"{nameof(ABartenderEditPage)}?{nameof(ABartenderDetailViewModel.ItemId)}={item.Id}");
         }
 
@@ -104,7 +110,7 @@ namespace AutoBarBar.ViewModels
 
             await ExecuteLoadItemsCommand();
 
-            var items = Bartender.Where(x => x.B_Name.ToLowerInvariant().Contains(searchTerm)).ToList();
+            var items = Bartender.Where(x => x.Name.ToLowerInvariant().Contains(searchTerm)).ToList();
 
             foreach (var item in Bartender.ToList())
             {

@@ -16,13 +16,13 @@
                     <ColumnDefinition Width="250"/>
                 </Grid.ColumnDefinitions>
                 <Label Text="Name: " FontSize="20" Grid.Column="0" Grid.Row="1"/>
-                <Label Text="{Binding Drink}" FontSize="20" Grid.Column="1" Grid.Row="1"/>
+                <Label Text="{Binding Name}" FontSize="20" Grid.Column="1" Grid.Row="1"/>
                 <Label Text="Price: " FontSize="20" Grid.Column="0" Grid.Row="2"/>
-                <Label Text="{Binding Price, StringFormat='PHP {0:F0}'}" FontSize="20" Grid.Column="1" Grid.Row="2"/>
+                <Label Text="{Binding Price, StringFormat='PHP {0}'}" FontSize="20" Grid.Column="1" Grid.Row="2"/>
                 <Label Text="Description: " FontSize="20" Grid.Column="0" Grid.Row="3"/>
                 <Label Text="{Binding Description}" FontSize="20" Grid.Column="1" Grid.Row="3"/>
             </Grid>
-            <Button Text="Delete" WidthRequest="250" CornerRadius="100"/>
+            <Button Text="Delete" WidthRequest="250" CornerRadius="100" Command="{Binding DeleteCommand}"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

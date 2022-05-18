@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AutoBarBar.Models
+﻿namespace AutoBarBar.Models
 {
     public class Product
     {

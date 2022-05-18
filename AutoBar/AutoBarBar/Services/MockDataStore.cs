@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AutoBarBar.Services
 {
-    public class MockDataStore : IDataStore<Item>, IDataStore<Customer>, IDataStore<Product>, IDataStore<OrderLine>, IDataStore<Order>, IDataStore<Reward>
+    public class MockDataStore : IDataStore<Item>, IDataStore<Customer>, IDataStore<Product>, IDataStore<OrderLine>, IDataStore<Order>, IDataStore<Reward>, IDataStore<Bartender>
     {
         readonly List<Item> items;
         readonly List<Customer> customers;
@@ -14,6 +14,7 @@ namespace AutoBarBar.Services
         readonly List<OrderLine> orderLines;
         readonly List<Order> orders;
         readonly List<Reward> rewards;
+        readonly List<Bartender> bartenders;
 
         public MockDataStore()
         {
@@ -82,8 +83,16 @@ namespace AutoBarBar.Services
 
             rewards = new List<Reward>()
             {
-                new Reward { Id = Guid.NewGuid().ToString(), Name="Summer sale."},
-                new Reward { Id = Guid.NewGuid().ToString(), Name="Winter sale."}
+                new Reward { Id = Guid.NewGuid().ToString(), Name = "Egg", Description = "The egg is big, dark orange, and fresh", ImageLink = "default_pic.png", Points = 100.00 },
+                new Reward { Id = Guid.NewGuid().ToString(), Name = "Apple", Description = "The apple is red, plump, and fresh", ImageLink = "default_pic.png", Points = 400.00 }
+            };
+
+            bartenders = new List<Bartender>()
+            {
+                new Bartender { Id = Guid.NewGuid().ToString(), Name = "Bartender One", Birthday = "Jan 1, 2001", Contact = "09123294756", Email = "one@gmail.com", Sex="Male", ImageLink = "default_pic.png"},
+                new Bartender { Id = Guid.NewGuid().ToString(), Name = "Bartender Two", Birthday = "Feb 1, 2001", Contact = "09123864756", Email = "two@gmail.com", Sex="Male", ImageLink = "default_pic.png"},
+                new Bartender { Id = Guid.NewGuid().ToString(), Name = "Bartender Three", Birthday = "Mar 1, 2001", Contact = "09123294756", Email = "three@gmail.com", Sex="Female", ImageLink = "default_pic.png"},
+                new Bartender { Id = Guid.NewGuid().ToString(), Name = "Bartender Four", Birthday = "Apr 1, 2001", Contact = "09123294756", Email = "four@gmail.com", Sex="Female", ImageLink = "default_pic.png"}
             };
         }
         #region Item
@@ -147,19 +156,33 @@ namespace AutoBarBar.Services
         #endregion
 
         #region Product
-        public Task<bool> AddItemAsync(Product item)
+        public async Task<bool> AddItemAsync(Product item)
         {
-            throw new NotImplementedException();
+            products.Add(item);
+
+            return await Task.FromResult(true);
         }
 
-        public Task<bool> UpdateItemAsync(Product item)
+        public async Task<bool> UpdateItemAsync(Product item)
         {
-            throw new NotImplementedException();
+            var oldItem = products.Where((Product arg) => arg.Id == item.Id).FirstOrDefault();
+            products.Remove(oldItem);
+            products.Add(item);
+
+            return await Task.FromResult(true);
         }
 
-        Task<Product> IDataStore<Product>.GetItemAsync(string id)
+        async Task<bool> IDataStore<Product>.DeleteItemAsync(string id)
         {
-            throw new NotImplementedException();
+            var oldItem = products.Where((Product arg) => arg.Id == id).FirstOrDefault();
+            products.Remove(oldItem);
+
+            return await Task.FromResult(true);
+        }
+
+        async Task<Product> IDataStore<Product>.GetItemAsync(string id)
+        {
+            return await Task.FromResult(products.FirstOrDefault(s => s.Id == id));
         }
 
         async Task<IEnumerable<Product>> IDataStore<Product>.GetItemsAsync(bool forceRefresh)
@@ -213,24 +236,74 @@ namespace AutoBarBar.Services
         #endregion
 
         #region Reward
-        public Task<bool> AddItemAsync(Reward item)
+        public async Task<bool> AddItemAsync(Reward item)
         {
-            throw new NotImplementedException();
+            rewards.Add(item);
+
+            return await Task.FromResult(true);
         }
 
-        public Task<bool> UpdateItemAsync(Reward item)
+        public async Task<bool> UpdateItemAsync(Reward item)
         {
-            throw new NotImplementedException();
+            var oldItem = rewards.Where((Reward arg) => arg.Id == item.Id).FirstOrDefault();
+            rewards.Remove(oldItem);
+            rewards.Add(item);
+
+            return await Task.FromResult(true);
         }
 
-        Task<Reward> IDataStore<Reward>.GetItemAsync(string id)
+        async Task<bool> IDataStore<Reward>.DeleteItemAsync(string id)
         {
-            throw new NotImplementedException();
+            var oldItem = rewards.Where((Reward arg) => arg.Id == id).FirstOrDefault();
+            rewards.Remove(oldItem);
+
+            return await Task.FromResult(true);
+        }
+
+        async Task<Reward> IDataStore<Reward>.GetItemAsync(string id)
+        {
+            return await Task.FromResult(rewards.FirstOrDefault(s => s.Id == id));
         }
 
         async Task<IEnumerable<Reward>> IDataStore<Reward>.GetItemsAsync(bool forceRefresh)
         {
             return await Task.FromResult(rewards);
+        }
+        #endregion
+
+        #region Bartender
+        public async Task<bool> AddItemAsync(Bartender item)
+        {
+            bartenders.Add(item);
+
+            return await Task.FromResult(true);
+        }
+
+        public async Task<bool> UpdateItemAsync(Bartender item)
+        {
+            var oldItem = bartenders.Where((Bartender arg) => arg.Id == item.Id).FirstOrDefault();
+            bartenders.Remove(oldItem);
+            bartenders.Add(item);
+
+            return await Task.FromResult(true);
+        }
+
+        async Task<bool> IDataStore<Bartender>.DeleteItemAsync(string id)
+        {
+            var oldItem = bartenders.Where((Bartender arg) => arg.Id == id).FirstOrDefault();
+            bartenders.Remove(oldItem);
+
+            return await Task.FromResult(true);
+        }
+
+        async Task<Bartender> IDataStore<Bartender>.GetItemAsync(string id)
+        {
+            return await Task.FromResult(bartenders.FirstOrDefault(s => s.Id == id));
+        }
+
+        async Task<IEnumerable<Bartender>> IDataStore<Bartender>.GetItemsAsync(bool forceRefresh)
+        {
+            return await Task.FromResult(bartenders);
         }
         #endregion
     }

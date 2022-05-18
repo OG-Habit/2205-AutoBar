@@ -1,6 +1,6 @@
 ﻿namespace AutoBarBar.Models
 {
-    public class Customer
+    public class Bartender
     {
         public string Id { get; set; }
         public string Name { get; set; }
@@ -8,8 +8,6 @@
         public string Contact { get; set; }
         public string Birthday { get; set; }
         public string Sex { get; set; }
-        public string CardIssued { get; set; }
-        public double CurrentBalance { get; set; }
-        public string TotalPoints { get; set; }
+        public string ImageLink { get; set; }
     }
 }

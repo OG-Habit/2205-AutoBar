@@ -16,6 +16,7 @@ namespace AutoBarBar.ViewModels
         public IDataStore<OrderLine> OrderLineDataStore => DependencyService.Get<IDataStore<OrderLine>>();
         public IDataStore<Order> OrderDataStore => DependencyService.Get<IDataStore<Order>>();
         public IDataStore<Reward> RewardDataStore => DependencyService.Get<IDataStore<Reward>>();
+        public IDataStore<Bartender> BartenderDataStore => DependencyService.Get<IDataStore<Bartender>>();
 
         bool isBusy = false;
         public bool IsBusy
