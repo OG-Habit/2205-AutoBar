@@ -11,24 +11,27 @@ namespace AutoBarBar.ViewModels
 {
     public class ARewardsViewModel : BaseViewModel
     {
-        private Item _selectedReward;
-        public ObservableCollection<Item> Rewards { get; }
+        private Reward _selectedReward;
+        public ObservableCollection<Reward> Rewards { get; }
         public Command LoadRewardsCommand { get; }
-        public Command<Item> RewardTapped { get; }
-        public Command<Item> RewardEdit { get; }
+        public Command RewardAdd { get; }
+        public Command<Reward> RewardTapped { get; }
+        public Command<Reward> RewardEdit { get; }
         public DateTime Today { get; set; }
 
         public ARewardsViewModel()
         {
             Title = "Rewards";
             Today = DateTime.Today;
-            Rewards = new ObservableCollection<Item>();
+            Rewards = new ObservableCollection<Reward>();
             
             LoadRewardsCommand = new Command(async () => await ExecuteLoadItemsCommand());
 
-            RewardTapped = new Command<Item>(OnRewardSelected);
+            RewardAdd = new Command(OnAddSelected);
 
-            RewardEdit = new Command<Item>(OnRewardEdit);
+            RewardTapped = new Command<Reward>(OnRewardSelected);
+
+            RewardEdit = new Command<Reward>(OnRewardEdit);
         }
 
         async Task ExecuteLoadItemsCommand()
@@ -38,7 +41,7 @@ namespace AutoBarBar.ViewModels
             try
             {
                 Rewards.Clear();
-                var items = await DataStore.GetItemsAsync(true);
+                var items = await RewardDataStore.GetItemsAsync(true);
                 foreach (var item in items)
                 {
                     Rewards.Add(item);
@@ -59,7 +62,12 @@ namespace AutoBarBar.ViewModels
             IsBusy = true;
         }
 
-        public Item SelectedReward
+        async void OnAddSelected()
+        {
+            await Shell.Current.GoToAsync($"{nameof(ARewardsAddPage)}");
+        }
+
+        public Reward SelectedReward
         {
             get => _selectedReward;
             set
@@ -69,16 +77,15 @@ namespace AutoBarBar.ViewModels
             }
         }
 
-        async void OnRewardSelected(Item item)
+        async void OnRewardSelected(Reward item)
         {
             if (item == null)
                 return;
 
-            // This will push the ItemDetailPage onto the navigation stack
             await Shell.Current.GoToAsync($"{nameof(ARewardsDetailPage)}?{nameof(ARewardsDetailViewModel.ItemId)}={item.Id}");
         }
 
-        public Item EditReward
+        public Reward EditReward
         {
             get => _selectedReward;
             set
@@ -88,12 +95,11 @@ namespace AutoBarBar.ViewModels
             }
         }
 
-        async void OnRewardEdit(Item item)
+        async void OnRewardEdit(Reward item)
         {
             if (item == null)
                 return;
 
-            // This will push the ItemDetailPage onto the navigation stack
             await Shell.Current.GoToAsync($"{nameof(ARewardsEditPage)}?{nameof(ARewardsDetailViewModel.ItemId)}={item.Id}");
         }
 
@@ -104,7 +110,7 @@ namespace AutoBarBar.ViewModels
 
             await ExecuteLoadItemsCommand();
 
-            var items = Rewards.Where(x => x.Reward.ToLowerInvariant().Contains(searchTerm)).ToList();
+            var items = Rewards.Where(x => x.Name.ToLowerInvariant().Contains(searchTerm)).ToList();
 
             foreach (var item in Rewards.ToList())
             {

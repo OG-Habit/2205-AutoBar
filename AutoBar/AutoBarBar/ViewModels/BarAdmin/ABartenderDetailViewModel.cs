@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutoBarBar.Models;
+using System;
 using System.Diagnostics;
 using Xamarin.Forms;
 
@@ -8,29 +9,55 @@ namespace AutoBarBar.ViewModels
     public class ABartenderDetailViewModel : BaseViewModel
     {
         private string itemId;
-        private string bName;
+        private string name;
         private string email;
+        private string contact;
+        private string birthday;
+        private string sex;
         private string image;
 
         public string Id { get; set; }
 
         public Command CancelCommand { get; }
+        public Command SaveCommand { get; }
+        public Command DeleteCommand { get; }
 
         public ABartenderDetailViewModel()
         {
             CancelCommand = new Command(OnCancelClicked);
+            SaveCommand = new Command(OnSaveClicked);
+            DeleteCommand = new Command(OnDeleteClicked);
         }
 
-        public string B_Name
+        public string Name
         {
-            get => bName;
-            set => SetProperty(ref bName, value);
+            get => name;
+            set => SetProperty(ref name, value);
+
         }
 
         public string Email
         {
             get => email;
             set => SetProperty(ref email, value);
+        }
+
+        public string Contact
+        {
+            get => contact;
+            set => SetProperty(ref contact, value);
+        }
+
+        public string Birthday
+        {
+            get => birthday;
+            set => SetProperty(ref birthday, value);
+        }
+
+        public string Sex
+        {
+            get => sex;
+            set => SetProperty(ref sex, value);
         }
 
         public string Image
@@ -56,11 +83,14 @@ namespace AutoBarBar.ViewModels
         {
             try
             {
-                var item = await DataStore.GetItemAsync(itemId);
+                var item = await BartenderDataStore.GetItemAsync(itemId);
                 Id = item.Id;
-                B_Name = item.B_Name;
+                Name = item.Name;
                 Email = item.Email;
-                Image = item.Image;
+                Contact = item.Contact;
+                Birthday = item.Birthday;
+                Sex = item.Sex;
+                Image = item.ImageLink;
             }
             catch (Exception)
             {
@@ -71,6 +101,34 @@ namespace AutoBarBar.ViewModels
         private async void OnCancelClicked()
         {
             await Shell.Current.GoToAsync("..");
+        }
+
+        private async void OnSaveClicked()
+        {
+            bool retryBool = await App.Current.MainPage.DisplayAlert("Save", "Would you like to save changes?", "Yes", "No");
+            if (retryBool)
+            {
+                Bartender item = new Bartender();
+                item.Id = ItemId;
+                item.Name = Name;
+                item.Email = Email;
+                item.Contact = Contact;
+                item.Birthday = Birthday;
+                item.Sex = Sex;
+                item.ImageLink = Image;
+                await BartenderDataStore.UpdateItemAsync(item);
+                await Shell.Current.GoToAsync("..");
+            }
+        }
+
+        private async void OnDeleteClicked()
+        {
+            bool retryBool = await App.Current.MainPage.DisplayAlert("Delete", "Would you like to delete bartender?", "Yes", "No");
+            if (retryBool)
+            {
+                await BartenderDataStore.DeleteItemAsync(ItemId);
+                await Shell.Current.GoToAsync("..");
+            }
         }
     }
 }

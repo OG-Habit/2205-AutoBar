@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutoBarBar.Models;
+using System;
 using System.Diagnostics;
 using Xamarin.Forms;
 
@@ -8,27 +9,31 @@ namespace AutoBarBar.ViewModels
     public class ARewardsDetailViewModel : BaseViewModel
     {
         private string itemId;
-        private string reward;
-        private string point;
+        private string name;
+        private double point;
         private string description;
         private string image;
 
         public string Id { get; set; }
 
         public Command CancelCommand { get; }
+        public Command SaveCommand { get; }
+        public Command DeleteCommand { get; }
 
         public ARewardsDetailViewModel()
         {
             CancelCommand = new Command(OnCancelClicked);
+            SaveCommand = new Command(OnSaveClicked);
+            DeleteCommand = new Command(OnDeleteClicked);
         }
 
-        public string Reward
+        public string Name
         {
-            get => reward;
-            set => SetProperty(ref reward, value);
+            get => name;
+            set => SetProperty(ref name, value);
         }
 
-        public string Point
+        public double Point
         {
             get => point;
             set => SetProperty(ref point, value);
@@ -63,12 +68,12 @@ namespace AutoBarBar.ViewModels
         {
             try
             {
-                var item = await DataStore.GetItemAsync(itemId);
+                var item = await RewardDataStore.GetItemAsync(itemId);
                 Id = item.Id;
-                Reward = item.Reward;
+                Name = item.Name;
                 Point = item.Points;
                 Description = item.Description;
-                Image = item.Image;
+                Image = item.ImageLink;
             }
             catch (Exception)
             {
@@ -79,6 +84,32 @@ namespace AutoBarBar.ViewModels
         private async void OnCancelClicked()
         {
             await Shell.Current.GoToAsync("..");
+        }
+
+        private async void OnSaveClicked()
+        {
+            bool retryBool = await App.Current.MainPage.DisplayAlert("Save", "Would you like to save changes?", "Yes", "No");
+            if (retryBool)
+            {
+                Reward item = new Reward();
+                item.Id = ItemId;
+                item.Name = Name;
+                item.Points = Point;
+                item.Description = Description;
+                item.ImageLink = Image;
+                await RewardDataStore.UpdateItemAsync(item);
+                await Shell.Current.GoToAsync("..");
+            }
+        }
+
+        private async void OnDeleteClicked()
+        {
+            bool retryBool = await App.Current.MainPage.DisplayAlert("Delete", "Would you like to delete reward?", "Yes", "No");
+            if (retryBool)
+            {
+                await RewardDataStore.DeleteItemAsync(ItemId);
+                await Shell.Current.GoToAsync("..");
+            }
         }
     }
 }

@@ -22,15 +22,15 @@
                     <RowDefinition Height="45"/>
                 </Grid.RowDefinitions>
                 <Label Text="Name: " FontSize="20" VerticalOptions="Center" Grid.Column="0" Grid.Row="0"/>
-                <Entry Placeholder="{Binding Reward}" FontSize="20" VerticalOptions="Center" Grid.Column="1" Grid.Row="0"/>
+                <Entry Text="{Binding Name}" FontSize="20" VerticalOptions="Center" Grid.Column="1" Grid.Row="0"/>
                 <Label Text="Points: " FontSize="20" VerticalOptions="Center" Grid.Column="0" Grid.Row="1"/>
-                <Entry Placeholder="{Binding Point}" FontSize="20" VerticalOptions="Center" Grid.Column="1" Grid.Row="1"/>
+                <Entry Text="{Binding Point}" FontSize="20" VerticalOptions="Center" Grid.Column="1" Grid.Row="1"/>
                 <Label Text="Description: " FontSize="20" VerticalOptions="Center" Grid.Column="0" Grid.Row="2"/>
-                <Entry Placeholder="{Binding Description}" FontSize="20" VerticalOptions="Center" Grid.Column="1" Grid.Row="2"/>
+                <Entry Text="{Binding Description}" FontSize="20" VerticalOptions="Center" Grid.Column="1" Grid.Row="2"/>
             </Grid>
             <StackLayout Orientation="Horizontal">
                 <Button Text="Cancel" WidthRequest="250" CornerRadius="100" Command="{Binding CancelCommand}"/>
-                <Button Text="Save" WidthRequest="250" CornerRadius="100"/>
+                <Button Text="Save" WidthRequest="250" CornerRadius="100" Command="{Binding SaveCommand}"/>
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>

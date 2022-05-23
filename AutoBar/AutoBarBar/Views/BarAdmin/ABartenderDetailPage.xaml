@@ -15,24 +15,18 @@
                     <ColumnDefinition Width="150"/>
                     <ColumnDefinition Width="250"/>
                 </Grid.ColumnDefinitions>
-                <Label Text="First Name: " FontSize="20" Grid.Column="0" Grid.Row="1"/>
-                <Label Text="{Binding B_Name}" FontSize="20" Grid.Column="1" Grid.Row="1"/>
-                <Label Text="Middle Name: " FontSize="20" Grid.Column="0" Grid.Row="2"/>
-                <Label Text="{Binding B_Name}" FontSize="20" Grid.Column="1" Grid.Row="2"/>
-                <Label Text="Last Name: " FontSize="20" Grid.Column="0" Grid.Row="3"/>
-                <Label Text="{Binding B_Name}" FontSize="20" Grid.Column="1" Grid.Row="3"/>
-                <Label Text="Sex: " FontSize="20" Grid.Column="0" Grid.Row="4"/>
-                <Label Text="{Binding B_Name}" FontSize="20" Grid.Column="1" Grid.Row="4"/>
-                <Label Text="Birthday: " FontSize="20" Grid.Column="0" Grid.Row="5"/>
-                <Label Text="{Binding B_Name}" FontSize="20" Grid.Column="1" Grid.Row="5"/>
-                <Label Text="Mobile No.: " FontSize="20" Grid.Column="0" Grid.Row="6"/>
-                <Label Text="{Binding B_Name}" FontSize="20" Grid.Column="1" Grid.Row="6"/>
-                <Label Text="Email: " FontSize="20" Grid.Column="0" Grid.Row="7"/>
-                <Label Text="{Binding Email}" FontSize="20" Grid.Column="1" Grid.Row="7"/>
-                <Label Text="Card Issued: " FontSize="20" Grid.Column="0" Grid.Row="8"/>
-                <Label Text="{Binding B_Name}" FontSize="20" Grid.Column="1" Grid.Row="8"/>
+                <Label Text="Name: " FontSize="20" Grid.Column="0" Grid.Row="1"/>
+                <Label Text="{Binding Name}" FontSize="20" Grid.Column="1" Grid.Row="1"/>
+                <Label Text="Sex: " FontSize="20" Grid.Column="0" Grid.Row="2"/>
+                <Label Text="{Binding Sex}" FontSize="20" Grid.Column="1" Grid.Row="2"/>
+                <Label Text="Birthday: " FontSize="20" Grid.Column="0" Grid.Row="3"/>
+                <Label Text="{Binding Birthday}" FontSize="20" Grid.Column="1" Grid.Row="3"/>
+                <Label Text="Mobile No.: " FontSize="20" Grid.Column="0" Grid.Row="4"/>
+                <Label Text="{Binding Contact}" FontSize="20" Grid.Column="1" Grid.Row="4"/>
+                <Label Text="Email: " FontSize="20" Grid.Column="0" Grid.Row="5"/>
+                <Label Text="{Binding Email}" FontSize="20" Grid.Column="1" Grid.Row="5"/>
             </Grid>
-            <Button Text="Delete" WidthRequest="250" CornerRadius="100"/>
+            <Button Text="Delete" WidthRequest="250" CornerRadius="100" Command="{Binding DeleteCommand}"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

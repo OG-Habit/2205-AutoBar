@@ -17,9 +17,13 @@ namespace AutoBarBar.ViewModels
 
         private async void OnLogoutClicked(object obj)
         {
-            // Prefixing with `//` switches to a different navigation stack instead of pushing to the active one
-            await Xamarin.Essentials.SecureStorage.SetAsync("isLogged", "0");
-            await Shell.Current.GoToAsync($"//LoginPage");
+            bool retryBool = await App.Current.MainPage.DisplayAlert("Log out", "Would you like to log out?", "Yes", "No");
+            if (retryBool)
+            {
+                // Prefixing with `//` switches to a different navigation stack instead of pushing to the active one
+                await Xamarin.Essentials.SecureStorage.SetAsync("isLogged", "0");
+                await Shell.Current.GoToAsync($"//LoginPage");
+            }  
         }
     }
 }

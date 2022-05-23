@@ -2,14 +2,14 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:AutoBarBar.ViewModels"
-             x:DataType="viewmodels:AMenuDetailViewModel"
-             x:Class="AutoBarBar.Views.AMenuEditPage"
+             x:DataType="viewmodels:ARewardsAddViewModel"
+             x:Class="AutoBarBar.Views.ARewardsAddPage"
              Shell.NavBarIsVisible="False">
     <ContentPage.Content>
         <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
             <Frame Padding="0" HorizontalOptions="Center" CornerRadius="200" WidthRequest="150" 
                    HasShadow="False" IsClippedToBounds="True" Grid.Row="0">
-                <Image x:Name="ProfilePic" Source="{Binding Image}" Aspect="AspectFit"/>
+                <Image x:Name="ProfilePic" Source="default_pic" Aspect="AspectFit"/>
             </Frame>
             <Grid Padding="0,20">
                 <Grid.ColumnDefinitions>
@@ -23,14 +23,14 @@
                 </Grid.RowDefinitions>
                 <Label Text="Name: " FontSize="20" VerticalOptions="Center" Grid.Column="0" Grid.Row="0"/>
                 <Entry Text="{Binding Name}" FontSize="20" VerticalOptions="Center" Grid.Column="1" Grid.Row="0"/>
-                <Label Text="Price: " FontSize="20" VerticalOptions="Center" Grid.Column="0" Grid.Row="1"/>
-                <Entry Text="{Binding Price}" FontSize="20" VerticalOptions="Center" Grid.Column="1" Grid.Row="1"/>
+                <Label Text="Points: " FontSize="20" VerticalOptions="Center" Grid.Column="0" Grid.Row="1"/>
+                <Entry Text="{Binding Point}" FontSize="20" VerticalOptions="Center" Grid.Column="1" Grid.Row="1"/>
                 <Label Text="Description: " FontSize="20" VerticalOptions="Center" Grid.Column="0" Grid.Row="2"/>
                 <Entry Text="{Binding Description}" FontSize="20" VerticalOptions="Center" Grid.Column="1" Grid.Row="2"/>
             </Grid>
             <StackLayout Orientation="Horizontal">
                 <Button Text="Cancel" WidthRequest="250" CornerRadius="100" Command="{Binding CancelCommand}"/>
-                <Button Text="Save" WidthRequest="250" CornerRadius="100" Command="{Binding SaveCommand}"/>
+                <Button Text="Add" WidthRequest="250" CornerRadius="100" Command="{Binding AddCommand}"/>
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>

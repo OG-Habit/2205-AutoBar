@@ -18,16 +18,23 @@
                 <SearchBar Placeholder="Search" Grid.Column="2" BackgroundColor="White"
                            TextChanged="SearchBarChange"/>
             </Grid>
-            <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="StartAndExpand" Padding="30,5">
-                <Label Text="BARTENDER" LineBreakMode="NoWrap" FontSize="25" TextDecorations="Underline"/>
-            </StackLayout>
+            <Grid ColumnDefinitions="2" Padding="30,5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Label Text="BARTENDER" LineBreakMode="NoWrap" FontSize="25" TextDecorations="Underline" Grid.Column="1"
+                       HorizontalOptions="Start" VerticalOptions="Center"/>
+                <Button Text="Add Bartender" CornerRadius="100" Grid.Column="2" HorizontalOptions="End" VerticalOptions="Center"
+                        CommandParameter="{Binding .}" Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ABartenderViewModel}},
+                        Path=BartenderAdd}"/>
+            </Grid>
             <RefreshView x:DataType="vm:ABartenderViewModel" Command="{Binding LoadBartenderCommand}" 
                          IsRefreshing="{Binding IsBusy, Mode=TwoWay}" Padding="30,10">
                 <CollectionView x:Name="ListView" ItemsSource="{Binding Bartender}" SelectionMode="None"
                                 ItemsLayout="VerticalGrid, 5">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <StackLayout Padding="10,10" x:DataType="model:Item">
+                            <StackLayout Padding="10,10" x:DataType="model:Bartender">
                                 <Frame HasShadow="True" CornerRadius="20">
                                     <Grid>
                                         <Grid.RowDefinitions>
@@ -37,9 +44,9 @@
                                         </Grid.RowDefinitions>
                                         <Frame Padding="0" HorizontalOptions="Center" CornerRadius="200" WidthRequest="100" 
                                                HasShadow="False" IsClippedToBounds="True" Grid.Row="0">
-                                            <Image x:Name="ProfilePic" Source="{Binding Image}" Aspect="AspectFit"/>
+                                            <Image x:Name="ProfilePic" Source="{Binding ImageLink}" Aspect="AspectFit"/>
                                         </Frame>
-                                        <Label Text="{Binding B_Name}" LineBreakMode="NoWrap" FontSize="18" Grid.Row="1"
+                                        <Label Text="{Binding Name}" LineBreakMode="NoWrap" FontSize="18" Grid.Row="1"
                                                FontAttributes="Bold"/>
                                         <Label Text="{Binding Email}" LineBreakMode="NoWrap" FontSize="16" Grid.Row="2"/>
                                         <Button Text="Edit" CornerRadius="100" Grid.Row="3" CommandParameter="{Binding .}"

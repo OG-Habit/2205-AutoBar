@@ -11,24 +11,27 @@ namespace AutoBarBar.ViewModels
 {
     public class AMenuViewModel : BaseViewModel
     {
-        private Item _selectedItem;
-        public ObservableCollection<Item> Item { get; }
+        private Product _selectedItem;
+        public ObservableCollection<Product> Item { get; }
         public Command LoadItemCommand { get; }
-        public Command<Item> ItemTapped { get; }
-        public Command<Item> ItemEdit { get; }
+        public Command ItemAdd { get; }
+        public Command<Product> ItemTapped { get; }
+        public Command<Product> ItemEdit { get; }
         public DateTime Today { get; set; }
 
         public AMenuViewModel()
         {
             Title = "Menu";
             Today = DateTime.Today;
-            Item = new ObservableCollection<Item>();
+            Item = new ObservableCollection<Product>();
             
             LoadItemCommand = new Command(async () => await ExecuteLoadItemsCommand());
 
-            ItemTapped = new Command<Item>(OnItemSelected);
+            ItemAdd = new Command(OnAddSelected);
 
-            ItemEdit = new Command<Item>(OnItemEdit);
+            ItemTapped = new Command<Product>(OnItemSelected);
+
+            ItemEdit = new Command<Product>(OnItemEdit);
         }
 
         async Task ExecuteLoadItemsCommand()
@@ -38,7 +41,7 @@ namespace AutoBarBar.ViewModels
             try
             {
                 Item.Clear();
-                var items = await DataStore.GetItemsAsync(true);
+                var items = await ProductDataStore.GetItemsAsync(true);
                 foreach (var item in items)
                 {
                     Item.Add(item);
@@ -59,7 +62,12 @@ namespace AutoBarBar.ViewModels
             IsBusy = true;
         }
 
-        public Item SelectedItem
+        async void OnAddSelected()
+        {
+            await Shell.Current.GoToAsync($"{nameof(AMenuAddPage)}");
+        }
+
+        public Product SelectedItem
         {
             get => _selectedItem;
             set
@@ -69,16 +77,15 @@ namespace AutoBarBar.ViewModels
             }
         }
 
-        async void OnItemSelected(Item item)
+        async void OnItemSelected(Product item)
         {
             if (item == null)
                 return;
 
-            // This will push the ItemDetailPage onto the navigation stack
             await Shell.Current.GoToAsync($"{nameof(AMenuDetailPage)}?{nameof(AMenuDetailViewModel.ItemId)}={item.Id}");
         }
 
-        public Item EditItem
+        public Product EditItem
         {
             get => _selectedItem;
             set
@@ -88,12 +95,11 @@ namespace AutoBarBar.ViewModels
             }
         }
 
-        async void OnItemEdit(Item item)
+        async void OnItemEdit(Product item)
         {
             if (item == null)
                 return;
 
-            // This will push the ItemDetailPage onto the navigation stack
             await Shell.Current.GoToAsync($"{nameof(AMenuEditPage)}?{nameof(AMenuDetailViewModel.ItemId)}={item.Id}");
         }
 
@@ -104,7 +110,7 @@ namespace AutoBarBar.ViewModels
 
             await ExecuteLoadItemsCommand();
 
-            var items = Item.Where(x => x.Drink.ToLowerInvariant().Contains(searchTerm)).ToList();
+            var items = Item.Where(x => x.Name.ToLowerInvariant().Contains(searchTerm)).ToList();
 
             foreach (var item in Item.ToList())
             {  

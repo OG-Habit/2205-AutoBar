@@ -14,10 +14,13 @@ namespace AutoBarBar
             Routing.RegisterRoute(nameof(ScanPage), typeof(ScanPage));
             //Routing.RegisterRoute(nameof(NewItemPage), typeof(NewItemPage));
             Routing.RegisterRoute(nameof(AOrderDetailPage), typeof(AOrderDetailPage));
+            Routing.RegisterRoute(nameof(ABartenderAddPage), typeof(ABartenderAddPage));
             Routing.RegisterRoute(nameof(ABartenderDetailPage), typeof(ABartenderDetailPage));
             Routing.RegisterRoute(nameof(ABartenderEditPage), typeof(ABartenderEditPage));
+            Routing.RegisterRoute(nameof(AMenuAddPage), typeof(AMenuAddPage));
             Routing.RegisterRoute(nameof(AMenuDetailPage), typeof(AMenuDetailPage));
             Routing.RegisterRoute(nameof(AMenuEditPage), typeof(AMenuEditPage));
+            Routing.RegisterRoute(nameof(ARewardsAddPage), typeof(ARewardsAddPage));
             Routing.RegisterRoute(nameof(ARewardsDetailPage), typeof(ARewardsDetailPage));
             Routing.RegisterRoute(nameof(ARewardsEditPage), typeof(ARewardsEditPage));
         }
