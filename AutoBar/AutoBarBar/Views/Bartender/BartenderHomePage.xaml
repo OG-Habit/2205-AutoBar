@@ -24,7 +24,15 @@
                     <Label Text="Nov 7, 2022"/>
                 </StackLayout>
                 <SearchBar Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"
-                    Placeholder="Search"/>
+                           x:Name="searchBar"
+                           Placeholder="Search">
+                    <SearchBar.Behaviors>
+                        <xct:EventToCommandBehavior
+                            EventName="TextChanged"
+                            Command="{Binding SearchCustomerCommand}"
+                            CommandParameter="{Binding Source={Reference searchBar}, Path=Text}"/>
+                    </SearchBar.Behaviors>
+                </SearchBar>
                 <CollectionView x:Name="CVCustomer" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" 
                                 SelectionMode="Single" SelectedItem="{Binding SelectedCustomer}"
                                 SelectionChangedCommand="{Binding SwitchUserCommand}"
