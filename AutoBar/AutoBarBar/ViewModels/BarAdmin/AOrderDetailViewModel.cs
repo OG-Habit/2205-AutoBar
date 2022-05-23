@@ -11,11 +11,16 @@ namespace AutoBarBar.ViewModels
     public class AOrderDetailViewModel : BaseViewModel
     {
         private string itemId;
-        private string cName;
+        private string name;
         private DateTime time;
-        private string payment;
+        private double payment;
         private string status;
         private string image;
+        private string birthday;
+        private string cardIssued;
+        private string sex;
+        private string contact;
+        private string email;
 
         public ObservableCollection<Item> Items{ get; }
         public Command LoadItemsCommand { get; }
@@ -28,10 +33,10 @@ namespace AutoBarBar.ViewModels
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
         }
 
-        public string C_Name
+        public string Name
         {
-            get => cName;
-            set => SetProperty(ref cName, value);
+            get => name;
+            set => SetProperty(ref name, value);
         }
 
         public DateTime Time
@@ -40,7 +45,7 @@ namespace AutoBarBar.ViewModels
             set => SetProperty(ref time, value);
         }
 
-        public string Price
+        public double Price
         {
             get => payment;
             set => SetProperty(ref payment, value);
@@ -56,6 +61,36 @@ namespace AutoBarBar.ViewModels
         {
             get => image;
             set => SetProperty(ref image, value);
+        }
+
+        public string Birthday
+        {
+            get => birthday;
+            set => SetProperty(ref birthday, value);
+        }
+
+        public string CardIssued
+        {
+            get => cardIssued;
+            set => SetProperty(ref cardIssued, value);
+        }
+
+        public string Sex
+        {
+            get => sex;
+            set => SetProperty(ref sex, value);
+        }
+
+        public string Contact
+        {
+            get => contact;
+            set => SetProperty(ref contact, value);
+        }
+
+        public string Email
+        {
+            get => email;
+            set => SetProperty(ref email, value);
         }
 
         public string ItemId
@@ -75,13 +110,19 @@ namespace AutoBarBar.ViewModels
         {
             try
             {
-                var item = await DataStore.GetItemAsync(itemId);
-                Id = item.Id;
-                C_Name = item.C_Name;
+                var item = await OrderLineDataStore.GetItemAsync(itemId);
+                var customer = await CustomerDataStore.GetItemAsync(item.CustomerId);
+                Id = customer.Id;
+                Name = customer.Name;
+                Status = customer.Status;
+                Image = customer.ImageLink;
+                Birthday = customer.Birthday;
+                CardIssued = customer.CardIssued;
+                Sex = customer.Sex;
+                Contact = customer.Contact;
+                Email = customer.Email;
                 Time = new DateTime(2022, 8, 18);
                 Price = item.Price;
-                Status = item.Status;
-                Image = item.Image;
             }
             catch (Exception)
             {

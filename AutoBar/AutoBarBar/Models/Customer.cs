@@ -11,5 +11,7 @@
         public string CardIssued { get; set; }
         public double CurrentBalance { get; set; }
         public string TotalPoints { get; set; }
+        public string ImageLink { get; set; }
+        public string Status { get; set; }
     }
 }

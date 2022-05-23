@@ -5,7 +5,6 @@
              xmlns:model="clr-namespace:AutoBarBar.Models"
              x:DataType="viewmodels:AOrderDetailViewModel"
              x:Class="AutoBarBar.Views.AOrderDetailPage"
-             Title="{Binding Title}"
              Shell.NavBarIsVisible="False">
     
     <ContentPage.BindingContext>
@@ -32,16 +31,16 @@
                        IsClippedToBounds="True" Grid.Column="1" Grid.RowSpan="3">
                     <Image x:Name="ProfilePic" Source="{Binding Image}" Aspect="AspectFit"/>
                 </Frame>
-                <Label Text="{Binding C_Name}" FontSize="20" FontAttributes="Bold" Grid.Column="2" Grid.Row="0" 
+                <Label Text="{Binding Name}" FontSize="20" FontAttributes="Bold" Grid.Column="2" Grid.Row="0" 
                        VerticalOptions="End"/>
                 <Label Text="{Binding Status, StringFormat='Status: {0:F0}'}" FontSize="16" Grid.Column="2" Grid.Row="1"/>
-                <Label Text="Email:test@email.com" FontSize="16" Grid.Column="2" Grid.Row="2"/>
-                <Label Text="Mobile #: 09123456789" FontSize="16" Grid.Column="3" Grid.Row="0" 
+                <Label Text="{Binding Email, StringFormat='Email: {0:F0}'}" FontSize="16" Grid.Column="2" Grid.Row="2"/>
+                <Label Text="{Binding Contact, StringFormat='Mobile #: {0:F0}'}" FontSize="16" Grid.Column="3" Grid.Row="0" 
                        VerticalOptions="End"/>
-                <Label Text="{Binding Time, StringFormat='Birthday: {0:MMM dd, yyyy}'}" FontSize="16" Grid.Column="3"
+                <Label Text="{Binding Birthday, StringFormat='Birthday: {0:MMM dd, yyyy}'}" FontSize="16" Grid.Column="3"
                        Grid.Row="1"/>
-                <Label Text="Sex:" FontSize="16" Grid.Column="3" Grid.Row="2"/>
-                <Label Text="{Binding Time, StringFormat='Card Issued: {0:MMM dd, yyyy}'}" FontSize="16" Grid.Column="4"
+                <Label Text="{Binding Sex, StringFormat='Sex: {0:F0}'}" FontSize="16" Grid.Column="3" Grid.Row="2"/>
+                <Label Text="{Binding CardIssued, StringFormat='Card Issued: {0:MMM dd, yyyy}'}" FontSize="16" Grid.Column="4"
                        Grid.Row="0" VerticalOptions="End"/>
             </Grid>
             <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="Center">

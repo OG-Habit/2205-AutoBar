@@ -11,21 +11,21 @@ namespace AutoBarBar.ViewModels
 {
     public class AHomeViewModel: BaseViewModel
     {
-        private Item _selectedCustomer;
-        public ObservableCollection<Item> Customer { get; }
+        private OrderLine _selectedCustomer;
+        public ObservableCollection<OrderLine> Customer { get; }
         public Command LoadCustomerCommand { get; }
-        public Command<Item> CustomerTapped { get; }
+        public Command<OrderLine> CustomerTapped { get; }
         public DateTime Today { get; set; }
 
         public AHomeViewModel()
         {
             Title = "Home";
             Today = DateTime.Today;
-            Customer = new ObservableCollection<Item>();
+            Customer = new ObservableCollection<OrderLine>();
             
             LoadCustomerCommand = new Command(async () => await ExecuteLoadItemsCommand());
             
-            CustomerTapped = new Command<Item>(OnCustomerSelected);
+            CustomerTapped = new Command<OrderLine>(OnCustomerSelected);
         }
 
         async Task ExecuteLoadItemsCommand()
@@ -35,7 +35,7 @@ namespace AutoBarBar.ViewModels
             try
             {
                 Customer.Clear();
-                var items = await DataStore.GetItemsAsync(true);
+                var items = await OrderLineDataStore.GetItemsAsync(true);
                 foreach (var item in items)
                 {
                     Customer.Add(item);
@@ -56,7 +56,7 @@ namespace AutoBarBar.ViewModels
             IsBusy = true;
         }
 
-        public Item SelectedCustomer
+        public OrderLine SelectedCustomer
         {
             get => _selectedCustomer;
             set
@@ -66,7 +66,7 @@ namespace AutoBarBar.ViewModels
             }
         }
 
-        async void OnCustomerSelected(Item item)
+        async void OnCustomerSelected(OrderLine item)
         {
             if (item == null)
                 return;
@@ -81,7 +81,7 @@ namespace AutoBarBar.ViewModels
 
             await ExecuteLoadItemsCommand();
 
-            var items = Customer.Where(x => x.C_Name.ToLowerInvariant().Contains(searchTerm)).ToList();
+            var items = Customer.Where(x => x.CustomerName.ToLowerInvariant().Contains(searchTerm)).ToList();
 
             foreach (var item in Customer.ToList())
             {

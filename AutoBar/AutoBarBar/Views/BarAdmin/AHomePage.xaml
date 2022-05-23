@@ -40,7 +40,7 @@
                 <CollectionView x:Name="ListView" ItemsSource="{Binding Customer}" SelectionMode="None">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <StackLayout Padding="30,10" x:DataType="model:Item">
+                            <StackLayout Padding="30,10" x:DataType="model:OrderLine">
                                 <Frame HasShadow="True" CornerRadius="20" Padding="7">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
@@ -52,21 +52,21 @@
                                         </Grid.ColumnDefinitions>
                                         <Frame Padding="0" HorizontalOptions="Center" CornerRadius="200" WidthRequest="50" 
                                                HasShadow="False" IsClippedToBounds="True" Grid.Column="0" BackgroundColor="Transparent">
-                                            <Image x:Name="ProfilePic" Source="{Binding Image}" Aspect="AspectFit"/>
+                                            <Image x:Name="ProfilePic" Source="default_pic" Aspect="AspectFit"/>
                                         </Frame>
-                                        <Label Text="{Binding C_Name}" LineBreakMode="NoWrap" FontSize="16" Grid.Column="1"
+                                        <Label Text="{Binding CustomerName}" LineBreakMode="NoWrap" FontSize="16" Grid.Column="1"
                                                VerticalOptions="Center"/>
-                                        <Label Text="{Binding Drink}" LineBreakMode="NoWrap" FontSize="16" Grid.Column="2"
+                                        <Label Text="{Binding ProductName}" LineBreakMode="NoWrap" FontSize="16" Grid.Column="2"
                                                VerticalOptions="Center"/>
                                         <Grid Grid.Column="3" RowDefinitions="2" VerticalOptions="Center">
-                                            <Label Text="{Binding Time, StringFormat='{0:MMMM dd, yyyy}'}" LineBreakMode="NoWrap" 
+                                            <Label Text="{Binding CreatedOn, StringFormat='{0:MMMM dd, yyyy}'}" LineBreakMode="NoWrap" 
                                                FontSize="16" Grid.Row="1"/>
-                                            <Label Text="{Binding Time, StringFormat='{0:h:mm tt}'}" LineBreakMode="NoWrap" 
+                                            <Label Text="{Binding CreatedOn, StringFormat='{0:h:mm tt}'}" LineBreakMode="NoWrap" 
                                                FontSize="12" Grid.Row="2"/>
                                         </Grid>
                                         <Label Text="{Binding Price}" LineBreakMode="NoWrap" FontSize="16" Grid.Column="4"
                                                VerticalOptions="Center"/>
-                                        <Label Text="{Binding Status}" LineBreakMode="NoWrap" FontSize="16" Grid.Column="5"
+                                        <Label Text="{Binding CustomerId}" LineBreakMode="NoWrap" FontSize="16" Grid.Column="5"
                                                VerticalOptions="Center"/>
                                     </Grid>
                                 </Frame>

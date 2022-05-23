@@ -20,7 +20,7 @@ namespace AutoBarBar.Services
         {
             items = new List<Item>()
             {
-                new Item { Id = Guid.NewGuid().ToString(), Text = "First item", Description="This is an item description.",
+                new Item { Id = "1", Text = "First item", Description="This is an item description.",
                            C_Name="ABC DEF", B_Name="ZYX WVU", Drink="Champagne", Reward="First Reward", Image="default_pic",
                            Status="Member", Email="zxy@email.com", Price="100.00", Points="100", Time=DateTime.Today },
                 new Item { Id = Guid.NewGuid().ToString(), Text = "Second item", Description = "This is an item description.",
@@ -45,10 +45,10 @@ namespace AutoBarBar.Services
 
             customers = new List<Customer>()
             {
-                new Customer { Id = Guid.NewGuid().ToString(), Name = "Adam Smith", Birthday = "Jan 1, 2001", CardIssued = "Jan 2, 2010", Contact = "09123294756", CurrentBalance = 1000, Email = "adamsmith@gmail.com", Sex="Male", TotalPoints="100"},
-                new Customer { Id = Guid.NewGuid().ToString(), Name = "Bam Carousel", Birthday = "Feb 1, 2001", CardIssued = "Feb 2, 2010", Contact = "09123864756", CurrentBalance = 2000, Email = "bamcarousel@gmail.com", Sex="Male", TotalPoints="200"},
-                new Customer { Id = Guid.NewGuid().ToString(), Name = "Caroline Smith", Birthday = "Mar 1, 2001", CardIssued = "Mar 2, 2010", Contact = "09123294756", CurrentBalance = 1500, Email = "caroline@gmail.com", Sex="Female", TotalPoints="300"},
-                new Customer { Id = Guid.NewGuid().ToString(), Name = "Diana Wonderwoman", Birthday = "Apr 1, 2001", CardIssued = "Apr 2, 2010", Contact = "09123294756", CurrentBalance = 3000, Email = "diana@gmail.com", Sex="Female", TotalPoints="300"}
+                new Customer { Id = "1", Name = "Adam Smith", Birthday = "Jan 1, 2001", CardIssued = "Jan 2, 2010", Contact = "09123294756", CurrentBalance = 1000, Email = "adamsmith@gmail.com", Sex="Male", TotalPoints="100", ImageLink = "default_pic.png", Status="Member"},
+                new Customer { Id = "2", Name = "Bam Carousel", Birthday = "Feb 1, 2001", CardIssued = "Feb 2, 2010", Contact = "09123864756", CurrentBalance = 2000, Email = "bamcarousel@gmail.com", Sex="Male", TotalPoints="200", ImageLink = "default_pic.png", Status="Member"},
+                new Customer { Id = "3", Name = "Caroline Smith", Birthday = "Mar 1, 2001", CardIssued = "Mar 2, 2010", Contact = "09123294756", CurrentBalance = 1500, Email = "caroline@gmail.com", Sex="Female", TotalPoints="300", ImageLink = "default_pic.png", Status="Member"},
+                new Customer { Id = "4", Name = "Diana Wonderwoman", Birthday = "Apr 1, 2001", CardIssued = "Apr 2, 2010", Contact = "09123294756", CurrentBalance = 3000, Email = "diana@gmail.com", Sex="Female", TotalPoints="300", ImageLink = "default_pic.png", Status="Member"}
             };
 
             products = new List<Product>()
@@ -66,13 +66,13 @@ namespace AutoBarBar.Services
 
             orderLines = new List<OrderLine>()
             {
-                new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Adam Smith", ProductName="Apple", Price=45.50, Quantity=3, CreatedOn = "7:30PM"}, 
-                new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Adam Smith", ProductName="Beans", Price=95.50, Quantity=2, CreatedOn = "7:30PM"},
-                new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Adam Smith", ProductName="Duck", Price=399.99, Quantity=1, CreatedOn = "8:30PM"},
-                new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Adam Smith", ProductName="Egg", Price=10.00, Quantity=10, CreatedOn = "10:30PM"},
-                new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Adam Smith", ProductName="Carrots", Price=60.75, Quantity=3, CreatedOn = "8:30PM"},
-                new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Adam Smith", ProductName="Apple", Price=45.50, Quantity=5, CreatedOn = "8:30PM"},
-                new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Bam Carousel", ProductName="Apple", Price=45.50, Quantity=5, CreatedOn = "8:30PM"}
+                new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Adam Smith", ProductName="Apple", Price=45.50, Quantity=3, CreatedOn = "7:30PM", CustomerId="1"}, 
+                new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Adam Smith", ProductName="Beans", Price=95.50, Quantity=2, CreatedOn = "7:30PM", CustomerId="1"},
+                new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Adam Smith", ProductName="Duck", Price=399.99, Quantity=1, CreatedOn = "8:30PM", CustomerId="1"},
+                new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Adam Smith", ProductName="Egg", Price=10.00, Quantity=10, CreatedOn = "10:30PM", CustomerId="1"},
+                new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Adam Smith", ProductName="Carrots", Price=60.75, Quantity=3, CreatedOn = "8:30PM", CustomerId="1"},
+                new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Adam Smith", ProductName="Apple", Price=45.50, Quantity=5, CreatedOn = "8:30PM", CustomerId="1"},
+                new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Bam Carousel", ProductName="Apple", Price=45.50, Quantity=5, CreatedOn = "8:30PM", CustomerId="2"}
             };
 
             orders = new List<Order>()
@@ -202,9 +202,9 @@ namespace AutoBarBar.Services
             throw new NotImplementedException();
         }
 
-        Task<OrderLine> IDataStore<OrderLine>.GetItemAsync(string id)
+        async Task<OrderLine> IDataStore<OrderLine>.GetItemAsync(string id)
         {
-            throw new NotImplementedException();
+            return await Task.FromResult(orderLines.FirstOrDefault(s => s.Id == id));
         }
 
         async Task<IEnumerable<OrderLine>> IDataStore<OrderLine>.GetItemsAsync(bool forceRefresh)
