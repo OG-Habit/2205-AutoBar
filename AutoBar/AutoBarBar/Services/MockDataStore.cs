@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace AutoBarBar.Services
 {
-    public class MockDataStore : IDataStore<Item>, IDataStore<Customer>, IDataStore<Product>, IDataStore<OrderLine>, IDataStore<Order>, IDataStore<Reward>, IDataStore<Bartender>
+    public class MockDataStore : IDataStore<Customer>, IDataStore<Product>, IDataStore<OrderLine>, IDataStore<Order>, IDataStore<Reward>, IDataStore<Bartender>
     {
-        readonly List<Item> items;
         readonly List<Customer> customers;
         readonly List<Product> products;
         readonly List<OrderLine> orderLines;
@@ -18,31 +17,6 @@ namespace AutoBarBar.Services
 
         public MockDataStore()
         {
-            items = new List<Item>()
-            {
-                new Item { Id = "1", Text = "First item", Description="This is an item description.",
-                           C_Name="ABC DEF", B_Name="ZYX WVU", Drink="Champagne", Reward="First Reward", Image="default_pic",
-                           Status="Member", Email="zxy@email.com", Price="100.00", Points="100", Time=DateTime.Today },
-                new Item { Id = Guid.NewGuid().ToString(), Text = "Second item", Description = "This is an item description.",
-                           C_Name="GHI JKL", B_Name="TSR QPO", Drink="Wine", Reward="Second Reward", Image="default_pic",
-                           Status="Guest", Email="tsr@email.com", Price="100.00", Points="100", Time=DateTime.Today  },
-                new Item { Id = Guid.NewGuid().ToString(), Text = "Third item", Description = "This is an item description.",
-                           C_Name="MNO PQR", B_Name="NML KJI", Drink="Tequila", Reward="Third Reward", Image="default_pic",
-                           Status="Guest", Email="nml@email.com", Price="100.00", Points="100", Time=DateTime.Today  },
-                new Item { Id = Guid.NewGuid().ToString(), Text = "Fourth item", Description = "This is an item description.",
-                           C_Name="STU VWX", B_Name="HGF EDC", Drink="Margarita", Reward="Fourth Reward", Image="default_pic",
-                           Status="Member", Email="hgf@email.com", Price="100.00", Points="100", Time=DateTime.Today  },
-                new Item { Id = Guid.NewGuid().ToString(), Text = "Fifth item", Description = "This is an item description.",
-                           C_Name="YZA BCD", B_Name="BAZ YXW", Drink="Mojito", Reward="Fifth Reward", Image="default_pic",
-                           Status="Member", Email="baz@email.com", Price="100.00", Points="100", Time=DateTime.Today  },
-                new Item { Id = Guid.NewGuid().ToString(), Text = "Sixth item", Description = "This is an item description.",
-                           C_Name="EFG HIJ", B_Name="VUT SRQ", Drink="Mimosa", Reward="Sixth Reward", Image="default_pic",
-                           Status="Guest", Email="vut@email.com", Price="100.00", Points="100", Time=DateTime.Today  },
-                new Item { Id = Guid.NewGuid().ToString(), Text = "Seventh item", Description = "This is an item description.",
-                           C_Name="KLM NOP", B_Name="PON MLK", Drink="Pina Colada", Reward="Seventh Reward", Image="default_pic",
-                           Status="Member", Email="pon@email.com", Price="100.00", Points="100", Time=DateTime.Today  }
-            };
-
             customers = new List<Customer>()
             {
                 new Customer { Id = "1", Name = "Adam Smith", Birthday = Convert.ToDateTime("Jan 1, 2001"), CardIssued = Convert.ToDateTime("Jan 2, 2010"), Contact = "09123294756", CurrentBalance = 1000, Email = "adamsmith@gmail.com", Sex="Male", TotalPoints="100", ImageLink = "default_pic.png", Status="Member"},
@@ -95,46 +69,6 @@ namespace AutoBarBar.Services
                 new Bartender { Id = Guid.NewGuid().ToString(), Name = "Bartender Four", Birthday = Convert.ToDateTime("Apr 1, 2001"), Contact = "09123294756", Email = "four@gmail.com", Sex="Female", ImageLink = "default_pic.png"}
             };
         }
-        #region Item
-        public async Task<bool> AddItemAsync(Item item)
-        {
-            items.Add(item);
-
-            return await Task.FromResult(true);
-        }
-
-        public async Task<bool> UpdateItemAsync(Item item)
-        {
-            var oldItem = items.Where((Item arg) => arg.Id == item.Id).FirstOrDefault();
-            items.Remove(oldItem);
-            items.Add(item);
-
-            return await Task.FromResult(true);
-        }
-
-        public async Task<bool> DeleteItemAsync(string id)
-        {
-            var oldItem = items.Where((Item arg) => arg.Id == id).FirstOrDefault();
-            items.Remove(oldItem);
-
-            return await Task.FromResult(true);
-        }
-
-        public async Task<Item> GetItemAsync(string id)
-        {
-            return await Task.FromResult(items.FirstOrDefault(s => s.Id == id));
-        }
-
-        public async Task<IEnumerable<Item>> GetItemsAsync(bool forceRefresh = false)
-        {
-            return await Task.FromResult(items);
-        }
-
-        public Task<IEnumerable<Item>> GetSearchResults(string query)
-        {
-            throw new NotImplementedException();
-        }
-        #endregion
 
         #region Customer
         public async Task<bool> AddItemAsync(Customer item)
@@ -144,9 +78,21 @@ namespace AutoBarBar.Services
             return await Task.FromResult(true);
         }
 
-        public Task<bool> UpdateItemAsync(Customer item)
+        public async Task<bool> UpdateItemAsync(Customer item)
         {
-            throw new NotImplementedException();
+            var oldItem = customers.Where((Customer arg) => arg.Id == item.Id).FirstOrDefault();
+            customers.Remove(oldItem);
+            customers.Add(item);
+
+            return await Task.FromResult(true);
+        }
+
+        public async Task<bool> DeleteItemAsync(string id)
+        {
+            var oldItem = customers.Where((Customer arg) => arg.Id == id).FirstOrDefault();
+            customers.Remove(oldItem);
+
+            return await Task.FromResult(true);
         }
 
         async Task<Customer> IDataStore<Customer>.GetItemAsync(string id)

@@ -10,7 +10,6 @@ namespace AutoBarBar.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
-        public IDataStore<Item> DataStore => DependencyService.Get<IDataStore<Item>>();
         public IDataStore<Customer> CustomerDataStore => DependencyService.Get<IDataStore<Customer>>();
         public IDataStore<Product> ProductDataStore => DependencyService.Get<IDataStore<Product>>();
         public IDataStore<OrderLine> OrderLineDataStore => DependencyService.Get<IDataStore<OrderLine>>();
