@@ -337,6 +337,11 @@ namespace AutoBarBar.Services
         {
             return await Task.FromResult(bartenders);
         }
+
+        Task<IEnumerable<Bartender>> IDataStore<Bartender>.GetSearchResults(string query)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
     }
 }
