@@ -23,16 +23,16 @@
                 <Grid RowDefinitions="Auto">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="10"/>
-                        <ColumnDefinition Width="260"/>
-                        <ColumnDefinition Width="200"/>
-                        <ColumnDefinition Width="145"/>
+                        <ColumnDefinition Width="277"/>
+                        <ColumnDefinition Width="150"/>
+                        <ColumnDefinition Width="150"/>
                         <ColumnDefinition Width="200"/>
                     </Grid.ColumnDefinitions>
-                    <Label Text="Customer" LineBreakMode="NoWrap" FontSize="20" Grid.Column="1" />
-                    <Label Text="Menu" LineBreakMode="NoWrap" FontSize="20" Grid.Column="2"/>
-                    <Label Text="Date" LineBreakMode="NoWrap" FontSize="20" Grid.Column="3"/>
-                    <Label Text="Total Payment" LineBreakMode="NoWrap" FontSize="20" Grid.Column="4"/>
-                    <Label Text="Status" LineBreakMode="NoWrap" FontSize="20" Grid.Column="5"/>
+                    <Label Text="Customer" LineBreakMode="NoWrap" FontSize="20" Grid.Column="1"/>
+                    <Label Text="Date" LineBreakMode="NoWrap" FontSize="20" Grid.Column="2" HorizontalTextAlignment="Center"/>
+                    <Label Text="Points" LineBreakMode="NoWrap" FontSize="20" Grid.Column="3" HorizontalTextAlignment="Center"/>
+                    <Label Text="Total Payment" LineBreakMode="NoWrap" FontSize="20" Grid.Column="4" HorizontalTextAlignment="Center"/>
+                    <Label Text="Status" LineBreakMode="NoWrap" FontSize="20" Grid.Column="5" HorizontalTextAlignment="Center"/>
                 </Grid>
             </StackLayout>
             <RefreshView x:DataType="vm:AHomeViewModel" Command="{Binding LoadCustomerCommand}" 
@@ -40,34 +40,39 @@
                 <CollectionView x:Name="ListView" ItemsSource="{Binding Customer}" SelectionMode="None">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <StackLayout Padding="30,10" x:DataType="model:OrderLine">
+                            <StackLayout Padding="30,10" x:DataType="model:Order">
                                 <Frame HasShadow="True" CornerRadius="20" Padding="7">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="60"/>
-                                            <ColumnDefinition Width="200"/>
-                                            <ColumnDefinition Width="200"/>
+                                            <ColumnDefinition Width="10"/>
+                                            <ColumnDefinition Width="270"/>
+                                            <ColumnDefinition Width="150"/>
                                             <ColumnDefinition Width="150"/>
                                             <ColumnDefinition Width="200"/>
                                         </Grid.ColumnDefinitions>
-                                        <Frame Padding="0" HorizontalOptions="Center" CornerRadius="200" WidthRequest="50" 
-                                               HasShadow="False" IsClippedToBounds="True" Grid.Column="0" BackgroundColor="Transparent">
-                                            <Image x:Name="ProfilePic" Source="default_pic" Aspect="AspectFit"/>
-                                        </Frame>
                                         <Label Text="{Binding CustomerName}" LineBreakMode="NoWrap" FontSize="16" Grid.Column="1"
                                                VerticalOptions="Center"/>
-                                        <Label Text="{Binding ProductName}" LineBreakMode="NoWrap" FontSize="16" Grid.Column="2"
-                                               VerticalOptions="Center"/>
-                                        <Grid Grid.Column="3" RowDefinitions="2" VerticalOptions="Center">
-                                            <Label Text="{Binding CreatedOn, StringFormat='{0:MMMM dd, yyyy}'}" LineBreakMode="NoWrap" 
-                                               FontSize="16" Grid.Row="1"/>
-                                            <Label Text="{Binding CreatedOn, StringFormat='{0:h:mm tt}'}" LineBreakMode="NoWrap" 
-                                               FontSize="12" Grid.Row="2"/>
+                                        <Grid Grid.Column="2" RowDefinitions="2" VerticalOptions="Center">
+                                            <Label Text="{Binding ClosedOn, StringFormat='{0:MMM dd, yyyy}'}" LineBreakMode="NoWrap" 
+                                               FontSize="16" Grid.Row="1" HorizontalTextAlignment="Center"/>
+                                            <Label Text="{Binding ClosedOn, StringFormat='{0:h:mm tt}'}" LineBreakMode="NoWrap" 
+                                               FontSize="12" Grid.Row="2" HorizontalTextAlignment="Center"/>
                                         </Grid>
-                                        <Label Text="{Binding Price}" LineBreakMode="NoWrap" FontSize="16" Grid.Column="4"
-                                               VerticalOptions="Center"/>
-                                        <Label Text="{Binding CustomerId}" LineBreakMode="NoWrap" FontSize="16" Grid.Column="5"
-                                               VerticalOptions="Center"/>
+                                        <Label Text="{Binding PointsEarned}" LineBreakMode="NoWrap" FontSize="16" Grid.Column="3"
+                                               VerticalOptions="Center" HorizontalTextAlignment="Center"/>
+                                        <Label Text="{Binding TotalPrice , StringFormat='PHP {0}'}" LineBreakMode="NoWrap" FontSize="16" Grid.Column="4"
+                                               VerticalOptions="Center" HorizontalTextAlignment="Center"/>
+                                        <Label Text="{Binding OrderStatus}" LineBreakMode="NoWrap" FontSize="16" Grid.Column="5"
+                                               VerticalOptions="Center" HorizontalTextAlignment="Center">
+                                            <Label.Triggers>
+                                                <DataTrigger TargetType="Label" Value="True" Binding="{Binding OrderStatus}">
+                                                    <Setter Property="Text"  Value="Active" />
+                                                </DataTrigger>
+                                                <DataTrigger TargetType="Label" Value="False" Binding="{Binding OrderStatus}">
+                                                    <Setter Property="Text"  Value="Not Active" />
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
                                     </Grid>
                                 </Frame>
                                 <StackLayout.GestureRecognizers>

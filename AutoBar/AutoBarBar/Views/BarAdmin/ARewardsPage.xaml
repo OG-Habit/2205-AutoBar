@@ -42,8 +42,8 @@
                                             <RowDefinition Height="20" />
                                             <RowDefinition Height="25" />
                                         </Grid.RowDefinitions>
-                                        <Frame Padding="0" HorizontalOptions="Center" CornerRadius="200" WidthRequest="100" 
-                                               HasShadow="False" IsClippedToBounds="True" Grid.Row="0">
+                                        <Frame Padding="0" HorizontalOptions="Center" WidthRequest="100" HasShadow="False"
+                                               IsClippedToBounds="True" Grid.Row="0">
                                             <Image x:Name="ProfilePic" Source="{Binding ImageLink}" Aspect="AspectFit"/>
                                         </Frame>
                                         <Label Text="{Binding Points, StringFormat='Points: {0}'}" LineBreakMode="NoWrap" FontSize="18" Grid.Row="1" 

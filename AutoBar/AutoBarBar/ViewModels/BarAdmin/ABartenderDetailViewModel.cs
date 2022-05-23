@@ -12,7 +12,7 @@ namespace AutoBarBar.ViewModels
         private string name;
         private string email;
         private string contact;
-        private string birthday;
+        private DateTime birthday;
         private string sex;
         private string image;
 
@@ -48,7 +48,7 @@ namespace AutoBarBar.ViewModels
             set => SetProperty(ref contact, value);
         }
 
-        public string Birthday
+        public DateTime Birthday
         {
             get => birthday;
             set => SetProperty(ref birthday, value);

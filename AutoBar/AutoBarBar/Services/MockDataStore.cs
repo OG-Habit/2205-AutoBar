@@ -45,10 +45,10 @@ namespace AutoBarBar.Services
 
             customers = new List<Customer>()
             {
-                new Customer { Id = "1", Name = "Adam Smith", Birthday = "Jan 1, 2001", CardIssued = "Jan 2, 2010", Contact = "09123294756", CurrentBalance = 1000, Email = "adamsmith@gmail.com", Sex="Male", TotalPoints="100", ImageLink = "default_pic.png", Status="Member"},
-                new Customer { Id = "2", Name = "Bam Carousel", Birthday = "Feb 1, 2001", CardIssued = "Feb 2, 2010", Contact = "09123864756", CurrentBalance = 2000, Email = "bamcarousel@gmail.com", Sex="Male", TotalPoints="200", ImageLink = "default_pic.png", Status="Member"},
-                new Customer { Id = "3", Name = "Caroline Smith", Birthday = "Mar 1, 2001", CardIssued = "Mar 2, 2010", Contact = "09123294756", CurrentBalance = 1500, Email = "caroline@gmail.com", Sex="Female", TotalPoints="300", ImageLink = "default_pic.png", Status="Member"},
-                new Customer { Id = "4", Name = "Diana Wonderwoman", Birthday = "Apr 1, 2001", CardIssued = "Apr 2, 2010", Contact = "09123294756", CurrentBalance = 3000, Email = "diana@gmail.com", Sex="Female", TotalPoints="300", ImageLink = "default_pic.png", Status="Member"}
+                new Customer { Id = "1", Name = "Adam Smith", Birthday = Convert.ToDateTime("Jan 1, 2001"), CardIssued = Convert.ToDateTime("Jan 2, 2010"), Contact = "09123294756", CurrentBalance = 1000, Email = "adamsmith@gmail.com", Sex="Male", TotalPoints="100", ImageLink = "default_pic.png", Status="Member"},
+                new Customer { Id = "2", Name = "Bam Carousel", Birthday = Convert.ToDateTime("Feb 1, 2001"), CardIssued = Convert.ToDateTime("Feb 2, 2010"), Contact = "09123864756", CurrentBalance = 2000, Email = "bamcarousel@gmail.com", Sex="Male", TotalPoints="200", ImageLink = "default_pic.png", Status="Member"},
+                new Customer { Id = "3", Name = "Caroline Smith", Birthday = Convert.ToDateTime("Mar 1, 2001"), CardIssued = Convert.ToDateTime("Mar 2, 2010"), Contact = "09123294756", CurrentBalance = 1500, Email = "caroline@gmail.com", Sex="Female", TotalPoints="300", ImageLink = "default_pic.png", Status="Member"},
+                new Customer { Id = "4", Name = "Diana Wonderwoman", Birthday = Convert.ToDateTime("Apr 1, 2001"), CardIssued = Convert.ToDateTime("Apr 2, 2010"), Contact = "09123294756", CurrentBalance = 3000, Email = "diana@gmail.com", Sex="Female", TotalPoints="300", ImageLink = "default_pic.png", Status="Member"}
             };
 
             products = new List<Product>()
@@ -66,19 +66,19 @@ namespace AutoBarBar.Services
 
             orderLines = new List<OrderLine>()
             {
-                new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Adam Smith", ProductName="Apple", Price=45.50, Quantity=3, CreatedOn = "7:30PM", CustomerId="1"}, 
-                new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Adam Smith", ProductName="Beans", Price=95.50, Quantity=2, CreatedOn = "7:30PM", CustomerId="1"},
-                new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Adam Smith", ProductName="Duck", Price=399.99, Quantity=1, CreatedOn = "8:30PM", CustomerId="1"},
-                new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Adam Smith", ProductName="Egg", Price=10.00, Quantity=10, CreatedOn = "10:30PM", CustomerId="1"},
-                new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Adam Smith", ProductName="Carrots", Price=60.75, Quantity=3, CreatedOn = "8:30PM", CustomerId="1"},
-                new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Adam Smith", ProductName="Apple", Price=45.50, Quantity=5, CreatedOn = "8:30PM", CustomerId="1"},
-                new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Bam Carousel", ProductName="Apple", Price=45.50, Quantity=5, CreatedOn = "8:30PM", CustomerId="2"}
+                new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Adam Smith", ProductName="Apple", Price=45.50, Quantity=3, CreatedOn = "7:30PM", OrderId="10", ProductImgUrl="default_pic.png"}, 
+                new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Adam Smith", ProductName="Beans", Price=95.50, Quantity=2, CreatedOn = "7:30PM", OrderId="10", ProductImgUrl="default_pic.png"},
+                new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Adam Smith", ProductName="Duck", Price=399.99, Quantity=1, CreatedOn = "8:30PM", OrderId="10", ProductImgUrl="default_pic.png"},
+                new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Adam Smith", ProductName="Egg", Price=10.00, Quantity=10, CreatedOn = "10:30PM", OrderId="10", ProductImgUrl="default_pic.png"},
+                new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Adam Smith", ProductName="Carrots", Price=60.75, Quantity=3, CreatedOn = "8:30PM", OrderId="10", ProductImgUrl="default_pic.png"},
+                new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Adam Smith", ProductName="Apple", Price=45.50, Quantity=5, CreatedOn = "8:30PM", OrderId="10", ProductImgUrl="default_pic.png"},
+                new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Bam Carousel", ProductName="Apple", Price=45.50, Quantity=5, CreatedOn = "8:30PM", OrderId="11", ProductImgUrl="default_pic.png"}
             };
 
             orders = new List<Order>()
             {
-                new Order { Id = Guid.NewGuid().ToString(), OpenedOn = "7:25 PM", CustomerName="Adam Smith", TotalPrice=1236.25, PointsEarned = 100, OrderStatus=false},
-                new Order { Id = Guid.NewGuid().ToString(), OpenedOn = "8:25 PM", CustomerName="Bam Carousel", TotalPrice=227.5, PointsEarned = 0, OrderStatus=false}
+                new Order { Id = "10", OpenedOn = DateTime.Today, ClosedOn = DateTime.Today, CustomerName="Adam Smith", TotalPrice=1236.25, PointsEarned = 100, OrderStatus=false, CustomerId="1", BartenderName="Bartender One", Reward="No Reward"},
+                new Order { Id = "11", OpenedOn = DateTime.Today, ClosedOn = DateTime.Today, CustomerName="Bam Carousel", TotalPrice=227.5, PointsEarned = 0, OrderStatus=false, CustomerId="2", BartenderName="Bartender Three", Reward="No Reward"}
             };
 
             rewards = new List<Reward>()
@@ -89,10 +89,10 @@ namespace AutoBarBar.Services
 
             bartenders = new List<Bartender>()
             {
-                new Bartender { Id = Guid.NewGuid().ToString(), Name = "Bartender One", Birthday = "Jan 1, 2001", Contact = "09123294756", Email = "one@gmail.com", Sex="Male", ImageLink = "default_pic.png"},
-                new Bartender { Id = Guid.NewGuid().ToString(), Name = "Bartender Two", Birthday = "Feb 1, 2001", Contact = "09123864756", Email = "two@gmail.com", Sex="Male", ImageLink = "default_pic.png"},
-                new Bartender { Id = Guid.NewGuid().ToString(), Name = "Bartender Three", Birthday = "Mar 1, 2001", Contact = "09123294756", Email = "three@gmail.com", Sex="Female", ImageLink = "default_pic.png"},
-                new Bartender { Id = Guid.NewGuid().ToString(), Name = "Bartender Four", Birthday = "Apr 1, 2001", Contact = "09123294756", Email = "four@gmail.com", Sex="Female", ImageLink = "default_pic.png"}
+                new Bartender { Id = Guid.NewGuid().ToString(), Name = "Bartender One", Birthday = Convert.ToDateTime("Jan 1, 2001"), Contact = "09123294756", Email = "one@gmail.com", Sex="Male", ImageLink = "default_pic.png"},
+                new Bartender { Id = Guid.NewGuid().ToString(), Name = "Bartender Two", Birthday = Convert.ToDateTime("Feb 1, 2001"), Contact = "09123864756", Email = "two@gmail.com", Sex="Male", ImageLink = "default_pic.png"},
+                new Bartender { Id = Guid.NewGuid().ToString(), Name = "Bartender Three", Birthday = Convert.ToDateTime("Mar 1, 2001"), Contact = "09123294756", Email = "three@gmail.com", Sex="Female", ImageLink = "default_pic.png"},
+                new Bartender { Id = Guid.NewGuid().ToString(), Name = "Bartender Four", Birthday = Convert.ToDateTime("Apr 1, 2001"), Contact = "09123294756", Email = "four@gmail.com", Sex="Female", ImageLink = "default_pic.png"}
             };
         }
         #region Item
@@ -229,9 +229,10 @@ namespace AutoBarBar.Services
             return await Task.FromResult(orderLines);
         }
 
-        Task<IEnumerable<OrderLine>> IDataStore<OrderLine>.GetSearchResults(string query)
+        async Task<IEnumerable<OrderLine>> IDataStore<OrderLine>.GetSearchResults(string query)
         {
-            throw new NotImplementedException();
+            query = query.ToLowerInvariant();
+            return await Task.FromResult(orderLines.Where(c => c.OrderId.Contains(query)));
         }
         #endregion
 
@@ -246,9 +247,9 @@ namespace AutoBarBar.Services
             throw new NotImplementedException();
         }
 
-        Task<Order> IDataStore<Order>.GetItemAsync(string id)
+        async Task<Order> IDataStore<Order>.GetItemAsync(string id)
         {
-            throw new NotImplementedException();
+            return await Task.FromResult(orders.FirstOrDefault(s => s.Id == id));
         }
 
         async Task<IEnumerable<Order>> IDataStore<Order>.GetItemsAsync(bool forceRefresh)
@@ -256,9 +257,10 @@ namespace AutoBarBar.Services
             return await Task.FromResult(orders);
         }
 
-        Task<IEnumerable<Order>> IDataStore<Order>.GetSearchResults(string query)
+        async Task<IEnumerable<Order>> IDataStore<Order>.GetSearchResults(string query)
         {
-            throw new NotImplementedException();
+            query = query.ToLowerInvariant();
+            return await Task.FromResult(orders.Where(c => c.CustomerName.ToLowerInvariant().Contains(query)));
         }
         #endregion
 
@@ -297,9 +299,10 @@ namespace AutoBarBar.Services
             return await Task.FromResult(rewards);
         }
 
-        Task<IEnumerable<Reward>> IDataStore<Reward>.GetSearchResults(string query)
+        async Task<IEnumerable<Reward>> IDataStore<Reward>.GetSearchResults(string query)
         {
-            throw new NotImplementedException();
+            query = query.ToLowerInvariant();
+            return await Task.FromResult(rewards.Where(c => c.Name.ToLowerInvariant().Contains(query)));
         }
         #endregion
 
@@ -338,9 +341,10 @@ namespace AutoBarBar.Services
             return await Task.FromResult(bartenders);
         }
 
-        Task<IEnumerable<Bartender>> IDataStore<Bartender>.GetSearchResults(string query)
+        async Task<IEnumerable<Bartender>> IDataStore<Bartender>.GetSearchResults(string query)
         {
-            throw new NotImplementedException();
+            query = query.ToLowerInvariant();
+            return await Task.FromResult(bartenders.Where(c => c.Name.ToLowerInvariant().Contains(query)));
         }
         #endregion
     }

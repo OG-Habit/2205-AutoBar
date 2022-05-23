@@ -20,7 +20,7 @@
                 <Label Text="Sex: " FontSize="20" Grid.Column="0" Grid.Row="2"/>
                 <Label Text="{Binding Sex}" FontSize="20" Grid.Column="1" Grid.Row="2"/>
                 <Label Text="Birthday: " FontSize="20" Grid.Column="0" Grid.Row="3"/>
-                <Label Text="{Binding Birthday}" FontSize="20" Grid.Column="1" Grid.Row="3"/>
+                <Label Text="{Binding Birthday, StringFormat='{0:MMM dd, yyyy}'}" FontSize="20" Grid.Column="1" Grid.Row="3"/>
                 <Label Text="Mobile No.: " FontSize="20" Grid.Column="0" Grid.Row="4"/>
                 <Label Text="{Binding Contact}" FontSize="20" Grid.Column="1" Grid.Row="4"/>
                 <Label Text="Email: " FontSize="20" Grid.Column="0" Grid.Row="5"/>

@@ -16,20 +16,23 @@ namespace AutoBarBar.ViewModels
         private double payment;
         private string status;
         private string image;
-        private string birthday;
-        private string cardIssued;
+        private DateTime birthday;
+        private DateTime cardIssued;
         private string sex;
         private string contact;
         private string email;
+        private int points;
+        private string bartender;
+        private string reward;
 
-        public ObservableCollection<Item> Items{ get; }
+        public ObservableCollection<OrderLine> Items{ get; }
         public Command LoadItemsCommand { get; }
 
         public string Id { get; set; }
 
         public AOrderDetailViewModel()
         {
-            Items = new ObservableCollection<Item>();
+            Items = new ObservableCollection<OrderLine>();
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
         }
 
@@ -63,13 +66,13 @@ namespace AutoBarBar.ViewModels
             set => SetProperty(ref image, value);
         }
 
-        public string Birthday
+        public DateTime Birthday
         {
             get => birthday;
             set => SetProperty(ref birthday, value);
         }
 
-        public string CardIssued
+        public DateTime CardIssued
         {
             get => cardIssued;
             set => SetProperty(ref cardIssued, value);
@@ -93,6 +96,24 @@ namespace AutoBarBar.ViewModels
             set => SetProperty(ref email, value);
         }
 
+        public int Points
+        {
+            get => points;
+            set => SetProperty(ref points, value);
+        }
+
+        public string Bartender
+        {
+            get => bartender;
+            set => SetProperty(ref bartender, value);
+        }
+
+        public string Reward
+        {
+            get => reward;
+            set => SetProperty(ref reward, value);
+        }
+
         public string ItemId
         {
             get
@@ -110,7 +131,7 @@ namespace AutoBarBar.ViewModels
         {
             try
             {
-                var item = await OrderLineDataStore.GetItemAsync(itemId);
+                var item = await OrderDataStore.GetItemAsync(itemId);
                 var customer = await CustomerDataStore.GetItemAsync(item.CustomerId);
                 Id = customer.Id;
                 Name = customer.Name;
@@ -121,8 +142,11 @@ namespace AutoBarBar.ViewModels
                 Sex = customer.Sex;
                 Contact = customer.Contact;
                 Email = customer.Email;
-                Time = new DateTime(2022, 8, 18);
-                Price = item.Price;
+                Time = item.ClosedOn;
+                Price = item.TotalPrice;
+                Points = item.PointsEarned;
+                Bartender = item.BartenderName;
+                Reward = item.Reward;
             }
             catch (Exception)
             {
@@ -137,7 +161,7 @@ namespace AutoBarBar.ViewModels
             try
             {
                 Items.Clear();
-                var items = await DataStore.GetItemsAsync(true);
+                var items = await OrderLineDataStore.GetSearchResults(itemId);
                 foreach (var item in items)
                 {
                     Items.Add(item);

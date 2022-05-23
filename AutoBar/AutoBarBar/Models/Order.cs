@@ -12,11 +12,10 @@ namespace AutoBarBar.Models
         public bool HasReward { get; set; }
         public double TotalPrice { get; set; }
         public int PointsEarned { get; set; }
-        public string OpenedOn { get; set; }
-        public string ClosedOn { get; set; }
-
-        
+        public DateTime OpenedOn { get; set; }
+        public DateTime ClosedOn { get; set; }
         public string CustomerName { get; set; }
-
+        public string BartenderName { get; set; }
+        public string Reward{ get; set; }
     }
 }

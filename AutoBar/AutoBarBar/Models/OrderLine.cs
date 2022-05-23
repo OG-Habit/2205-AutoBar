@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace AutoBarBar.Models
 {
@@ -17,7 +15,6 @@ namespace AutoBarBar.Models
             set => SetProperty(ref quantity, value);
         } 
         public string CreatedOn { get; set; }
-        public string CustomerId { get; set; }
         public string CustomerName { get; set; }
         public string ProductName { get; set; }
         double subTotal;

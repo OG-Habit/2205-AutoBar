@@ -106,22 +106,19 @@ namespace AutoBarBar.ViewModels
         public async void SearchBar_Change(object sender, TextChangedEventArgs e)
         {
             var searchTerm = e.NewTextValue;
-            searchTerm = searchTerm.ToLowerInvariant();
 
-            await ExecuteLoadItemsCommand();
-
-            var items = Rewards.Where(x => x.Name.ToLowerInvariant().Contains(searchTerm)).ToList();
-
-            foreach (var item in Rewards.ToList())
+            try
             {
-                if (!items.Contains(item))
-                {
-                    Rewards.Remove(item);
-                }
-                else if (!Rewards.Contains(item))
+                Rewards.Clear();
+                var items = await RewardDataStore.GetSearchResults(searchTerm);
+                foreach (var item in items)
                 {
                     Rewards.Add(item);
                 }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
             }
         }
     }

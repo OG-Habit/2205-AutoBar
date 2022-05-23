@@ -7,8 +7,7 @@
              Shell.NavBarIsVisible="False">
     <ContentPage.Content>
         <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
-            <Frame Padding="0" HorizontalOptions="Center" CornerRadius="200" WidthRequest="150" 
-                   HasShadow="False" IsClippedToBounds="True" Grid.Row="0">
+            <Frame Padding="0" HorizontalOptions="Center" WidthRequest="150" HasShadow="False" IsClippedToBounds="True" Grid.Row="0">
                 <Image x:Name="ProfilePic" Source="{Binding Image}" Aspect="AspectFit"/>
             </Frame>
             <Grid Padding="0,20">

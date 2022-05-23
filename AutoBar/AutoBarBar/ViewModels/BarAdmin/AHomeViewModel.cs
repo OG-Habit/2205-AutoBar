@@ -11,21 +11,21 @@ namespace AutoBarBar.ViewModels
 {
     public class AHomeViewModel: BaseViewModel
     {
-        private OrderLine _selectedCustomer;
-        public ObservableCollection<OrderLine> Customer { get; }
+        private Order _selectedCustomer;
+        public ObservableCollection<Order> Customer { get; }
         public Command LoadCustomerCommand { get; }
-        public Command<OrderLine> CustomerTapped { get; }
+        public Command<Order> CustomerTapped { get; }
         public DateTime Today { get; set; }
 
         public AHomeViewModel()
         {
             Title = "Home";
             Today = DateTime.Today;
-            Customer = new ObservableCollection<OrderLine>();
+            Customer = new ObservableCollection<Order>();
             
             LoadCustomerCommand = new Command(async () => await ExecuteLoadItemsCommand());
             
-            CustomerTapped = new Command<OrderLine>(OnCustomerSelected);
+            CustomerTapped = new Command<Order>(OnCustomerSelected);
         }
 
         async Task ExecuteLoadItemsCommand()
@@ -35,7 +35,7 @@ namespace AutoBarBar.ViewModels
             try
             {
                 Customer.Clear();
-                var items = await OrderLineDataStore.GetItemsAsync(true);
+                var items = await OrderDataStore.GetItemsAsync(true);
                 foreach (var item in items)
                 {
                     Customer.Add(item);
@@ -56,7 +56,7 @@ namespace AutoBarBar.ViewModels
             IsBusy = true;
         }
 
-        public OrderLine SelectedCustomer
+        public Order SelectedCustomer
         {
             get => _selectedCustomer;
             set
@@ -66,7 +66,7 @@ namespace AutoBarBar.ViewModels
             }
         }
 
-        async void OnCustomerSelected(OrderLine item)
+        async void OnCustomerSelected(Order item)
         {
             if (item == null)
                 return;
@@ -77,22 +77,19 @@ namespace AutoBarBar.ViewModels
         public async void SearchBar_Change(object sender, TextChangedEventArgs e)
         {
             var searchTerm = e.NewTextValue;
-            searchTerm = searchTerm.ToLowerInvariant();
-
-            await ExecuteLoadItemsCommand();
-
-            var items = Customer.Where(x => x.CustomerName.ToLowerInvariant().Contains(searchTerm)).ToList();
-
-            foreach (var item in Customer.ToList())
+            
+            try
             {
-                if (!items.Contains(item))
-                {
-                    Customer.Remove(item);
-                }
-                else if (!Customer.Contains(item))
+                Customer.Clear();
+                var items = await OrderDataStore.GetSearchResults(searchTerm);
+                foreach (var item in items)
                 {
                     Customer.Add(item);
                 }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
             }
         }
     }

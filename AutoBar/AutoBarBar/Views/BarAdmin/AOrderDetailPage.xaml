@@ -52,7 +52,7 @@
                                 ItemsLayout="VerticalGrid, 5">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <StackLayout Padding="10,10" x:DataType="model:Item">
+                            <StackLayout Padding="10,10" x:DataType="model:OrderLine">
                                 <Frame HasShadow="True" CornerRadius="20">
                                     <Grid>
                                         <Grid.RowDefinitions>
@@ -60,13 +60,13 @@
                                             <RowDefinition Height="20" />
                                             <RowDefinition Height="25" />
                                         </Grid.RowDefinitions>
-                                        <Frame Padding="0" HorizontalOptions="Center" CornerRadius="200" WidthRequest="100" 
-                                               HasShadow="False" IsClippedToBounds="True" Grid.Row="0">
-                                            <Image x:Name="MenuPic" Source="{Binding Image}" Aspect="AspectFit"/>
+                                        <Frame Padding="0" HorizontalOptions="Center" WidthRequest="100" HasShadow="False" 
+                                               IsClippedToBounds="True" Grid.Row="0">
+                                            <Image x:Name="MenuPic" Source="{Binding ProductImgUrl}" Aspect="AspectFit"/>
                                         </Frame>
-                                        <Label Text="{Binding Price}" LineBreakMode="NoWrap" FontSize="18" Grid.Row="1"
+                                        <Label Text="{Binding Price, StringFormat='PHP {0}'}" LineBreakMode="NoWrap" FontSize="18" Grid.Row="1"
                                                FontAttributes="Bold"/>
-                                        <Label Text="{Binding Drink}" LineBreakMode="NoWrap" FontSize="16" Grid.Row="2"/>
+                                        <Label Text="{Binding ProductName}" LineBreakMode="NoWrap" FontSize="16" Grid.Row="2"/>
                                     </Grid>
                                 </Frame>
                             </StackLayout>
@@ -95,11 +95,11 @@
                 <Label Text="{Binding Time, StringFormat='{0:h:mm tt}'}" FontSize="20" TextColor="White"
                        Grid.Column="1" Grid.Row="3"/>
                 <Label Text="Points Received" FontSize="16" TextColor="White" Grid.Column="2" Grid.Row="0"/>
-                <Label Text="10.00" FontSize="20" TextColor="White" Grid.Column="2" Grid.Row="1"/>
+                <Label Text="{Binding Points}" FontSize="20" TextColor="White" Grid.Column="2" Grid.Row="1"/>
                 <Label Text="Bartender" FontSize="16" TextColor="White" Grid.Column="2" Grid.Row="2"/>
-                <Label Text="Zxy Wvu" FontSize="20" TextColor="White" Grid.Column="2" Grid.Row="3"/>
+                <Label Text="{Binding Bartender}" FontSize="20" TextColor="White" Grid.Column="2" Grid.Row="3"/>
                 <Label Text="Reward" FontSize="16" TextColor="White" Grid.Column="3" Grid.Row="0"/>
-                <Label Text="No Reward" FontSize="20" TextColor="White" Grid.Column="3" Grid.Row="1"/>
+                <Label Text="{Binding Reward}" FontSize="20" TextColor="White" Grid.Column="3" Grid.Row="1"/>
                 <Label Text="Total" FontSize="16" TextColor="White" Grid.Column="3" Grid.Row="2"/>
                 <Label Text="{Binding Price}" FontSize="20" TextColor="White"
                        Grid.Column="3" Grid.Row="3"/>
