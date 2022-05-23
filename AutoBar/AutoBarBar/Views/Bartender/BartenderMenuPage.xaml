@@ -4,6 +4,7 @@
              xmlns:vm="clr-namespace:AutoBarBar.ViewModels"
              xmlns:model="clr-namespace:AutoBarBar.Models"
              xmlns:custom="clr-namespace:AutoBarBar.CustomRenderers"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              x:Class="AutoBarBar.Views.BartenderMenuPage"
              x:DataType="vm:BartenderHomePageViewModel"
              x:Name="PageView"
@@ -19,8 +20,15 @@
                     <Label Text="Nov 7, 2022"/>
                 </StackLayout>
                 <SearchBar Grid.Row="0" Grid.RowSpan="2" BackgroundColor="Blue"
-                           Grid.Column="1"
-                           Placeholder="Search"/>
+                           Grid.Column="1" x:Name="searchBar"
+                           Placeholder="Search">
+                    <SearchBar.Behaviors>
+                        <xct:EventToCommandBehavior
+                            EventName="TextChanged"
+                            Command="{Binding SearchProductCommand}"
+                            CommandParameter="{Binding Source={Reference searchBar}, Path=Text}"/>
+                    </SearchBar.Behaviors>
+                </SearchBar>
             </FlexLayout>
 
             <StackLayout Grid.Row="1"

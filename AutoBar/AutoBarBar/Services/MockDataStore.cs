@@ -120,6 +120,11 @@ namespace AutoBarBar.Services
         {
             return await Task.FromResult(items);
         }
+
+        public Task<IEnumerable<Item>> GetSearchResults(string query)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
 
         #region Customer
@@ -144,6 +149,12 @@ namespace AutoBarBar.Services
         {
             return await Task.FromResult(customers);
         }
+
+        async Task<IEnumerable<Customer>> IDataStore<Customer>.GetSearchResults(string query)
+        {
+            query = query.ToLowerInvariant();
+            return await Task.FromResult(customers.Where(c => c.Name.ToLowerInvariant().Contains(query)));
+        }
         #endregion
 
         #region Product
@@ -165,6 +176,12 @@ namespace AutoBarBar.Services
         async Task<IEnumerable<Product>> IDataStore<Product>.GetItemsAsync(bool forceRefresh)
         {
             return await Task.FromResult(products);
+        }
+
+        async Task<IEnumerable<Product>> IDataStore<Product>.GetSearchResults(string query)
+        {
+            query = query.ToLowerInvariant();
+            return await Task.FromResult(products.Where(p => p.Name.ToLowerInvariant().Contains(query)));
         }
         #endregion
 
@@ -188,6 +205,11 @@ namespace AutoBarBar.Services
         {
             return await Task.FromResult(orderLines);
         }
+
+        Task<IEnumerable<OrderLine>> IDataStore<OrderLine>.GetSearchResults(string query)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
 
         #region Order
@@ -210,6 +232,11 @@ namespace AutoBarBar.Services
         {
             return await Task.FromResult(orders);
         }
+
+        Task<IEnumerable<Order>> IDataStore<Order>.GetSearchResults(string query)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
 
         #region Reward
@@ -231,6 +258,11 @@ namespace AutoBarBar.Services
         async Task<IEnumerable<Reward>> IDataStore<Reward>.GetItemsAsync(bool forceRefresh)
         {
             return await Task.FromResult(rewards);
+        }
+
+        Task<IEnumerable<Reward>> IDataStore<Reward>.GetSearchResults(string query)
+        {
+            throw new NotImplementedException();
         }
         #endregion
     }

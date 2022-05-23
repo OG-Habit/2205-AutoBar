@@ -20,6 +20,8 @@ namespace AutoBarBar.ViewModels
         public AsyncCommand ShowScanCommand { get; }
         public AsyncCommand EndTransactionCommand { get; }
         public AsyncCommand AddOrderLineCommand { get; }
+        public AsyncCommand<string> SearchProductCommand { get; }
+        public AsyncCommand<string> SearchCustomerCommand { get; }
 
         public Command SwitchUserCommand { get; }
         public Command AddProductToOrderLineCommand { get; }
@@ -53,7 +55,8 @@ namespace AutoBarBar.ViewModels
             GetReloadBalanceAmountCommand = new AsyncCommand(GetReloadBalanceAmount);
             EndTransactionCommand = new AsyncCommand(EndTransaction);
             AddOrderLineCommand = new AsyncCommand(AddOrderLine);
-
+            SearchCustomerCommand = new AsyncCommand<string>(SearchCustomer);
+            SearchProductCommand = new AsyncCommand<string>(SearchProduct);
             SwitchUserCommand = new Command<object>(SwitchUser);
             AddProductToOrderLineCommand = new Command<Product>(AddProductToOrderLine);
             IncreaseQuantityCommand = new Command<OrderLine>(IncreaseQuantity);
@@ -83,7 +86,8 @@ namespace AutoBarBar.ViewModels
             {
                 getCustomersTask, getProductsTask, getOrderLinesTask, getOrdersTask, getRewardsTask
             };
-            Task.WaitAll(tasks);
+            //Task.WaitAll(tasks);
+            Task.WhenAll(tasks).Await();
         }
 
         async Task GetItemsAsync<TModel>(ObservableRangeCollection<TModel> list, IDataStore<TModel> dataStore)
@@ -131,16 +135,29 @@ namespace AutoBarBar.ViewModels
                         group ol by time into newOl
                         select newOl;
             CurrentOrderLineGroup.Add(group.ElementAt(0));
-            foreach (var ol in NewOrderLines)
-            {
-                OrderLines.Add(ol);
-
-            }
-            CurrentBalance = SelectedCustomer.CurrentBalance -= TotalOrderLinesCost;
+            OrderLines.AddRange(NewOrderLines);
             NewOrderLines.Clear();
+
+            CurrentBalance = SelectedCustomer.CurrentBalance -= TotalOrderLinesCost;
             TotalOrderPrice = CurrentOrder.TotalPrice += TotalOrderLinesCost;
             PointsEarned = CurrentOrder.PointsEarned += (pe = (int)CurrentOrder.TotalPrice / 1000) != 0 ? pe * 100 : 0;
             TotalOrderLinesCost = 0;
+        }
+
+        async Task SearchProduct(string arg)
+        {
+            await SearchItemsAsync<Product>(Products, ProductDataStore, arg.ToLowerInvariant());
+        }
+
+        async Task SearchCustomer(string arg)
+        {
+            await SearchItemsAsync<Customer>(Customers, CustomerDataStore, arg.ToLowerInvariant());
+        }
+
+        async Task SearchItemsAsync<TModel>(ObservableRangeCollection<TModel> List, IDataStore<TModel> dataStore, string arg)
+        {
+            var list = await dataStore.GetSearchResults(arg);
+            List.ReplaceRange(list);
         }
 
         void SwitchUser(object c)
