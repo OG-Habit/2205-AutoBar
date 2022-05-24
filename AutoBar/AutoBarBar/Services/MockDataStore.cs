@@ -1,4 +1,5 @@
 ﻿using AutoBarBar.Models;
+using MySqlConnector;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,18 +26,18 @@ namespace AutoBarBar.Services
                 new Customer { Id = "4", Name = "Diana Wonderwoman", Birthday = Convert.ToDateTime("Apr 1, 2001"), CardIssued = Convert.ToDateTime("Apr 2, 2010"), Contact = "09123294756", CurrentBalance = 3000, Email = "diana@gmail.com", Sex="Female", TotalPoints="300", ImageLink = "default_pic.png", Status="Member"}
             };
 
-            products = new List<Product>()
-            {
-                new Product { Id = Guid.NewGuid().ToString(), Name = "Apple", Description = "The apple is red, plump, and fresh", ImageLink = "default_pic.png", Price = 45.50 },
-                new Product { Id = Guid.NewGuid().ToString(), Name = "Beans", Description = "The bean is green, long, and fresh", ImageLink = "default_pic.png", Price = 95.50 },
-                new Product { Id = Guid.NewGuid().ToString(), Name = "Carrots", Description = "The carrot is orange, healthy, and fresh", ImageLink = "default_pic.png", Price = 60.75 },
-                new Product { Id = Guid.NewGuid().ToString(), Name = "Duck", Description = "The duck is tasty, juicy, and free range", ImageLink = "default_pic.png", Price = 399.99 },
-                new Product { Id = Guid.NewGuid().ToString(), Name = "Egg", Description = "The egg is big, dark orange, and fresh", ImageLink = "default_pic.png", Price = 10.00 },
-                new Product { Id = Guid.NewGuid().ToString(), Name = "Egg", Description = "The egg is big, dark orange, and fresh", ImageLink = "default_pic.png", Price = 10.00 },
-                new Product { Id = Guid.NewGuid().ToString(), Name = "Egg", Description = "The egg is big, dark orange, and fresh", ImageLink = "default_pic.png", Price = 10.00 },
-                new Product { Id = Guid.NewGuid().ToString(), Name = "Egg", Description = "The egg is big, dark orange, and fresh", ImageLink = "default_pic.png", Price = 10.00 },
-                new Product { Id = Guid.NewGuid().ToString(), Name = "Egg", Description = "The egg is big, dark orange, and fresh", ImageLink = "default_pic.png", Price = 10.00 },
-            };
+            //products = new List<Product>()
+            //{
+            //    new Product { Id = Guid.NewGuid().ToString(), Name = "Apple", Description = "The apple is red, plump, and fresh", ImageLink = "default_pic.png", Price = 45.50 },
+            //    new Product { Id = Guid.NewGuid().ToString(), Name = "Beans", Description = "The bean is green, long, and fresh", ImageLink = "default_pic.png", Price = 95.50 },
+            //    new Product { Id = Guid.NewGuid().ToString(), Name = "Carrots", Description = "The carrot is orange, healthy, and fresh", ImageLink = "default_pic.png", Price = 60.75 },
+            //    new Product { Id = Guid.NewGuid().ToString(), Name = "Duck", Description = "The duck is tasty, juicy, and free range", ImageLink = "default_pic.png", Price = 399.99 },
+            //    new Product { Id = Guid.NewGuid().ToString(), Name = "Egg", Description = "The egg is big, dark orange, and fresh", ImageLink = "default_pic.png", Price = 10.00 },
+            //    new Product { Id = Guid.NewGuid().ToString(), Name = "Egg", Description = "The egg is big, dark orange, and fresh", ImageLink = "default_pic.png", Price = 10.00 },
+            //    new Product { Id = Guid.NewGuid().ToString(), Name = "Egg", Description = "The egg is big, dark orange, and fresh", ImageLink = "default_pic.png", Price = 10.00 },
+            //    new Product { Id = Guid.NewGuid().ToString(), Name = "Egg", Description = "The egg is big, dark orange, and fresh", ImageLink = "default_pic.png", Price = 10.00 },
+            //    new Product { Id = Guid.NewGuid().ToString(), Name = "Egg", Description = "The egg is big, dark orange, and fresh", ImageLink = "default_pic.png", Price = 10.00 },
+            //};
 
             orderLines = new List<OrderLine>()
             {
@@ -131,15 +132,18 @@ namespace AutoBarBar.Services
 
         async Task<bool> IDataStore<Product>.DeleteItemAsync(string id)
         {
-            var oldItem = products.Where((Product arg) => arg.Id == id).FirstOrDefault();
-            products.Remove(oldItem);
+            //var oldItem = products.Where((Product arg) => arg.Id == id).FirstOrDefault();
+            //products.Remove(oldItem);
 
             return await Task.FromResult(true);
         }
 
         async Task<Product> IDataStore<Product>.GetItemAsync(string id)
         {
-            return await Task.FromResult(products.FirstOrDefault(s => s.Id == id));
+            //return await Task.FromResult(products.FirstOrDefault(s => s.Id == id));
+            
+            // feel free to remove, just added this para i can run the app
+            return await Task.FromResult(products[0]);
         }
 
         async Task<IEnumerable<Product>> IDataStore<Product>.GetItemsAsync(bool forceRefresh)

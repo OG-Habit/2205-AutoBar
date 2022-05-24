@@ -60,12 +60,15 @@
                                            HeightRequest="{Binding Source={x:RelativeSource Self}, Path=WidthRequest}"
                                         HorizontalOptions="Center" VerticalOptions="Center"
                                         Source="{Binding ImageLink}"/>
-                                    <Label Text="{Binding Price, StringFormat='PHP {0:F2}'}"/>
+                                    <Label Text="{Binding UnitPrice, StringFormat='PHP {0:F2}'}"/>
                                     <Label Text="{Binding Name}"/>
                                 </StackLayout>
                             </Frame>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
+                    <CollectionView.EmptyView>
+                        <Label Text="EMPTY" FontSize="Large"/>
+                    </CollectionView.EmptyView>
                 </CollectionView>
             </StackLayout>
 

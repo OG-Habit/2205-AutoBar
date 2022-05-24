@@ -46,7 +46,7 @@
                                                IsClippedToBounds="True" Grid.Row="0">
                                             <Image x:Name="MenuPic" Source="{Binding ImageLink}" Aspect="AspectFit"/>
                                         </Frame>
-                                        <Label Text="{Binding Price, StringFormat='PHP {0:#.00}'}" LineBreakMode="NoWrap" FontSize="18" Grid.Row="1"
+                                        <Label Text="{Binding UnitPrice, StringFormat='PHP {0:#.00}'}" LineBreakMode="NoWrap" FontSize="18" Grid.Row="1"
                                                FontAttributes="Bold"/>
                                         <Label Text="{Binding Name}" LineBreakMode="NoWrap" FontSize="16" Grid.Row="2"/>
                                         <Button Text="Edit" CornerRadius="100" Grid.Row="3" CommandParameter="{Binding .}"
