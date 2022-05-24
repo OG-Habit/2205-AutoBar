@@ -64,8 +64,8 @@
                                                IsClippedToBounds="True" Grid.Row="0">
                                             <Image x:Name="MenuPic" Source="{Binding ProductImgUrl}" Aspect="AspectFit"/>
                                         </Frame>
-                                        <Label Text="{Binding Price, StringFormat='PHP {0:#.00}'}" LineBreakMode="NoWrap" FontSize="18" Grid.Row="1"
-                                               FontAttributes="Bold"/>
+                                        <!--<Label Text="{Binding Price, StringFormat='PHP {0:#.00}'}" LineBreakMode="NoWrap" FontSize="18" Grid.Row="1"
+                                               FontAttributes="Bold"/>-->
                                         <Label Text="{Binding ProductName}" LineBreakMode="NoWrap" FontSize="16" Grid.Row="2"/>
                                     </Grid>
                                 </Frame>

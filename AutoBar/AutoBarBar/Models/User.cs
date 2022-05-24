@@ -10,7 +10,7 @@ namespace AutoBarBar.Models
         public int UserType { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public int Sex { get; set; }
+        public string Sex { get; set; }
         public string Birthday { get; set; }
         public string MobileNumber { get; set; }
         public string Email { get; set; }

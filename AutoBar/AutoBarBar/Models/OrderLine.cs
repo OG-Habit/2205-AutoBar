@@ -20,7 +20,7 @@ namespace AutoBarBar.Models
 
         public string CustomerName { get; set; }
         public string ProductName { get; set; }
-        double subTotal;
+        decimal subTotal;
         public decimal SubTotal 
         {
             get => subTotal;

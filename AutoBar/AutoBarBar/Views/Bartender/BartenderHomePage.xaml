@@ -34,13 +34,13 @@
                     </SearchBar.Behaviors>
                 </SearchBar>
                 <CollectionView x:Name="CVCustomer" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" 
-                                SelectionMode="Single" SelectedItem="{Binding SelectedCustomer}"
+                                SelectionMode="Single" SelectedItem="{Binding SelectedUser}"
                                 SelectionChangedCommand="{Binding SwitchUserCommand}"
                                 SelectionChangedCommandParameter="{Binding SelectedItem, Source={x:Reference CVCustomer}}"
-                                ItemsLayout="HorizontalList" ItemsSource="{Binding Customers}">
+                                ItemsLayout="HorizontalList" ItemsSource="{Binding Users}">
                     <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="models:Customer">
-                            <Label Text="{Binding Name}" FontSize="Large" 
+                        <DataTemplate x:DataType="models:User">
+                            <Label Text="{Binding FirstName}" FontSize="Large" 
                                    Margin="{Binding Converter={StaticResource scale}, ConverterParameter='thickness=0,0,10,0'}">
                             </Label>
                         </DataTemplate>
@@ -62,15 +62,15 @@
                     <Image Grid.Row="0" Grid.RowSpan="3"
                        Grid.Column="0"  
                     Source="default_pic.png"/>
-                    <Label Grid.Row="0" Grid.Column="1" Text="{Binding SelectedCustomer.Name, StringFormat='Name: {0}'}"/>
+                    <Label Grid.Row="0" Grid.Column="1" Text="{Binding SelectedUser.FirstName, StringFormat='Name: {0}'}"/>
                     <Label Grid.Row="1" Grid.Column="1" Text="Status: Member"/>
-                    <Label Grid.Row="2" Grid.Column="1" Text="{Binding SelectedCustomer.Email, StringFormat='Email: {0}'}"/>
-                    <Label Grid.Row="0" Grid.Column="2" Text="{Binding SelectedCustomer.Contact, StringFormat='Contact: {0}'}"/>
-                    <Label Grid.Row="1" Grid.Column="2" Text="{Binding SelectedCustomer.Birthday, StringFormat='Birthday: {0}'}"/>
-                    <Label Grid.Row="2" Grid.Column="2" Text="{Binding SelectedCustomer.Sex, StringFormat='Sex: {0}'}"/>
-                    <Label Grid.Row="0" Grid.Column="3" Text="{Binding SelectedCustomer.CardIssued, StringFormat='Card Issued: {0}'}"/>
+                    <Label Grid.Row="2" Grid.Column="1" Text="{Binding SelectedUser.Email, StringFormat='Email: {0}'}"/>
+                    <Label Grid.Row="0" Grid.Column="2" Text="{Binding SelectedUser.MobileNumber, StringFormat='Contact: {0}'}"/>
+                    <Label Grid.Row="1" Grid.Column="2" Text="{Binding SelectedUser.Birthday, StringFormat='Birthday: {0}'}"/>
+                    <Label Grid.Row="2" Grid.Column="2" Text="{Binding SelectedUser.Sex, StringFormat='Sex: {0}'}"/>
+                    <Label Grid.Row="0" Grid.Column="3" Text="{Binding SelectedCustomer.CardStatus, StringFormat='Card Issued: {0}'}"/>
                     <Label Grid.Row="1" Grid.Column="3" Text="{Binding CurrentBalance, StringFormat='Current Balance: PHP {0:F2}'}"/>
-                    <Label Grid.Row="2" Grid.Column="3" Text="{Binding SelectedCustomer.TotalPoints, StringFormat='Total Points: {0}'}"/>
+                    <Label Grid.Row="2" Grid.Column="3" Text="{Binding SelectedCustomer.Points, StringFormat='Total Points: {0}'}"/>
                 </Grid>
                 <ListView 
                     Grid.Row="1"
@@ -95,7 +95,7 @@
                                     BackgroundColor="Yellow">
                                     <Label Grid.Column="0" Text="{Binding ProductName}"/>
                                     <Label Grid.Column="1" Text="{Binding Quantity}"/>
-                                    <Label Grid.Column="2" Text="{Binding Price, StringFormat='PHP {0:F2}'}"/>
+                                    <Label Grid.Column="2" Text="{Binding UnitPrice, StringFormat='PHP {0:F2}'}"/>
                                     <Label Grid.Column="3" Text="{Binding SubTotal, StringFormat='PHP {0:F2}'}"/>
                                 </Grid>
                             </ViewCell>

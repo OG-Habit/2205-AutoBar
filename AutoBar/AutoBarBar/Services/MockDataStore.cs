@@ -39,22 +39,22 @@ namespace AutoBarBar.Services
             //    new Product { Id = Guid.NewGuid().ToString(), Name = "Egg", Description = "The egg is big, dark orange, and fresh", ImageLink = "default_pic.png", Price = 10.00 },
             //};
 
-            orderLines = new List<OrderLine>()
-            {
-                new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Adam Smith", ProductName="Apple", Price=45.50, Quantity=3, CreatedOn = "7:30PM", OrderId="10", ProductImgUrl="default_pic.png"}, 
-                new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Adam Smith", ProductName="Beans", Price=95.50, Quantity=2, CreatedOn = "7:30PM", OrderId="10", ProductImgUrl="default_pic.png"},
-                new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Adam Smith", ProductName="Duck", Price=399.99, Quantity=1, CreatedOn = "8:30PM", OrderId="10", ProductImgUrl="default_pic.png"},
-                new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Adam Smith", ProductName="Egg", Price=10.00, Quantity=10, CreatedOn = "10:30PM", OrderId="10", ProductImgUrl="default_pic.png"},
-                new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Adam Smith", ProductName="Carrots", Price=60.75, Quantity=3, CreatedOn = "8:30PM", OrderId="10", ProductImgUrl="default_pic.png"},
-                new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Adam Smith", ProductName="Apple", Price=45.50, Quantity=5, CreatedOn = "8:30PM", OrderId="10", ProductImgUrl="default_pic.png"},
-                new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Bam Carousel", ProductName="Apple", Price=45.50, Quantity=5, CreatedOn = "8:30PM", OrderId="11", ProductImgUrl="default_pic.png"}
-            };
+            //orderLines = new List<OrderLine>()
+            //{
+            //    new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Adam Smith", ProductName="Apple", Price=45.50, Quantity=3, CreatedOn = "7:30PM", OrderId="10", ProductImgUrl="default_pic.png"}, 
+            //    new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Adam Smith", ProductName="Beans", Price=95.50, Quantity=2, CreatedOn = "7:30PM", OrderId="10", ProductImgUrl="default_pic.png"},
+            //    new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Adam Smith", ProductName="Duck", Price=399.99, Quantity=1, CreatedOn = "8:30PM", OrderId="10", ProductImgUrl="default_pic.png"},
+            //    new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Adam Smith", ProductName="Egg", Price=10.00, Quantity=10, CreatedOn = "10:30PM", OrderId="10", ProductImgUrl="default_pic.png"},
+            //    new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Adam Smith", ProductName="Carrots", Price=60.75, Quantity=3, CreatedOn = "8:30PM", OrderId="10", ProductImgUrl="default_pic.png"},
+            //    new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Adam Smith", ProductName="Apple", Price=45.50, Quantity=5, CreatedOn = "8:30PM", OrderId="10", ProductImgUrl="default_pic.png"},
+            //    new OrderLine { Id = Guid.NewGuid().ToString(), CustomerName = "Bam Carousel", ProductName="Apple", Price=45.50, Quantity=5, CreatedOn = "8:30PM", OrderId="11", ProductImgUrl="default_pic.png"}
+            //};
 
-            orders = new List<Order>()
-            {
-                new Order { Id = "10", OpenedOn = DateTime.Today, ClosedOn = DateTime.Today, CustomerName="Adam Smith", TotalPrice=1236.25, PointsEarned = 100, OrderStatus=false, CustomerId="1", BartenderName="Bartender One", Reward="No Reward"},
-                new Order { Id = "11", OpenedOn = DateTime.Today, ClosedOn = DateTime.Today, CustomerName="Bam Carousel", TotalPrice=227.5, PointsEarned = 0, OrderStatus=false, CustomerId="2", BartenderName="Bartender Three", Reward="No Reward"}
-            };
+            //orders = new List<Order>()
+            //{
+            //    new Order { Id = "10", OpenedOn = DateTime.Today, ClosedOn = DateTime.Today, CustomerName="Adam Smith", TotalPrice=1236.25, PointsEarned = 100, OrderStatus=false, CustomerId="1", BartenderName="Bartender One", Reward="No Reward"},
+            //    new Order { Id = "11", OpenedOn = DateTime.Today, ClosedOn = DateTime.Today, CustomerName="Bam Carousel", TotalPrice=227.5, PointsEarned = 0, OrderStatus=false, CustomerId="2", BartenderName="Bartender Three", Reward="No Reward"}
+            //};
 
             rewards = new List<Reward>()
             {
@@ -172,7 +172,8 @@ namespace AutoBarBar.Services
 
         async Task<OrderLine> IDataStore<OrderLine>.GetItemAsync(string id)
         {
-            return await Task.FromResult(orderLines.FirstOrDefault(s => s.Id == id));
+            //return await Task.FromResult(orderLines.FirstOrDefault(s => s.Id == id));
+            return await Task.FromResult(orderLines.FirstOrDefault());
         }
 
         async Task<IEnumerable<OrderLine>> IDataStore<OrderLine>.GetItemsAsync(bool forceRefresh)
@@ -183,7 +184,8 @@ namespace AutoBarBar.Services
         async Task<IEnumerable<OrderLine>> IDataStore<OrderLine>.GetSearchResults(string query)
         {
             query = query.ToLowerInvariant();
-            return await Task.FromResult(orderLines.Where(c => c.OrderId.Contains(query)));
+            //return await Task.FromResult(orderLines.Where(c => c.OrderId.Contains(query)));
+            return await Task.FromResult(orderLines);
         }
         #endregion
 
@@ -200,7 +202,8 @@ namespace AutoBarBar.Services
 
         async Task<Order> IDataStore<Order>.GetItemAsync(string id)
         {
-            return await Task.FromResult(orders.FirstOrDefault(s => s.Id == id));
+            //return await Task.FromResult(orders.FirstOrDefault(s => s.Id == id));
+            return await Task.FromResult(orders.FirstOrDefault());
         }
 
         async Task<IEnumerable<Order>> IDataStore<Order>.GetItemsAsync(bool forceRefresh)

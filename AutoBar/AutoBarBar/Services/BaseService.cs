@@ -44,7 +44,32 @@ namespace AutoBarBar.Services
 
         protected void AddItem<T>(string cmd, Action<DbDataRecord, T> action)
         {
+            try
+            {
+                using (var conn = new MySqlConnection(CONNECTION_STRING))
+                {
+                    conn.Open();
+                    using (var command = new MySqlCommand(cmd, conn))
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            var list = reader.GetEnumerator();
+                            while (list.MoveNext())
+                            {
+                                T temp = (T)Activator.CreateInstance(typeof(T));
+                                DbDataRecord dataRecord = (DbDataRecord)list.Current;
 
+                                action(dataRecord, temp);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                var a = e.Message;
+            }
         }
 
         protected void DeleteItem<T>(string cmd, Action<DbDataRecord, T> action)

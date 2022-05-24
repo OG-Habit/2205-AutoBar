@@ -71,7 +71,7 @@ namespace AutoBarBar.ViewModels
             if (item == null)
                 return;
 
-            await Shell.Current.GoToAsync($"{nameof(AOrderDetailPage)}?{nameof(AOrderDetailViewModel.ItemId)}={item.Id}");
+            //await Shell.Current.GoToAsync($"{nameof(AOrderDetailPage)}?{nameof(AOrderDetailViewModel.ItemId)}={item.Id}");
         }
 
         public async void SearchBar_Change(object sender, TextChangedEventArgs e)

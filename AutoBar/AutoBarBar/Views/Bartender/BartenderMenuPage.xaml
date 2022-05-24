@@ -85,7 +85,7 @@
                            WidthRequest="100"
                            HeightRequest="{Binding Source={x:RelativeSource Self}, Path=WidthRequest}"/>
                     <Label Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" 
-                           Text="{Binding SelectedCustomer.Name}" VerticalOptions="Center"/>
+                           Text="{Binding SelectedUser.FirstName}" VerticalOptions="Center"/>
                     <Label Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" 
                            Text="{Binding CurrentBalance, StringFormat='Current Balance: PHP {0:F2}'}" VerticalOptions="Center"/>
                 </Grid>
@@ -125,7 +125,7 @@
                                            Text="{Binding ProductName}"/>
                                         <Label Grid.Row="1" BackgroundColor="Green"
                                            Grid.Column="1" 
-                                           Text="{Binding Price, StringFormat='PHP {0:F2}'}"/>
+                                           Text="{Binding UnitPrice, StringFormat='PHP {0:F2}'}"/>
                                         <Label Grid.Row="0" BackgroundColor="Blue"
                                            Grid.Column="2" 
                                            Text="Quantity"/>

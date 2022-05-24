@@ -19,7 +19,9 @@ namespace AutoBarBar.Services
 
         public async Task<IEnumerable<Product>> GetProducts()
         {
-            string cmd = "SELECT * FROM Products";
+            string cmd = @"
+                SELECT * FROM Products
+            ";
 
             // The second argument of the GetItems() is a function. The function is what you want to do with the query result
             // cmd = query string
@@ -30,7 +32,7 @@ namespace AutoBarBar.Services
                 product.Id = dataRecord.GetInt32(0);
                 product.Name = dataRecord.GetString(1);
                 product.Description = dataRecord.GetString(2);
-                product.UnitPrice = Convert.ToDouble(dataRecord.GetValue(3));
+                product.UnitPrice = dataRecord.GetDecimal(3);
                 product.ImageLink = "default_pic.png";
                 products.Add(product);
             });
