@@ -42,7 +42,7 @@ namespace AutoBarBar.ViewModels
             {
                 Item.Clear();
                 var items = await ProductDataStore.GetItemsAsync(true);
-                foreach (var item in items)
+                foreach (var item in items.OrderBy(x => x.Name))
                 {
                     Item.Add(item);
                 }
