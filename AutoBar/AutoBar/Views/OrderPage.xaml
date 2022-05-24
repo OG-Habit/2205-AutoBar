@@ -1,12 +1,121 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="AutoBar.Views.OrderPage">
+             xmlns:vm="clr-namespace:AutoBar.ViewModels"
+             xmlns:model="clr-namespace:AutoBar.Models"
+             x:Class="AutoBar.Views.OrderPage"
+             Shell.NavBarIsVisible="False">
+    
+    <ContentPage.BindingContext>
+        <vm:OrderViewModel />
+    </ContentPage.BindingContext>
+    
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Order Page"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+            <Grid BackgroundColor="#2196F3" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand"
+                  ColumnDefinitions="2" Padding="20,10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                </Grid.RowDefinitions>
+                <Label Text="AUTOBAR" FontSize="25" Grid.Column="1" Grid.Row="0" TextColor="White" VerticalOptions="Center"/>
+                <Frame Grid.Column="2" Grid.Row="0" HasShadow="False" CornerRadius="20" Padding="10" BackgroundColor="gray"
+                       VerticalOptions="Center" HorizontalOptions="End">
+                    <Label Text="{Binding Balance, StringFormat='PHP {0:#.00}'}" FontSize="15"  TextColor="White"/>
+                </Frame>
+            </Grid>
+            <Grid ColumnDefinitions="2" Padding="30,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                </Grid.RowDefinitions>
+                <Label Text="Current Order" LineBreakMode="NoWrap" FontSize="20" Grid.Column="1"
+                       HorizontalOptions="Start" VerticalOptions="Center"/>
+                <Button Text="=" CornerRadius="100" Grid.Column="2" HorizontalOptions="End" VerticalOptions="Center"
+                        CommandParameter="{Binding .}" Command="{Binding Source={RelativeSource AncestorType={x:Type vm:OrderViewModel}},
+                        Path=SwitchTapped}"/>
+            </Grid>
+            <RefreshView x:DataType="vm:OrderViewModel" Command="{Binding LoadOrderCommand}" 
+                         IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
+                <CollectionView x:Name="ListView" ItemsSource="{Binding Order}" SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout Padding="20,5" x:DataType="model:OrderLine">
+                                <Frame HasShadow="True" CornerRadius="20" Padding="10">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="0"/>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="120"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Frame Padding="0" HorizontalOptions="Center" WidthRequest="100" HasShadow="False" 
+                                               IsClippedToBounds="True" Grid.Column="1" VerticalOptions="Center">
+                                            <Image x:Name="ItemPic" Source="{Binding ProductImgUrl}" Aspect="AspectFit"/>
+                                        </Frame>
+                                        <Grid Grid.Column="2" VerticalOptions="Center" Padding="10,0,0,0">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+                                            <Label Text="{Binding ProductName}" LineBreakMode="NoWrap" 
+                                               FontSize="18" Grid.Row="0"/>
+                                            <Label Text="{Binding Price, StringFormat='PHP {0:#.00}'}" LineBreakMode="NoWrap" 
+                                               FontSize="12" Grid.Row="1"/>
+                                            <Label Text="{Binding CreatedOn, StringFormat='Time: {0:h:mm tt}'}" LineBreakMode="NoWrap" 
+                                               FontSize="12" Grid.Row="2"/>
+                                            <Label Text="{Binding Quantity, StringFormat='Quantity: {0}'}" LineBreakMode="NoWrap" 
+                                               FontSize="12" Grid.Row="3"/>
+                                        </Grid>
+                                        <Grid Grid.Column="3" VerticalOptions="Center" BackgroundColor="Gray">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="2"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="2"/>
+                                            </Grid.RowDefinitions>
+                                            <Label Text="Total" LineBreakMode="NoWrap" FontSize="12" Grid.Row="1" TextColor="White"
+                                                   HorizontalTextAlignment="Center"/>
+                                            <Label Text="{Binding SubTotal, StringFormat='PHP {0:#.00}'}" LineBreakMode="NoWrap" 
+                                                   FontSize="18" Grid.Row="2" TextColor="White" HorizontalTextAlignment="Center"/>
+                                        </Grid>
+                                    </Grid>
+                                </Frame>
+                                <StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer NumberOfTapsRequired="1" CommandParameter="{Binding .}"
+                                                          Command="{Binding Source={RelativeSource 
+                                                                    AncestorType={x:Type vm:OrderViewModel}},
+                                                                    Path=ItemTapped}"/>
+                                </StackLayout.GestureRecognizers>
+                            </StackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </RefreshView>
+            <Grid BackgroundColor="Gray" Padding="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="30"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="120"/>
+                </Grid.ColumnDefinitions>
+                <Label Text="Time" FontSize="15" TextColor="White" Grid.Row="0" Grid.Column="1"/>
+                <Label Text="{Binding Time, StringFormat='{0:h:mm tt}'}" FontSize="15" TextColor="White" Grid.Row="1" Grid.Column="1"/>
+                <Label Text="Points" FontSize="15" TextColor="White" Grid.Row="0" Grid.Column="2"/>
+                <Label Text="{Binding Points}" FontSize="15" TextColor="White" Grid.Row="1" Grid.Column="2"/>
+                <Label Text="Reward" FontSize="15" TextColor="White" Grid.Row="0" Grid.Column="3"/>
+                <Label Text="{Binding Reward}" FontSize="15" TextColor="White" Grid.Row="1" Grid.Column="3" />
+                <Label Text="Date" FontSize="15" TextColor="White" Grid.Row="2" Grid.Column="1"/>
+                <Label Text="{Binding Time, StringFormat='{0:MMM dd, yyyy}'}" FontSize="15" TextColor="White" Grid.Row="3" Grid.Column="1"/>
+                <Label Text="Total" FontSize="15" TextColor="White" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2"/>
+                <Label Text="{Binding Total, StringFormat='PHP {0:#.00}'}" FontSize="20" TextColor="White" Grid.Row="3" Grid.Column="2" 
+                       Grid.ColumnSpan="2"/>
+            </Grid>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

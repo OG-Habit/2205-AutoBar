@@ -30,7 +30,7 @@
     </Shell.Resources>
     
     <!-- Uncomment this below so that when the app starts, it will direct the user to the login page. -->
-    <!--<ShellContent Route="LoginPage" ContentTemplate="{DataTemplate local:LoginPage}" />-->
+    <ShellContent Route="LoginPage" ContentTemplate="{DataTemplate local:LoginPage}" />
 
     <TabBar>
         <ShellContent Title="Home" Icon="icon_about.png" Route="HomePage" ContentTemplate="{DataTemplate local:HomePage}" />

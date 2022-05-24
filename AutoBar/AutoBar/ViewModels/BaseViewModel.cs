@@ -1,4 +1,5 @@
-﻿using AutoBar.Services;
+﻿using AutoBar.Models;
+using AutoBar.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,6 +10,11 @@ namespace AutoBar.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
+        public IDataStore<Product> ProductDataStore => DependencyService.Get<IDataStore<Product>>();
+        public IDataStore<OrderLine> OrderLineDataStore => DependencyService.Get<IDataStore<OrderLine>>();
+        public IDataStore<Order> OrderDataStore => DependencyService.Get<IDataStore<Order>>();
+        public IDataStore<Reward> RewardDataStore => DependencyService.Get<IDataStore<Reward>>();
+
         bool isBusy = false;
         public bool IsBusy
         {

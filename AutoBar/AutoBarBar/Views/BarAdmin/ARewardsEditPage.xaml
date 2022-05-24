@@ -23,7 +23,7 @@
                 <Label Text="Name: " FontSize="20" VerticalOptions="Center" Grid.Column="0" Grid.Row="0"/>
                 <Entry Text="{Binding Name}" FontSize="20" VerticalOptions="Center" Grid.Column="1" Grid.Row="0"/>
                 <Label Text="Points: " FontSize="20" VerticalOptions="Center" Grid.Column="0" Grid.Row="1"/>
-                <Entry Text="{Binding Point}" FontSize="20" VerticalOptions="Center" Grid.Column="1" Grid.Row="1"/>
+                <Entry Text="{Binding Point}" FontSize="20" VerticalOptions="Center" Grid.Column="1" Grid.Row="1" Keyboard="Numeric"/>
                 <Label Text="Description: " FontSize="20" VerticalOptions="Center" Grid.Column="0" Grid.Row="2"/>
                 <Entry Text="{Binding Description}" FontSize="20" VerticalOptions="Center" Grid.Column="1" Grid.Row="2"/>
             </Grid>

@@ -15,8 +15,7 @@
             <Grid BackgroundColor="#2196F3" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand"
                   ColumnDefinitions="2" Padding="20">
                 <Label Text="{Binding Today, StringFormat='{0:MMMM dd, yyyy}'}" FontSize="25" Grid.Column="1" TextColor="White"/>
-                <SearchBar Placeholder="Search" Grid.Column="2" BackgroundColor="White"
-                           TextChanged="SearchBarChange"/>
+                <SearchBar Placeholder="Search" Grid.Column="2" BackgroundColor="White" TextChanged="SearchBarChange"/>
             </Grid>
             <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="StartAndExpand" Padding="30,0">
                 <Label Text="Order Report" LineBreakMode="NoWrap" FontSize="30"/>
@@ -60,7 +59,7 @@
                                         </Grid>
                                         <Label Text="{Binding PointsEarned}" LineBreakMode="NoWrap" FontSize="16" Grid.Column="3"
                                                VerticalOptions="Center" HorizontalTextAlignment="Center"/>
-                                        <Label Text="{Binding TotalPrice , StringFormat='PHP {0}'}" LineBreakMode="NoWrap" FontSize="16" Grid.Column="4"
+                                        <Label Text="{Binding TotalPrice, StringFormat='PHP {0:#.00}'}" LineBreakMode="NoWrap" FontSize="16" Grid.Column="4"
                                                VerticalOptions="Center" HorizontalTextAlignment="Center"/>
                                         <Label Text="{Binding OrderStatus}" LineBreakMode="NoWrap" FontSize="16" Grid.Column="5"
                                                VerticalOptions="Center" HorizontalTextAlignment="Center">

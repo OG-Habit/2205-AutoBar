@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:AutoBar.ViewModels"
+             x:DataType="viewmodels:ProductDetailViewModel"
+             x:Class="AutoBar.Views.ProductDetailPage">
+    <ContentPage.Content>
+        <StackLayout>
+            <Frame Padding="10,20" HorizontalOptions="Center" WidthRequest="300" HasShadow="False" IsClippedToBounds="True" Grid.Row="0">
+                <Image x:Name="ProfilePic" Source="{Binding Image}" Aspect="AspectFit"/>
+            </Frame>
+            <StackLayout Padding="20,0" HeightRequest="250">
+                <Label Text="{Binding Name}" FontSize="30"/>
+                <Label Text="{Binding Description}" FontSize="15" Grid.Column="1" Grid.Row="3"/>
+            </StackLayout>
+            <Grid BackgroundColor="Gray" Padding="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="30"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="250"/>
+                </Grid.ColumnDefinitions>
+                <Label Text="Price" FontSize="15" TextColor="White" Grid.Row="0" Grid.Column="1"/>
+                <Label Text="{Binding Price, StringFormat='PHP {0:#.00}'}" FontSize="25" TextColor="White" Grid.Row="1" Grid.Column="1"/>
+            </Grid>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

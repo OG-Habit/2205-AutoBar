@@ -1,5 +1,4 @@
 ﻿using AutoBarBar.ViewModels;
-
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -11,7 +10,7 @@ namespace AutoBarBar.Views
         public ProfilePage()
         {
             InitializeComponent();
-            this.BindingContext = new ProfileViewModel();
+            BindingContext = new ProfileViewModel();
         }
     }
 }

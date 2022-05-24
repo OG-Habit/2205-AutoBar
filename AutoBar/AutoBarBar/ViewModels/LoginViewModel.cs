@@ -17,13 +17,13 @@ namespace AutoBarBar.ViewModels
         {
             // Prefixing with `//` switches to a different navigation stack instead of pushing to the active one
 
-            //await Xamarin.Essentials.SecureStorage.SetAsync("isLogged", "1");
-            //await Shell.Current.GoToAsync($"//{nameof(AHomePage)}");
+            await Xamarin.Essentials.SecureStorage.SetAsync("isLogged", "1");
+            await Shell.Current.GoToAsync($"//{nameof(AHomePage)}");
 
             // Uncomment Lines below and Comment Lines 22 and 23 to access the Bartender TabBar
 
-            await Xamarin.Essentials.SecureStorage.SetAsync("isLogged", "2");
-            await Shell.Current.GoToAsync($"//{nameof(BartenderHomePage)}");
+            //await Xamarin.Essentials.SecureStorage.SetAsync("isLogged", "2");
+            //await Shell.Current.GoToAsync($"//{nameof(BartenderHomePage)}");
 
         }
 

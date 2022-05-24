@@ -1,12 +1,75 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="AutoBar.Views.RewardPage">
+             xmlns:vm="clr-namespace:AutoBar.ViewModels"
+             xmlns:model="clr-namespace:AutoBar.Models"
+             x:Class="AutoBar.Views.RewardPage"
+             Shell.NavBarIsVisible="False">
+
+    <ContentPage.BindingContext>
+        <vm:RewardViewModel />
+    </ContentPage.BindingContext>
+
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="RewardPage"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+            <Grid BackgroundColor="#2196F3" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand"
+                  ColumnDefinitions="2" Padding="20,10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="30"/>
+                </Grid.RowDefinitions>
+                <Label Text="AUTOBAR" FontSize="25" Grid.Column="1" Grid.Row="0" TextColor="White" VerticalOptions="Center"/>
+                <Frame Grid.Column="2" Grid.Row="0" HasShadow="False" CornerRadius="20" Padding="10" BackgroundColor="gray"
+                       VerticalOptions="Center" HorizontalOptions="End">
+                    <Label Text="{Binding Balance, StringFormat='Total Points: {0}'}" FontSize="15"  TextColor="White"/>
+                </Frame>
+                <SearchBar Placeholder="Search" BackgroundColor="White" Grid.ColumnSpan="3" Grid.Row="1"
+                           TextChanged="SearchBarChange"/>
+            </Grid>
+            <Grid ColumnDefinitions="2" Padding="30,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                </Grid.RowDefinitions>
+                <Label Text="Rewards" LineBreakMode="NoWrap" FontSize="20" Grid.Column="1" HorizontalOptions="Start" 
+                       VerticalOptions="Center"/>
+                <Button Text="Sort" CornerRadius="100" Grid.Column="2" HorizontalOptions="End" VerticalOptions="Center"
+                        CommandParameter="{Binding .}" Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RewardViewModel}},
+                        Path=ItemSort}"/>
+            </Grid>
+            <RefreshView x:DataType="vm:RewardViewModel" Command="{Binding LoadItemCommand}" 
+                         IsRefreshing="{Binding IsBusy, Mode=TwoWay}" Padding="30,10">
+                <CollectionView x:Name="ListView" ItemsSource="{Binding Item}" SelectionMode="None"
+                                ItemsLayout="VerticalGrid, 2">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout Padding="10,10" x:DataType="model:Reward">
+                                <Frame HasShadow="True" CornerRadius="20">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="20" />
+                                            <RowDefinition Height="25" />
+                                        </Grid.RowDefinitions>
+                                        <Frame Padding="0" HorizontalOptions="Center" WidthRequest="100" HasShadow="False" 
+                                               IsClippedToBounds="True" Grid.Row="0">
+                                            <Image x:Name="MenuPic" Source="{Binding ImageLink}" Aspect="AspectFit"/>
+                                        </Frame>
+                                        <Label Text="{Binding Points, StringFormat='Points: {0}'}" LineBreakMode="NoWrap" FontSize="18" Grid.Row="1"
+                                               FontAttributes="Bold"/>
+                                        <Label Text="{Binding Name}" LineBreakMode="NoWrap" FontSize="16" Grid.Row="2"/>
+                                    </Grid>
+                                </Frame>
+                                <StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer NumberOfTapsRequired="1" CommandParameter="{Binding .}"
+                                                          Command="{Binding Source={RelativeSource 
+                                                                    AncestorType={x:Type vm:RewardViewModel}},
+                                                                    Path=ItemTapped}"/>
+                                </StackLayout.GestureRecognizers>
+                            </StackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </RefreshView>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:AutoBar.ViewModels"
+             x:DataType="viewmodels:OrderDetailViewModel"
+             x:Class="AutoBar.Views.OrderDetailPage">
+    <ContentPage.Content>
+        <StackLayout>
+            <Frame Padding="10,20" HorizontalOptions="Center" WidthRequest="300" HasShadow="False" IsClippedToBounds="True" Grid.Row="0">
+                <Image x:Name="ProfilePic" Source="{Binding Image}" Aspect="AspectFit"/>
+            </Frame>
+            <StackLayout Padding="20,0" HeightRequest="250">
+                <Label Text="{Binding Name}" FontSize="30"/>
+                <Label Text="{Binding Price, StringFormat='Price: PHP {0:#.00}'}" FontSize="20"/>
+                <Label Text="{Binding Description}" FontSize="15"/>
+                <Frame HasShadow="False" BackgroundColor="LightGray" Padding="15,5" Margin="10" CornerRadius="20">
+                    <StackLayout>
+                        <Label Text="{Binding Quantity, StringFormat='Quantity: {0}'}" FontSize="20"/>
+                        <Label Text="{Binding Created, StringFormat='Purchased At: {0:h:mm tt}'}" FontSize="20"/>
+                    </StackLayout>
+                </Frame>
+            </StackLayout>
+            <Grid BackgroundColor="Gray" Padding="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="30"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="200"/>
+                </Grid.ColumnDefinitions>
+                <Label Text="Bartender" FontSize="15" TextColor="White" Grid.Row="0" Grid.Column="1"/>
+                <Label Text="{Binding Bartender, StringFormat='{0:F2}'}" FontSize="25" TextColor="White" Grid.Row="1" Grid.Column="1"/>
+                <Label Text="Total" FontSize="15" TextColor="White" Grid.Row="0" Grid.Column="2"/>
+                <Label Text="{Binding Total, StringFormat='PHP {0:#.00}'}" FontSize="25" TextColor="White" Grid.Row="1" Grid.Column="2"/>
+            </Grid>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

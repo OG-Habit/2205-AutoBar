@@ -28,11 +28,12 @@
                 <Label Text="Sex: " FontSize="20" VerticalOptions="Center" Grid.Column="0" Grid.Row="1"/>
                 <Entry Text="{Binding Sex}" FontSize="20" VerticalOptions="Center" Grid.Column="1" Grid.Row="1"/>
                 <Label Text="Birthday: " FontSize="20" VerticalOptions="Center" Grid.Column="0" Grid.Row="2"/>
-                <Entry Text="{Binding Birthday, StringFormat='{0:MMM dd, yyyy}'}" FontSize="20" VerticalOptions="Center" Grid.Column="1" Grid.Row="2"/>
+                <Entry Text="{Binding Birthday, StringFormat='{0:MMM dd, yyyy}'}" FontSize="20" VerticalOptions="Center" Grid.Column="1"
+                       Grid.Row="2"/>
                 <Label Text="Mobile No.: " FontSize="20" VerticalOptions="Center" Grid.Column="0" Grid.Row="3"/>
-                <Entry Text="{Binding Contact}" FontSize="20" VerticalOptions="Center" Grid.Column="1" Grid.Row="3"/>
+                <Entry Text="{Binding Contact}" FontSize="20" VerticalOptions="Center" Grid.Column="1" Grid.Row="3" Keyboard="Numeric"/>
                 <Label Text="Email: " FontSize="20" VerticalOptions="Center" Grid.Column="0" Grid.Row="4"/>
-                <Entry Text="{Binding Email}" FontSize="20" VerticalOptions="Center" Grid.Column="1" Grid.Row="4"/>
+                <Entry Text="{Binding Email}" FontSize="20" VerticalOptions="Center" Grid.Column="1" Grid.Row="4" Keyboard="Email"/>
             </Grid>
             <StackLayout Orientation="Horizontal">
                 <Button Text="Cancel" WidthRequest="250" CornerRadius="100" Command="{Binding CancelCommand}"/>
