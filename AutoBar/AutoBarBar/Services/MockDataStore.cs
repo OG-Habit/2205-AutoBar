@@ -124,7 +124,7 @@ namespace AutoBarBar.Services
 
         public async Task<bool> UpdateItemAsync(Product item)
         {
-            var oldItem = products.Where((Product arg) => arg.Id == item.Id).FirstOrDefault();
+            var oldItem = products.Where((Product arg) => arg.ID == item.ID).FirstOrDefault();
             products.Remove(oldItem);
             products.Add(item);
 

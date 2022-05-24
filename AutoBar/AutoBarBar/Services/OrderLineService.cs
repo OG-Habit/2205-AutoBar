@@ -18,11 +18,12 @@ namespace AutoBarBar.Services
 
             for(var i = 0; i < IDs.Count; i++)
             {
-                str += IDs[i];
-                
                 if(i > 0)
                 {
                     str += ", " + IDs[i];
+                } else
+                {
+                    str += IDs[i];
                 }
             }
 
@@ -36,6 +37,7 @@ namespace AutoBarBar.Services
                 ol.UnitPrice = dataRecord.GetDecimal(3);
                 ol.Quantity = dataRecord.GetInt32(4);
                 ol.CreatedOn = dataRecord.GetValue(6).ToString();
+                orderLines.Add(ol);
             });
 
             return await Task.FromResult(orderLines);

@@ -92,9 +92,6 @@ namespace AutoBarBar.ViewModels
             try
             {
                 List<int> orderIDs = new List<int>();
-                //var getCustomersTask = GetItemsAsync(Customers, CustomerDataStore);
-                //var getProductsTask = GetItemsAsync(Products, ProductDataStore);
-                //var getOrderLinesTask = GetItemsAsync(OrderLines, OrderLineDataStore);
                 var getRewardsTask = GetItemsAsync(Rewards, RewardDataStore);
                 var productsTask = productService.GetProducts();
                 var activeTabsTask = activeTabService.GetActiveTabs();
@@ -105,8 +102,6 @@ namespace AutoBarBar.ViewModels
                 };
                 Task.WaitAll(tasks);
 
-                //var getOrdersTask = orderService.GetOrders();
-                //Orders.AddRange(getOrdersTask.Result);
                 ActiveTabs.AddRange(activeTabsTask.Result);
                 Products.AddRange(productsTask.Result);
 
@@ -120,7 +115,12 @@ namespace AutoBarBar.ViewModels
 
                 var orderLinesTask = orderLineService.GetOrderLines(orderIDs);
                 orderLinesTask.Wait();
-                OrderLines.AddRange(orderLinesTask.Result);
+                foreach(OrderLine ol in orderLinesTask.Result)
+                {
+                    ol.ProductName = Products.FirstOrDefault(p => p.ID == ol.ProductID).Name;
+                    ol.SubTotal = ol.Quantity * ol.UnitPrice;
+                    OrderLines.Add(ol);
+                }
             }
             catch(Exception e)
             {
@@ -304,7 +304,7 @@ namespace AutoBarBar.ViewModels
 
             var group = from ol in CurrentOrderLines
                         group ol by ol.CreatedOn into newGroup
-                        orderby newGroup.Key
+                        orderby newGroup.Key descending
                         select newGroup;
             CurrentOrderLineGroup = new ObservableCollection<IGrouping<string, OrderLine>>(group);
             NewOrderLines.Clear();

@@ -29,7 +29,7 @@ namespace AutoBarBar.Services
             // product = container variable
             GetItems<Product>(cmd, (dataRecord, product) =>
             {
-                product.Id = dataRecord.GetInt32(0);
+                product.ID = dataRecord.GetInt32(0);
                 product.Name = dataRecord.GetString(1);
                 product.Description = dataRecord.GetString(2);
                 product.UnitPrice = dataRecord.GetDecimal(3);
