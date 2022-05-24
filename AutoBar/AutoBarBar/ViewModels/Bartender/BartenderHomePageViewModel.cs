@@ -1,6 +1,7 @@
 ﻿using AutoBarBar.Models;
 using AutoBarBar.Services;
 using AutoBarBar.Views;
+using MySqlConnector;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -98,7 +99,84 @@ namespace AutoBarBar.ViewModels
 
         async Task ShowScan()
         {
-            await Shell.Current.GoToAsync($"{nameof(ScanPage)}");
+            var builder = new MySqlConnectionStringBuilder
+            {
+                Server = "sql6.freemysqlhosting.net", 
+                UserID = "sql6494729",
+                Password = "gEB2fyY5T4",
+                Database = "sql6494729"
+            };
+
+            using (var conn = new MySqlConnection(builder.ConnectionString))
+            using (var cmd = conn.CreateCommand())
+            {
+                try
+                {
+                    conn.Open();
+                    cmd.CommandText = "SELECT * FROM Test";
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var a = reader.GetString(0);
+                        }
+                    }
+                }
+                catch(Exception e)
+                {
+                    var m = e.Message;
+                }
+            }
+            {
+                //try
+                //{
+                //    //Task contask = connection.OpenAsync();
+                //    //contask.Await();
+                //    await conn.OpenAsync();
+                //    //using (var cmd = new MySqlCommand())
+                //    //{
+                //    //    cmd.Connection = conn;
+                //    //    cmd.CommandText = "SELECT * FROM Test";
+                //    //    try
+                //    //    {
+                //    //        using (var reader = await cmd.ExecuteReaderAsync())
+                //    //        {
+                //    //            while (await reader.ReadAsync())
+                //    //            {
+                //    //                var a = reader.GetString(0);
+                //    //            }
+                //    //        }
+                //    //    }
+                //    //    catch(Exception e)
+                //    //    {
+                //    //        var a = e.Message;
+                //    //    }
+                //    //}
+                //} 
+                //catch (MySqlException e)
+                //{
+                //    var a = e.Message;
+                //    switch(e.Number)
+                //    {
+                //        case 4060:
+                //            break;
+                //        case 18456:
+                //            break;
+                //        default:
+                //            break;
+                //    }
+                //}
+                //catch (NullReferenceException e)
+                //{
+                //    var a = e.Message;
+                //}
+                //catch(Exception e)
+                //{
+                //    var a = e.Message;
+                //    var source = e.Source;
+                //}
+            };
+            //await Shell.Current.GoToAsync($"{nameof(ScanPage)}");
         }
         
         async Task GetReloadBalanceAmount()
