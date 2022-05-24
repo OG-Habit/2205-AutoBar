@@ -25,7 +25,7 @@ namespace AutoBarBar.Services
             // cmd = query string
             // dataRecord = what holds the current row of the query results
             // product = container variable
-            GetItems<Product>(cmd, ((dataRecord, product) =>
+            GetItems<Product>(cmd, (dataRecord, product) =>
             {
                 product.Id = dataRecord.GetInt32(0);
                 product.Name = dataRecord.GetString(1);
@@ -33,7 +33,7 @@ namespace AutoBarBar.Services
                 product.UnitPrice = Convert.ToDouble(dataRecord.GetValue(3));
                 product.ImageLink = "default_pic.png";
                 products.Add(product);
-            }));
+            });
 
             return await Task.FromResult(products);
         }

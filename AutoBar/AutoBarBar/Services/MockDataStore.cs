@@ -18,13 +18,13 @@ namespace AutoBarBar.Services
 
         public MockDataStore()
         {
-            customers = new List<Customer>()
-            {
-                new Customer { Id = "1", Name = "Adam Smith", Birthday = Convert.ToDateTime("Jan 1, 2001"), CardIssued = Convert.ToDateTime("Jan 2, 2010"), Contact = "09123294756", CurrentBalance = 1000, Email = "adamsmith@gmail.com", Sex="Male", TotalPoints="100", ImageLink = "default_pic.png", Status="Member"},
-                new Customer { Id = "2", Name = "Bam Carousel", Birthday = Convert.ToDateTime("Feb 1, 2001"), CardIssued = Convert.ToDateTime("Feb 2, 2010"), Contact = "09123864756", CurrentBalance = 2000, Email = "bamcarousel@gmail.com", Sex="Male", TotalPoints="200", ImageLink = "default_pic.png", Status="Member"},
-                new Customer { Id = "3", Name = "Caroline Smith", Birthday = Convert.ToDateTime("Mar 1, 2001"), CardIssued = Convert.ToDateTime("Mar 2, 2010"), Contact = "09123294756", CurrentBalance = 1500, Email = "caroline@gmail.com", Sex="Female", TotalPoints="300", ImageLink = "default_pic.png", Status="Member"},
-                new Customer { Id = "4", Name = "Diana Wonderwoman", Birthday = Convert.ToDateTime("Apr 1, 2001"), CardIssued = Convert.ToDateTime("Apr 2, 2010"), Contact = "09123294756", CurrentBalance = 3000, Email = "diana@gmail.com", Sex="Female", TotalPoints="300", ImageLink = "default_pic.png", Status="Member"}
-            };
+            //customers = new List<Customer>()
+            //{
+            //    new Customer { Id = "1", Name = "Adam Smith", Birthday = Convert.ToDateTime("Jan 1, 2001"), CardIssued = Convert.ToDateTime("Jan 2, 2010"), Contact = "09123294756", CurrentBalance = 1000, Email = "adamsmith@gmail.com", Sex="Male", TotalPoints="100", ImageLink = "default_pic.png", Status="Member"},
+            //    new Customer { Id = "2", Name = "Bam Carousel", Birthday = Convert.ToDateTime("Feb 1, 2001"), CardIssued = Convert.ToDateTime("Feb 2, 2010"), Contact = "09123864756", CurrentBalance = 2000, Email = "bamcarousel@gmail.com", Sex="Male", TotalPoints="200", ImageLink = "default_pic.png", Status="Member"},
+            //    new Customer { Id = "3", Name = "Caroline Smith", Birthday = Convert.ToDateTime("Mar 1, 2001"), CardIssued = Convert.ToDateTime("Mar 2, 2010"), Contact = "09123294756", CurrentBalance = 1500, Email = "caroline@gmail.com", Sex="Female", TotalPoints="300", ImageLink = "default_pic.png", Status="Member"},
+            //    new Customer { Id = "4", Name = "Diana Wonderwoman", Birthday = Convert.ToDateTime("Apr 1, 2001"), CardIssued = Convert.ToDateTime("Apr 2, 2010"), Contact = "09123294756", CurrentBalance = 3000, Email = "diana@gmail.com", Sex="Female", TotalPoints="300", ImageLink = "default_pic.png", Status="Member"}
+            //};
 
             //products = new List<Product>()
             //{
@@ -81,24 +81,25 @@ namespace AutoBarBar.Services
 
         public async Task<bool> UpdateItemAsync(Customer item)
         {
-            var oldItem = customers.Where((Customer arg) => arg.Id == item.Id).FirstOrDefault();
-            customers.Remove(oldItem);
-            customers.Add(item);
+            //var oldItem = customers.Where((Customer arg) => arg.Id == item.Id).FirstOrDefault();
+            //customers.Remove(oldItem);
+            //customers.Add(item);
 
             return await Task.FromResult(true);
         }
 
         public async Task<bool> DeleteItemAsync(string id)
         {
-            var oldItem = customers.Where((Customer arg) => arg.Id == id).FirstOrDefault();
-            customers.Remove(oldItem);
+            //var oldItem = customers.Where((Customer arg) => arg.Id == id).FirstOrDefault();
+            //customers.Remove(oldItem);
 
             return await Task.FromResult(true);
         }
 
         async Task<Customer> IDataStore<Customer>.GetItemAsync(string id)
         {
-            return await Task.FromResult(customers.FirstOrDefault(s => s.Id == id));
+            //return await Task.FromResult(customers.FirstOrDefault(s => s.Id == id));
+            return await Task.FromResult(customers.First());
         }
 
         async Task<IEnumerable<Customer>> IDataStore<Customer>.GetItemsAsync(bool forceRefresh)
@@ -109,7 +110,7 @@ namespace AutoBarBar.Services
         async Task<IEnumerable<Customer>> IDataStore<Customer>.GetSearchResults(string query)
         {
             query = query.ToLowerInvariant();
-            return await Task.FromResult(customers.Where(c => c.Name.ToLowerInvariant().Contains(query)));
+            return await Task.FromResult(customers.Where(c => c.LastTransactionAt.ToLowerInvariant().Contains(query)));
         }
         #endregion
 

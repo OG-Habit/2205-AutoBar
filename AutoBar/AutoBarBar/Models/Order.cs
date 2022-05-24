@@ -6,14 +6,15 @@ namespace AutoBarBar.Models
 {
     public class Order 
     {
-        public string Id { get; set; }  
-        public string CustomerId { get; set; }
-        public bool OrderStatus { get; set; }
-        public bool HasReward { get; set; }
+        public int ID { get; set; }  
+        public int CustomerID { get; set; }
+        public int OrderStatus { get; set; }
         public double TotalPrice { get; set; }
-        public int PointsEarned { get; set; }
-        public DateTime OpenedOn { get; set; }
-        public DateTime ClosedOn { get; set; }
+        public decimal PointsEarned { get; set; }
+        public int HasReward { get; set; }
+        public string OpenedOn { get; set; }
+        public string ClosedOn { get; set; }
+        public string Remarks { get; set; }
 
 
         public string CustomerName { get; set; }

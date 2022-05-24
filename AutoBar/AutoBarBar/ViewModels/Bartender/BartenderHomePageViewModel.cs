@@ -19,6 +19,8 @@ namespace AutoBarBar.ViewModels
     public class BartenderHomePageViewModel : BaseViewModel
     {
         readonly IProductService productService;
+        readonly IActiveTabService activeTabService;
+        readonly IOrderLineService orderLineService;
 
         public AsyncCommand GetReloadBalanceAmountCommand { get; }
         public AsyncCommand ShowScanCommand { get; }
@@ -44,6 +46,8 @@ namespace AutoBarBar.ViewModels
         public BartenderHomePageViewModel()
         {
             productService = DependencyService.Get<IProductService>();
+            activeTabService = DependencyService.Get<IActiveTabService>();
+            orderLineService = DependencyService.Get<IOrderLineService>();
 
             Title = "Bartender Home Page";
             Customers = new ObservableRangeCollection<Customer>();
@@ -55,7 +59,6 @@ namespace AutoBarBar.ViewModels
             NewOrderLines = new ObservableCollection<OrderLine>();
             
             PopulateData();
-            SwitchUser(Customers[0]);
 
             ShowScanCommand = new AsyncCommand(ShowScan);
             GetReloadBalanceAmountCommand = new AsyncCommand(GetReloadBalanceAmount);
@@ -83,20 +86,34 @@ namespace AutoBarBar.ViewModels
 
         void PopulateData()
         {
-            var getCustomersTask = GetItemsAsync(Customers, CustomerDataStore);
+            List<int> orderIDs = new List<int>();
+            //var getCustomersTask = GetItemsAsync(Customers, CustomerDataStore);
             //var getProductsTask = GetItemsAsync(Products, ProductDataStore);
-            var getOrderLinesTask = GetItemsAsync(OrderLines, OrderLineDataStore);
-            var getOrdersTask = GetItemsAsync(Orders, OrderDataStore);
+            //var getOrderLinesTask = GetItemsAsync(OrderLines, OrderLineDataStore);
             var getRewardsTask = GetItemsAsync(Rewards, RewardDataStore);
-            
+            var productsTask = productService.GetProducts();
+            var activeTabsTask = activeTabService.GetActiveTabs();
+
             Task[] tasks = new Task[]
             {
-                getCustomersTask, getOrderLinesTask, getOrdersTask, getRewardsTask
+                getRewardsTask, productsTask, activeTabsTask
             };
             Task.WaitAll(tasks);
 
-            var productsTask = productService.GetProducts();
+            //var getOrdersTask = orderService.GetOrders();
+            //Orders.AddRange(getOrdersTask.Result);
+            ActiveTabs.AddRange(activeTabsTask.Result);
             Products.AddRange(productsTask.Result);
+            
+            foreach(var at in ActiveTabs)
+            {
+                Customers.Add(at.ATCustomer);
+                Orders.Add(at.ATOrder);
+                orderIDs.Add(at.ATOrder.ID);
+            }
+
+            var orderLinesTask = orderLineService.GetOrderLines(orderIDs);
+            OrderLines.AddRange(orderLinesTask.Result);
         }
 
         async Task GetItemsAsync<TModel>(ObservableRangeCollection<TModel> list, IDataStore<TModel> dataStore)
@@ -201,14 +218,14 @@ namespace AutoBarBar.ViewModels
         async Task GetReloadBalanceAmount()
         {
             string ans = await Application.Current.MainPage.DisplayPromptAsync("Balance", "Enter amount:", "Add", "Cancel", null, -1, Keyboard.Numeric, "");
-            if(float.TryParse(ans, out float num))
+            if(decimal.TryParse(ans, out decimal num))
             {
                 foreach(var c in Customers)
                 {
-                    if(c.Name == SelectedCustomer.Name)
+                    if(c.ID == SelectedCustomer.ID)
                     {
                         await Application.Current.MainPage.DisplayAlert("Success", "Balance has been added.", "Ok");
-                        CurrentBalance = c.CurrentBalance += num;
+                        CurrentBalance = c.Balance += num;
                     }
                 }
             }
@@ -235,7 +252,7 @@ namespace AutoBarBar.ViewModels
             OrderLines.AddRange(NewOrderLines);
             NewOrderLines.Clear();
 
-            CurrentBalance = SelectedCustomer.CurrentBalance -= TotalOrderLinesCost;
+            CurrentBalance = SelectedCustomer.Balance -= TotalOrderLinesCost;
             TotalOrderPrice = CurrentOrder.TotalPrice += TotalOrderLinesCost;
             PointsEarned = CurrentOrder.PointsEarned += (pe = (int)CurrentOrder.TotalPrice / 1000) != 0 ? pe * 100 : 0;
             TotalOrderLinesCost = 0;
@@ -263,10 +280,10 @@ namespace AutoBarBar.ViewModels
                 return;
 
             SelectedCustomer = c as Customer;
-            CurrentBalance = selectedCustomer.CurrentBalance;
-            CurrentOrderLines = new ObservableCollection<OrderLine>(OrderLines.Where(ol => ol.CustomerName == SelectedCustomer.Name));
-            CurrentOrder = Orders.First(o => String.Equals(o.CustomerName, SelectedCustomer.Name) &&
-                                            o.OrderStatus == false);
+            // Extend BaseModel
+            CurrentBalance = SelectedCustomer.Balance;
+            CurrentOrder = Orders.First(o => o.CustomerID == SelectedCustomer.ID);
+            CurrentOrderLines = new ObservableCollection<OrderLine>(OrderLines.Where(ol => ol.OrderID == CurrentOrder.ID));
             PointsEarned = CurrentOrder.PointsEarned;
             TotalOrderPrice = CurrentOrder.TotalPrice;
 
@@ -278,7 +295,7 @@ namespace AutoBarBar.ViewModels
             NewOrderLines.Clear();
             foreach (var colg in CurrentOrderLineGroup)
             {
-                double total = 0;
+                decimal total = 0;
                 foreach (var ol in colg)
                 {
                     total += ol.SubTotal;
@@ -325,8 +342,8 @@ namespace AutoBarBar.ViewModels
 
         void IncreaseQuantity(OrderLine Ol)
         {
-            var newTotal = TotalOrderLinesCost + Ol.Price;
-            if (newTotal > SelectedCustomer.CurrentBalance)
+            var newTotal = TotalOrderLinesCost + Ol.UnitPrice;
+            if (newTotal > SelectedCustomer.Balance)
             {
                 DependencyService.Get<IToastService>().ShowLongMessage("Insufficient balance.");
                 return;
@@ -334,11 +351,11 @@ namespace AutoBarBar.ViewModels
 
             foreach(var nol in NewOrderLines)
             {
-                if (string.Equals(Ol.Id, nol.Id))
+                if (nol.ID == Ol.ID)
                 {
                     nol.Quantity++;
-                    nol.SubTotal += Ol.Price;
-                    TotalOrderLinesCost = (float)newTotal;
+                    nol.SubTotal += Ol.UnitPrice;
+                    TotalOrderLinesCost = newTotal;
                     break;
                 }
             }
@@ -382,8 +399,8 @@ namespace AutoBarBar.ViewModels
             set { SetProperty(ref selectedCustomer, value); }
         }
 
-        double currentBalance;
-        public double CurrentBalance
+        decimal currentBalance;
+        public decimal CurrentBalance
         {
             get => currentBalance;
             set => SetProperty(ref currentBalance, value);
@@ -428,8 +445,8 @@ namespace AutoBarBar.ViewModels
             set => SetProperty(ref totalOrderPrice, value);
         }
 
-        int pointsEarned;
-        public int PointsEarned
+        decimal pointsEarned;
+        public decimal PointsEarned
         {
             get => pointsEarned;
             set => SetProperty(ref pointsEarned, value);
@@ -472,8 +489,8 @@ namespace AutoBarBar.ViewModels
             set => SetProperty(ref canAddNewOrderLine, value);
         }
 
-        float totalOrderLinesCost;
-        public float TotalOrderLinesCost
+        decimal totalOrderLinesCost;
+        public decimal TotalOrderLinesCost
         {
             get => totalOrderLinesCost;
             set => SetProperty(ref totalOrderLinesCost, value);
@@ -493,6 +510,15 @@ namespace AutoBarBar.ViewModels
         {
             get { return selectedReward; }
             set { SetProperty(ref selectedReward, value); }
+        }
+        #endregion
+
+        #region ActiveTabs
+        ObservableRangeCollection<ActiveTab> activeTabs;
+        public ObservableRangeCollection<ActiveTab> ActiveTabs
+        {
+            get => activeTabs;
+            set => SetProperty(ref activeTabs, value);
         }
         #endregion
         #endregion
