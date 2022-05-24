@@ -51,18 +51,18 @@ namespace AutoBarBar.ViewModels
 
         private async void OnAddClicked()
         {
-            bool retryBool = await App.Current.MainPage.DisplayAlert("Add", "Would you like to add to menu?", "Yes", "No");
-            if (retryBool)
-            {
-                Product item = new Product();
-                item.Id = Guid.NewGuid().ToString();
-                item.Name = Name;
-                item.Price = Price;
-                item.Description = Description;
-                item.ImageLink = "default_pic";
-                await ProductDataStore.AddItemAsync(item);
-                await Shell.Current.GoToAsync("..");
-            }
+            //bool retryBool = await App.Current.MainPage.DisplayAlert("Add", "Would you like to add to menu?", "Yes", "No");
+            //if (retryBool)
+            //{
+            //    Product item = new Product();
+            //    item.Id = Guid.NewGuid().ToString();
+            //    item.Name = Name;
+            //    item.UnitPrice = Price;
+            //    item.Description = Description;
+            //    item.ImageLink = "default_pic";
+            //    await ProductDataStore.AddItemAsync(item);
+            //    await Shell.Current.GoToAsync("..");
+            //}
         }
     }
 }

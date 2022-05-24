@@ -66,19 +66,19 @@ namespace AutoBarBar.ViewModels
 
         public async void LoadItemId(string itemId)
         {
-            try
-            {
-                var item = await ProductDataStore.GetItemAsync(itemId);
-                Id = item.Id;
-                Name = item.Name;
-                Price = item.Price;
-                Description = item.Description;
-                Image = item.ImageLink;
-            }
-            catch (Exception)
-            {
-                Debug.WriteLine("Failed to Load Item");
-            }
+            //try
+            //{
+            //    var item = await ProductDataStore.GetItemAsync(itemId);
+            //    Id = item.Id;
+            //    Name = item.Name;
+            //    Price = item.Price;
+            //    Description = item.Description;
+            //    Image = item.ImageLink;
+            //}
+            //catch (Exception)
+            //{
+            //    Debug.WriteLine("Failed to Load Item");
+            //}
         }
 
         private async void OnCancelClicked()
@@ -88,18 +88,18 @@ namespace AutoBarBar.ViewModels
 
         private async void OnSaveClicked()
         {
-            bool retryBool = await App.Current.MainPage.DisplayAlert("Save", "Would you like to save changes?", "Yes", "No");
-            if (retryBool)
-            {
-                Product item = new Product();
-                item.Id = ItemId;
-                item.Name = Name;
-                item.Price = Price;
-                item.Description = Description;
-                item.ImageLink = Image;
-                await ProductDataStore.UpdateItemAsync(item);
-                await Shell.Current.GoToAsync("..");
-            }
+            //bool retryBool = await App.Current.MainPage.DisplayAlert("Save", "Would you like to save changes?", "Yes", "No");
+            //if (retryBool)
+            //{
+            //    Product item = new Product();
+            //    item.Id = ItemId;
+            //    item.Name = Name;
+            //    item.UnitPrice = Price;
+            //    item.Description = Description;
+            //    item.ImageLink = Image;
+            //    await ProductDataStore.UpdateItemAsync(item);
+            //    await Shell.Current.GoToAsync("..");
+            //}
         }
 
         private async void OnDeleteClicked()

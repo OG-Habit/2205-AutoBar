@@ -14,6 +14,8 @@ namespace AutoBarBar.Models
         public int PointsEarned { get; set; }
         public DateTime OpenedOn { get; set; }
         public DateTime ClosedOn { get; set; }
+
+
         public string CustomerName { get; set; }
         public string BartenderName { get; set; }
         public string Reward{ get; set; }

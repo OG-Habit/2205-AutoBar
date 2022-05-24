@@ -5,6 +5,7 @@ using MySqlConnector;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data.Common;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -17,6 +18,8 @@ namespace AutoBarBar.ViewModels
 {
     public class BartenderHomePageViewModel : BaseViewModel
     {
+        readonly IProductService productService;
+
         public AsyncCommand GetReloadBalanceAmountCommand { get; }
         public AsyncCommand ShowScanCommand { get; }
         public AsyncCommand EndTransactionCommand { get; }
@@ -40,6 +43,8 @@ namespace AutoBarBar.ViewModels
 
         public BartenderHomePageViewModel()
         {
+            productService = DependencyService.Get<IProductService>();
+
             Title = "Bartender Home Page";
             Customers = new ObservableRangeCollection<Customer>();
             Products = new ObservableRangeCollection<Product>();
@@ -79,16 +84,19 @@ namespace AutoBarBar.ViewModels
         void PopulateData()
         {
             var getCustomersTask = GetItemsAsync(Customers, CustomerDataStore);
-            var getProductsTask = GetItemsAsync(Products, ProductDataStore);
+            //var getProductsTask = GetItemsAsync(Products, ProductDataStore);
             var getOrderLinesTask = GetItemsAsync(OrderLines, OrderLineDataStore);
             var getOrdersTask = GetItemsAsync(Orders, OrderDataStore);
             var getRewardsTask = GetItemsAsync(Rewards, RewardDataStore);
+            
             Task[] tasks = new Task[]
             {
-                getCustomersTask, getProductsTask, getOrderLinesTask, getOrdersTask, getRewardsTask
+                getCustomersTask, getOrderLinesTask, getOrdersTask, getRewardsTask
             };
-            //Task.WaitAll(tasks);
-            Task.WhenAll(tasks).Await();
+            Task.WaitAll(tasks);
+
+            var productsTask = productService.GetProducts();
+            Products.AddRange(productsTask.Result);
         }
 
         async Task GetItemsAsync<TModel>(ObservableRangeCollection<TModel> list, IDataStore<TModel> dataStore)
@@ -99,6 +107,7 @@ namespace AutoBarBar.ViewModels
 
         async Task ShowScan()
         {
+            ObservableCollection<User> user = new ObservableCollection<User>();
             var builder = new MySqlConnectionStringBuilder
             {
                 Server = "sql6.freemysqlhosting.net", 
@@ -108,21 +117,31 @@ namespace AutoBarBar.ViewModels
             };
 
             using (var conn = new MySqlConnection(builder.ConnectionString))
-            using (var cmd = conn.CreateCommand())
             {
                 try
                 {
                     conn.Open();
-                    cmd.CommandText = "SELECT * FROM Test";
-                    using (var reader = cmd.ExecuteReader())
+                    string cmd = "SELECT * FROM Users";
+                    using (var command = new MySqlCommand(cmd, conn))
+                    using (var reader = command.ExecuteReader())
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
-                            var a = reader.GetString(0);
+                            var list = reader.GetEnumerator();
+                            while (list.MoveNext())
+                            {
+                                User u = new User();
+                                var a = list.Current;
+                                DbDataRecord dataRecord = (DbDataRecord)a;
+                                u.FirstName = dataRecord.GetString(2);
+                                u.LastName = dataRecord.GetString(3);
+                                int fc = dataRecord.FieldCount;
+                                user.Add(u);
+                            }
                         }
                     }
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     var m = e.Message;
                 }
@@ -274,7 +293,7 @@ namespace AutoBarBar.ViewModels
             if (CanAddNewOrderLine == false)
                 CanAddNewOrderLine = true;
 
-            var newTotalCost = p.Price + TotalOrderLinesCost;
+            var newTotalCost = p.UnitPrice + TotalOrderLinesCost;
             if(newTotalCost > CurrentBalance)
             {
                 DependencyService.Get<IToastService>().ShowLongMessage("Insufficient balance.");
@@ -290,11 +309,11 @@ namespace AutoBarBar.ViewModels
                     Id = Guid.NewGuid().ToString(),
                     CustomerName = SelectedCustomer.Name,
                     ProductName = p.Name,
-                    Price = p.Price,
+                    Price = p.UnitPrice,
                     Quantity = 1,
                     ProductImgUrl = p.ImageLink,
                     CreatedOn = "9:10PM",
-                    SubTotal = p.Price
+                    SubTotal = p.UnitPrice
                 });
                 TotalOrderLinesCost = (float)newTotalCost;
             } 
