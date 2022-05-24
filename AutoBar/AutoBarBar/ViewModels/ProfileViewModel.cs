@@ -7,12 +7,14 @@ namespace AutoBarBar.ViewModels
         public Command LogoutCommand { get; }
         public string Name { get; }
         public string Email { get; }
+        public string ImageLink { get; }
 
         public ProfileViewModel()
         {
             LogoutCommand = new Command(OnLogoutClicked);
             Name = "Test Testing Tester";
             Email = "test@email.com";
+            ImageLink = "default_pic";
         }
 
         private async void OnLogoutClicked(object obj)

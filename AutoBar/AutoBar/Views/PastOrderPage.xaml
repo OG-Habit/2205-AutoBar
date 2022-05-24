@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:AutoBar.ViewModels"
+             xmlns:model="clr-namespace:AutoBar.Models"
+             x:Class="AutoBar.Views.PastOrderPage"
+             Shell.NavBarIsVisible="False">
+
+    <ContentPage.BindingContext>
+        <vm:PastOrderViewModel />
+    </ContentPage.BindingContext>
+
+    <ContentPage.Content>
+        <StackLayout>
+            <Grid BackgroundColor="#2196F3" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand"
+                  ColumnDefinitions="2" Padding="20,10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                </Grid.RowDefinitions>
+                <Label Text="AUTOBAR" FontSize="25" Grid.Column="1" Grid.Row="0" TextColor="White" VerticalOptions="Center"/>
+                <Frame Grid.Column="2" Grid.Row="0" HasShadow="False" CornerRadius="20" Padding="10" BackgroundColor="gray"
+                       VerticalOptions="Center" HorizontalOptions="End">
+                    <Label Text="{Binding Balance, StringFormat='PHP {0:#.00}'}" FontSize="15"  TextColor="White"/>
+                </Frame>
+            </Grid>
+            <Grid ColumnDefinitions="2" Padding="30,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                </Grid.RowDefinitions>
+                <Label Text="Past Orders" LineBreakMode="NoWrap" FontSize="20" Grid.Column="1"
+                       HorizontalOptions="Start" VerticalOptions="Center"/>
+                <Button Text="=" CornerRadius="100" Grid.Column="2" HorizontalOptions="End" VerticalOptions="Center"
+                        CommandParameter="{Binding .}" Command="{Binding Source={RelativeSource AncestorType={x:Type vm:PastOrderViewModel}},
+                        Path=SwitchTapped}"/>
+            </Grid>
+            <RefreshView x:DataType="vm:PastOrderViewModel" Command="{Binding LoadOrderCommand}" 
+                         IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
+                <CollectionView x:Name="ListView" ItemsSource="{Binding Order}" SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout Padding="20,5" x:DataType="model:Order">
+                                <Frame HasShadow="True" CornerRadius="20" Padding="10">
+                                    <Grid Grid.Column="2" VerticalOptions="Center" Padding="10,0,0,0">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Label Text="{Binding ClosedOn, StringFormat='{0:MMM dd, yyyy}'}" LineBreakMode="NoWrap" 
+                                                   FontSize="18" Grid.Row="0"/>
+                                        <Label Text="{Binding ClosedOn, StringFormat='Time: {0:h:mm tt}'}" LineBreakMode="NoWrap" 
+                                                   FontSize="12" Grid.Row="1"/>
+                                        <Label Text="{Binding TotalPrice, StringFormat='Total: PHP {0:#.00}'}" LineBreakMode="NoWrap" 
+                                                   FontSize="12" Grid.Row="2"/>
+                                        <Label Text="{Binding BartenderName, StringFormat='Bartender: {0:F:0}'}" LineBreakMode="NoWrap" 
+                                                   FontSize="12" Grid.Row="3"/>
+                                    </Grid>
+                                </Frame>
+                                <StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer NumberOfTapsRequired="1" CommandParameter="{Binding .}"
+                                                          Command="{Binding Source={RelativeSource 
+                                                                    AncestorType={x:Type vm:PastOrderViewModel}},
+                                                                    Path=ItemTapped}"/>
+                                </StackLayout.GestureRecognizers>
+                            </StackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </RefreshView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

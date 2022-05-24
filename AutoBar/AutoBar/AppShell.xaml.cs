@@ -12,7 +12,12 @@ namespace AutoBar
         {
             InitializeComponent();
             Routing.RegisterRoute(nameof(QRCodePage), typeof(QRCodePage));
-            //Routing.RegisterRoute(nameof(ItemDetailPage), typeof(ItemDetailPage));
+            Routing.RegisterRoute(nameof(EwalletPage), typeof(EwalletPage));
+            Routing.RegisterRoute(nameof(ProductDetailPage), typeof(ProductDetailPage));
+            Routing.RegisterRoute(nameof(RewardDetailPage), typeof(RewardDetailPage));
+            Routing.RegisterRoute(nameof(OrderDetailPage), typeof(OrderDetailPage));
+            Routing.RegisterRoute(nameof(PastOrderPage), typeof(PastOrderPage));
+            Routing.RegisterRoute(nameof(PastOrderDetailPage), typeof(PastOrderDetailPage));
             //Routing.RegisterRoute(nameof(NewItemPage), typeof(NewItemPage));
         }
 

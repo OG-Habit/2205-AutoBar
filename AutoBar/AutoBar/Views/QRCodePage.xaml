@@ -4,8 +4,7 @@
              xmlns:zxing="clr-namespace:ZXing.Net.Mobile.Forms;assembly=ZXing.Net.Mobile.Forms"
              xmlns:zxingcommon="clr-namespace:ZXing.Common;assembly=zxing.portable"
              xmlns:viewModel="clr-namespace:AutoBar.ViewModels"
-             x:Class="AutoBar.Views.QRCodePage"
-             Shell.TabBarIsVisible="False">
+             x:Class="AutoBar.Views.QRCodePage">
     <ContentPage.BindingContext>
         <viewModel:QRCodeViewModel/>
     </ContentPage.BindingContext>

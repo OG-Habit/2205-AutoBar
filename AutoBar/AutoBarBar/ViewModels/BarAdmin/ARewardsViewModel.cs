@@ -42,7 +42,7 @@ namespace AutoBarBar.ViewModels
             {
                 Rewards.Clear();
                 var items = await RewardDataStore.GetItemsAsync(true);
-                foreach (var item in items)
+                foreach (var item in items.OrderBy(x => x.Name))
                 {
                     Rewards.Add(item);
                 }

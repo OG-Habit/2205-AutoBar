@@ -1,7 +1,5 @@
 ﻿using AutoBar.Views;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace AutoBar.ViewModels
@@ -18,6 +16,22 @@ namespace AutoBar.ViewModels
         private async void OnLoginClicked(object obj)
         {
             // Prefixing with `//` switches to a different navigation stack instead of pushing to the active one
+            await Xamarin.Essentials.SecureStorage.SetAsync("isLogged", "1");
+            await Shell.Current.GoToAsync($"//{nameof(HomePage)}");
+        }
+
+        public void OnAppearing()
+        {
+            _ = CheckLogin();
+        }
+
+        private async Task CheckLogin()
+        {
+            var isLoogged = Xamarin.Essentials.SecureStorage.GetAsync("isLogged").Result;
+            if (isLoogged == "1")
+            {
+                await Shell.Current.GoToAsync($"//{nameof(HomePage)}");
+            }
         }
     }
 }

@@ -17,7 +17,7 @@
                 <Label Text="Name: " FontSize="20" Grid.Column="0" Grid.Row="1"/>
                 <Label Text="{Binding Name}" FontSize="20" Grid.Column="1" Grid.Row="1"/>
                 <Label Text="Price: " FontSize="20" Grid.Column="0" Grid.Row="2"/>
-                <Label Text="{Binding Price, StringFormat='PHP {0}'}" FontSize="20" Grid.Column="1" Grid.Row="2"/>
+                <Label Text="{Binding Price, StringFormat='PHP {0:#.00}'}" FontSize="20" Grid.Column="1" Grid.Row="2"/>
                 <Label Text="Description: " FontSize="20" Grid.Column="0" Grid.Row="3"/>
                 <Label Text="{Binding Description}" FontSize="20" Grid.Column="1" Grid.Row="3"/>
             </Grid>

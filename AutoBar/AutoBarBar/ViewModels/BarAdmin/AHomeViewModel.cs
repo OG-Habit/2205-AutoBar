@@ -36,7 +36,7 @@ namespace AutoBarBar.ViewModels
             {
                 Customer.Clear();
                 var items = await OrderDataStore.GetItemsAsync(true);
-                foreach (var item in items)
+                foreach (var item in items.OrderByDescending(x => x.ClosedOn))
                 {
                     Customer.Add(item);
                 }

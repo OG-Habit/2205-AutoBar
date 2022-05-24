@@ -1,10 +1,70 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="AutoBar.Views.ProfilePage">
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             mc:Ignorable="d"
+             Shell.NavBarIsVisible="False"
+             x:Class="AutoBar.Views.ProfilePage"
+             xmlns:viewmodels="clr-namespace:AutoBar.ViewModels" 
+             x:DataType="viewmodels:ProfileViewModel">
     <ContentPage.Content>
-        <StackLayout>
-            <Button Text="QR Code" Clicked="GoToQRCodePage"/>
+        <StackLayout Padding="50,0" VerticalOptions="Center" HorizontalOptions="Center">
+            <Frame Padding="0" HorizontalOptions="Center" CornerRadius="200" HeightRequest="200" WidthRequest="200" 
+                   HasShadow="False" IsClippedToBounds="True" BackgroundColor="Transparent">
+                <Image x:Name="ProfilePic" Source="{Binding ImageLink}" Aspect="AspectFit"/>
+            </Frame>
+            <Label x:Name="NameLabel" HorizontalTextAlignment="Center" FontSize="30" Text="{Binding Name}"/>
+            <Label x:Name="EmailLabel" HorizontalTextAlignment="Center" FontSize="25" Text="{Binding Email}" Margin="0,0,0,20"/>
+            <Grid Margin="0" Padding="10,0" ColumnSpacing="0" RowSpacing="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="20"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="50"/>
+                </Grid.ColumnDefinitions>
+                    <Label Text="E-wallet" FontSize="Medium" Grid.Row="0" Grid.Column="0" VerticalTextAlignment="Center"/>
+                    <Label Text="Check balance of e-wallet" FontSize="Small" Grid.Row="1" Grid.Column="0" VerticalTextAlignment="Center"/>
+                <Label Text=">" Grid.RowSpan="2" Grid.Column="1" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding EwalletClicked}" NumberOfTapsRequired="1"/>
+                </Grid.GestureRecognizers>
+            </Grid>
+            <Grid Margin="0" Padding="10,0" ColumnSpacing="0" RowSpacing="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="20"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="50"/>
+                </Grid.ColumnDefinitions>
+                <Label Text="QR Code" FontSize="Medium" Grid.Row="0" Grid.Column="0" VerticalTextAlignment="Center"/>
+                <Label Text="Show QR code for scanning" FontSize="Small" Grid.Row="1" Grid.Column="0" VerticalTextAlignment="Center"/>
+                <Label Text=">" Grid.RowSpan="2" Grid.Column="1" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding QRCodeClicked}" NumberOfTapsRequired="1"/>
+                </Grid.GestureRecognizers>
+            </Grid>
+            <Grid Margin="0" Padding="10,0" ColumnSpacing="0" RowSpacing="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="20"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="50"/>
+                </Grid.ColumnDefinitions>
+                <Label Text="Report Lost Card" FontSize="Medium" Grid.Row="0" Grid.Column="0" VerticalTextAlignment="Center"/>
+                <Label Text="Send a report for a lost card" FontSize="Small" Grid.Row="1" Grid.Column="0" VerticalTextAlignment="Center"/>
+                <Label Text=">" Grid.RowSpan="2" Grid.Column="1" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ReportClicked}" NumberOfTapsRequired="1"/>
+                </Grid.GestureRecognizers>
+            </Grid>
+            <Button Text="Log out" WidthRequest="250" CornerRadius="100" Command="{Binding LogoutCommand}" Margin="0,30,0,0"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
