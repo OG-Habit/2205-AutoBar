@@ -11,10 +11,9 @@ namespace AutoBarBar.Services
 {
     public class ActiveTabService : BaseService, IActiveTabService
     {
-        readonly List<ActiveTab> activeTabs = new List<ActiveTab>();
-
         public async Task<IEnumerable<ActiveTab>> GetActiveTabs()
         {
+            List<ActiveTab> activeTabs = new List<ActiveTab>();
             string cmd = @"
                 SELECT 
                 Orders.ID, Orders.CustomerID, Orders.TotalPrice, Orders.PointsEarned, Orders.HasReward, Orders.OpenedOn,
@@ -62,6 +61,62 @@ namespace AutoBarBar.Services
             });
 
             return await Task.FromResult(activeTabs);
+        }
+
+        public async Task<ActiveTab> CreateActiveTab(string qrKey)
+        {
+            ActiveTab activeTab = new ActiveTab();
+            string cmd = $@"
+                SELECT 
+                Users.ID, Users.FirstName, Users.LastName, Users.Sex, Users.Birthday, Users.MobileNumber, Users.Email, Users.ImageLink,
+                Customers.ID, Customers.UserID, Customers.Balance, Customers.Points, Customers.CardStatus
+                FROM Customers
+                INNER JOIN Users
+                ON Users.ID = Customers.UserID
+                WHERE QRKey = ""{qrKey}"" 
+                LIMIT 1;
+            ";
+
+            GetItem<ActiveTab>(cmd, ref activeTab, (dataRecord, at) =>
+            {
+                activeTab.ATOrder = new Order();
+                activeTab.ATUser = new User();
+                activeTab.ATCustomer = new Customer();
+
+                activeTab.ATUser.ID = dataRecord.GetInt32(0);
+                activeTab.ATUser.FirstName = dataRecord.GetString(1);
+                activeTab.ATUser.LastName = dataRecord.GetString(2);
+                activeTab.ATUser.Sex = dataRecord.GetString(3);
+                activeTab.ATUser.Birthday = dataRecord.GetValue(4).ToString();
+                activeTab.ATUser.MobileNumber = dataRecord.GetString(5);
+                activeTab.ATUser.Email = dataRecord.GetString(6);
+                activeTab.ATUser.ImageLink = dataRecord.GetValue(7).ToString();
+                activeTab.ATUser.FullName = activeTab.ATUser.FirstName + " " + activeTab.ATUser.LastName;
+
+                activeTab.ATCustomer.ID = dataRecord.GetInt32(8);
+                activeTab.ATCustomer.UserID = dataRecord.GetInt32(9);
+                activeTab.ATCustomer.Balance = dataRecord.GetDecimal(10);
+                activeTab.ATCustomer.Points = dataRecord.GetDecimal(11);
+                activeTab.ATCustomer.CardStatus = dataRecord.GetInt32(12);
+            });
+
+            return await Task.FromResult(activeTab);
+        }
+
+        public async Task<bool> CheckExistingTabs(string customerIDs)
+        {
+            string cmd = $@"
+                SELECT * FROM Customers WHERE ID IN ({customerIDs})
+                LIMIT 1;
+            ";
+            bool ans = false;
+
+            GetItem<bool>(cmd, ref ans, (dataRecord, data) =>
+            {
+                ans = true;
+            });
+
+            return await Task.FromResult(ans);
         }
 
         public Task AddBalance(int customerID, decimal newBalance, string dateTime)

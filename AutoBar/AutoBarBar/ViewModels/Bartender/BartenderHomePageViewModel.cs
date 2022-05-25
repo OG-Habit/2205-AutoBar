@@ -17,6 +17,7 @@ using Xamarin.Forms;
 using Newtonsoft.Json;
 using static AutoBarBar.Constants;
 using static AutoBarBar.DateTimeHelper;
+using ZXing;
 
 namespace AutoBarBar.ViewModels
 {
@@ -96,10 +97,11 @@ namespace AutoBarBar.ViewModels
         {
             try
             {
-                List<int> orderIDs = new List<int>();
+                //List<int> orderIDs = new List<int>();
                 var getRewardsTask = GetItemsAsync(Rewards, RewardDataStore);
                 var productsTask = productService.GetProducts();
                 var activeTabsTask = activeTabService.GetActiveTabs();
+                string orderIDs = customerIDs = string.Empty;
 
                 Task[] tasks = new Task[]
                 {
@@ -115,7 +117,17 @@ namespace AutoBarBar.ViewModels
                     Customers.Add(at.ATCustomer);
                     Orders.Add(at.ATOrder);
                     Users.Add(at.ATUser);
-                    orderIDs.Add(at.ATOrder.ID);
+                    orderIDs += $", {at.ATOrder.ID}";
+                    customerIDs += $", {at.ATCustomer.ID}"; 
+                }
+
+                if(!string.IsNullOrEmpty(orderIDs))
+                {
+                    orderIDs.Remove(0, 2);
+                }
+                if (!string.IsNullOrEmpty(customerIDs))
+                {
+                    customerIDs.Remove(0, 2);
                 }
 
                 var orderLinesTask = orderLineService.GetOrderLines(orderIDs);
@@ -141,95 +153,7 @@ namespace AutoBarBar.ViewModels
 
         async Task ShowScan()
         {
-            ObservableCollection<User> user = new ObservableCollection<User>();
-            var builder = new MySqlConnectionStringBuilder
-            {
-                Server = "sql6.freemysqlhosting.net", 
-                UserID = "sql6494729",
-                Password = "gEB2fyY5T4",
-                Database = "sql6494729"
-            };
-
-            using (var conn = new MySqlConnection(builder.ConnectionString))
-            {
-                try
-                {
-                    conn.Open();
-                    string cmd = "SELECT * FROM Users";
-                    using (var command = new MySqlCommand(cmd, conn))
-                    using (var reader = command.ExecuteReader())
-                    {
-                        while (await reader.ReadAsync())
-                        {
-                            var list = reader.GetEnumerator();
-                            while (list.MoveNext())
-                            {
-                                User u = new User();
-                                var a = list.Current;
-                                DbDataRecord dataRecord = (DbDataRecord)a;
-                                u.FirstName = dataRecord.GetString(2);
-                                u.LastName = dataRecord.GetString(3);
-                                int fc = dataRecord.FieldCount;
-                                user.Add(u);
-                            }
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    var m = e.Message;
-                }
-            }
-            {
-                //try
-                //{
-                //    //Task contask = connection.OpenAsync();
-                //    //contask.Await();
-                //    await conn.OpenAsync();
-                //    //using (var cmd = new MySqlCommand())
-                //    //{
-                //    //    cmd.Connection = conn;
-                //    //    cmd.CommandText = "SELECT * FROM Test";
-                //    //    try
-                //    //    {
-                //    //        using (var reader = await cmd.ExecuteReaderAsync())
-                //    //        {
-                //    //            while (await reader.ReadAsync())
-                //    //            {
-                //    //                var a = reader.GetString(0);
-                //    //            }
-                //    //        }
-                //    //    }
-                //    //    catch(Exception e)
-                //    //    {
-                //    //        var a = e.Message;
-                //    //    }
-                //    //}
-                //} 
-                //catch (MySqlException e)
-                //{
-                //    var a = e.Message;
-                //    switch(e.Number)
-                //    {
-                //        case 4060:
-                //            break;
-                //        case 18456:
-                //            break;
-                //        default:
-                //            break;
-                //    }
-                //}
-                //catch (NullReferenceException e)
-                //{
-                //    var a = e.Message;
-                //}
-                //catch(Exception e)
-                //{
-                //    var a = e.Message;
-                //    var source = e.Source;
-                //}
-            };
-            //await Shell.Current.GoToAsync($"{nameof(ScanPage)}");
+            await Shell.Current.GoToAsync($"//{nameof(BartenderHomePage)}/{nameof(ScanPage)}?ids={customerIDs}");
         }
         
         async Task GetReloadBalanceAmount()
@@ -410,8 +334,23 @@ namespace AutoBarBar.ViewModels
 
         public void ApplyQueryAttributes(IDictionary<string, string> query)
         {
-            string user = HttpUtility.UrlDecode(query["user"]);
-            StaffUser = JsonConvert.DeserializeObject<User>(Uri.UnescapeDataString(user));
+            if(query.Count == 0)
+            {
+                return;
+            }
+
+            if (query.ContainsKey("user"))
+            {
+                string user = HttpUtility.UrlDecode(query["user"]);
+                StaffUser = JsonConvert.DeserializeObject<User>(Uri.UnescapeDataString(user));
+            }
+
+            if(query.ContainsKey("newTab"))
+            {
+                string at = HttpUtility.UrlDecode(query["newTab"]);
+                ActiveTab activeTab = JsonConvert.DeserializeObject<ActiveTab>(Uri.UnescapeDataString(at));
+                customerIDs += $", {activeTab.ATCustomer.ID}";
+            }
         }
 
         #region Getters setters
@@ -428,6 +367,13 @@ namespace AutoBarBar.ViewModels
         {
             get { return selectedCustomer; }
             set { SetProperty(ref selectedCustomer, value); }
+        }
+
+        string customerIDs;
+        public string CustomerIDs
+        {
+            get => customerIDs;
+            set => SetProperty(ref customerIDs, value);
         }
 
         decimal currentBalance;

@@ -12,22 +12,20 @@ namespace AutoBarBar.Services
     public class OrderLineService : BaseService, IOrderLineService
     {
         readonly List<OrderLine> orderLines = new List<OrderLine>();
-        public async Task<IEnumerable<OrderLine>> GetOrderLines(List<int> IDs)
+        public async Task<IEnumerable<OrderLine>> GetOrderLines(string IDs)
         {
-            string str = string.Empty;
+            //if(IDs.Count == 0)
+            //{
+            //    return orderLines;
+            //}
 
-            for(var i = 0; i < IDs.Count; i++)
-            {
-                if(i > 0)
-                {
-                    str += ", " + IDs[i];
-                } else
-                {
-                    str += IDs[i];
-                }
-            }
+            //string str = "" + IDs[0];
+            //for(var i = 1; i < IDs.Count; i++)
+            //{
+            //    str += ", " + IDs[i];
+            //}
 
-            string cmd = $"SELECT * FROM OrderLine WHERE OrderID IN ({str})";
+            string cmd = $"SELECT * FROM OrderLine WHERE OrderID IN ({IDs})";
 
             GetItems<OrderLine>(cmd, (dataRecord, ol) =>
             {

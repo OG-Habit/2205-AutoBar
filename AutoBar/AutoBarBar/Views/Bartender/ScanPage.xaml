@@ -2,13 +2,19 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:zxing="clr-namespace:ZXing.Net.Mobile.Forms;assembly=ZXing.Net.Mobile.Forms"
+             xmlns:vm="clr-namespace:AutoBarBar.ViewModels"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              x:Class="AutoBarBar.Views.ScanPage"
-             Shell.TabBarIsVisible="False">
+             Shell.TabBarIsVisible="False"
+             x:DataType="vm:ScanPageViewModel">
+    <ContentPage.BindingContext>
+        <vm:ScanPageViewModel/>
+    </ContentPage.BindingContext>
     <ContentPage.Content>
         <Grid RowDefinitions="1*, 1*, 8*">
-            <Label x:Name="LabelQRResult" Text="Result..." TextColor="Black" Grid.Row="0" />
+            <Label Text="{Binding ScanResult}" TextColor="Black" Grid.Row="0" />
             <Label x:Name="LabelSha" Grid.Row="1"/>
-            <zxing:ZXingScannerView x:Name="scan" Grid.Row="2" IsScanning="True" VerticalOptions="FillAndExpand"/>
+            <zxing:ZXingScannerView x:Name="scan" Grid.Row="2" IsScanning="True" VerticalOptions="FillAndExpand" ScanResultCommand="{Binding ScanCommand}"/>
             <zxing:ZXingDefaultOverlay Grid.Row="2" TopText="Scan QR now..." />
         </Grid>
     </ContentPage.Content>

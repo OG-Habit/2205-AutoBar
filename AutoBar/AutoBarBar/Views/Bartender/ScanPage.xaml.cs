@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutoBarBar.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -17,40 +18,6 @@ namespace AutoBarBar.Views
         public ScanPage()
         {
             InitializeComponent();
-            scan.OnScanResult += (result) => Device.BeginInvokeOnMainThread(() =>
-            {
-                
-                //if (IsMatch(result.Text))
-                //{
-                //    LabelQRResult.Text = "true";
-                //}
-                //else
-                //{
-                //    LabelQRResult.Text = "false";
-                //}
-                IsMatch(result.Text);
-            });
-        }
-
-        private bool IsMatch(string result)
-        {
-            string email = "ivan@gmail.com", emailVal;
-            SHA256 sha = new SHA256Managed();
-
-            LabelSha.Text = emailVal = Convert.ToBase64String(sha.ComputeHash(Encoding.ASCII.GetBytes(email)));
-            LabelQRResult.Text = result;
-
-            return string.Equals(result, emailVal);
-        }
-
-        protected override void OnAppearing()
-        {
-            base.OnAppearing();
-        }
-
-        protected override void OnDisappearing()
-        {
-            base.OnDisappearing();
         }
     }
 }

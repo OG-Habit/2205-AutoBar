@@ -34,12 +34,12 @@ namespace AutoBar.ViewModels
         public string QRKey
         {
             get { return qrKey; }
-            set 
-            {
-                SHA256 sha = new SHA256Managed();
-                byte[] b = Encoding.ASCII.GetBytes(value);
-                SetProperty(ref qrKey, Convert.ToBase64String(sha.ComputeHash(b)));
-            }
+            set => SetProperty(ref qrKey, value);
+            //{
+            //    SHA256 sha = new SHA256Managed();
+            //    byte[] b = Encoding.ASCII.GetBytes(value);
+            //    SetProperty(ref qrKey, Convert.ToBase64String(sha.ComputeHash(b)));
+            //}
         }
     }
 }

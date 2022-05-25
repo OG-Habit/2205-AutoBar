@@ -8,6 +8,6 @@ namespace AutoBarBar.Services
 {
     public interface IOrderLineService
     {
-        Task<IEnumerable<OrderLine>> GetOrderLines(List<int> IDs);
+        Task<IEnumerable<OrderLine>> GetOrderLines(string IDs);
     }
 }
