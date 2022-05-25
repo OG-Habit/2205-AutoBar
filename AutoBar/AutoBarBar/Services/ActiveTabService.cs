@@ -50,6 +50,7 @@ namespace AutoBarBar.Services
                 activeTab.ATUser.MobileNumber = dataRecord.GetString(11);
                 activeTab.ATUser.Email = dataRecord.GetString(12);
                 activeTab.ATUser.ImageLink = dataRecord.GetValue(13).ToString();
+                activeTab.ATUser.FullName = activeTab.ATUser.FirstName + " " + activeTab.ATUser.LastName;
 
                 activeTab.ATCustomer.ID = dataRecord.GetInt32(14);
                 activeTab.ATCustomer.UserID = dataRecord.GetInt32(15);
@@ -61,6 +62,17 @@ namespace AutoBarBar.Services
             });
 
             return await Task.FromResult(activeTabs);
+        }
+
+        public Task AddBalance(int customerID, decimal newBalance, string dateTime)
+        {
+            string cmd = $@"
+                UPDATE Customers
+                SET Balance={newBalance}, LastTransactionAt='{dateTime}' 
+                WHERE ID={customerID};
+            ";
+            UpdateItem(cmd);
+            return Task.CompletedTask;
         }
     }
 }

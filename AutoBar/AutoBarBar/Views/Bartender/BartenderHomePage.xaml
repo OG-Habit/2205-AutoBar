@@ -40,7 +40,7 @@
                                 ItemsLayout="HorizontalList" ItemsSource="{Binding Users}">
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="models:User">
-                            <Label Text="{Binding FirstName}" FontSize="Large" 
+                            <Label Text="{Binding FullName}" FontSize="Large" 
                                    Margin="{Binding Converter={StaticResource scale}, ConverterParameter='thickness=0,0,10,0'}">
                             </Label>
                         </DataTemplate>
@@ -62,7 +62,7 @@
                     <Image Grid.Row="0" Grid.RowSpan="3"
                        Grid.Column="0"  
                     Source="default_pic.png"/>
-                    <Label Grid.Row="0" Grid.Column="1" Text="{Binding SelectedUser.FirstName, StringFormat='Name: {0}'}"/>
+                    <Label Grid.Row="0" Grid.Column="1" Text="{Binding SelectedUser.FullName, StringFormat='Name: {0}'}"/>
                     <Label Grid.Row="1" Grid.Column="1" Text="Status: Member"/>
                     <Label Grid.Row="2" Grid.Column="1" Text="{Binding SelectedUser.Email, StringFormat='Email: {0}'}"/>
                     <Label Grid.Row="0" Grid.Column="2" Text="{Binding SelectedUser.MobileNumber, StringFormat='Contact: {0}'}"/>

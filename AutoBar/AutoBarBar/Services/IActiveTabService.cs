@@ -9,5 +9,6 @@ namespace AutoBarBar.Services
     public interface IActiveTabService
     {
         Task<IEnumerable<ActiveTab>> GetActiveTabs();
+        Task AddBalance(int customerID, decimal newBalance, string dateTime);
     }
 }

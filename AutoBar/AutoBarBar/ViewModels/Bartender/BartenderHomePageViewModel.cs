@@ -14,6 +14,7 @@ using System.Windows.Input;
 using Xamarin.CommunityToolkit.ObjectModel;
 using Xamarin.Forms;
 using static AutoBarBar.Constants;
+using static AutoBarBar.DateTimeHelper;
 
 namespace AutoBarBar.ViewModels
 {
@@ -236,8 +237,10 @@ namespace AutoBarBar.ViewModels
                 {
                     if(c.ID == SelectedCustomer.ID)
                     {
+                        c.Balance += num; 
+                        await activeTabService.AddBalance(c.ID, c.Balance, GetPHTime());
                         await Application.Current.MainPage.DisplayAlert("Success", "Balance has been added.", "Ok");
-                        CurrentBalance = c.Balance += num;
+                        CurrentBalance = c.Balance;
                     }
                 }
             }

@@ -18,5 +18,7 @@ namespace AutoBarBar.Models
         public string ImageLink { get; set; }
         public string CreatedOn { get; set; }
         public int IsDeleted { get; set; }
+
+        public string FullName { get; set; }
     }
 }

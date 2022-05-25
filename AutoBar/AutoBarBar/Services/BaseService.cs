@@ -77,9 +77,27 @@ namespace AutoBarBar.Services
 
         }
 
-        protected void UpdateItem<T>(string cmd, Action<DbDataRecord, T> action)
+        protected void UpdateItem(string cmd, Action action = null)
         {
+            try
+            {
+                using (var conn = new MySqlConnection(CONNECTION_STRING))
+                {
+                    conn.Open();
+                    using (var command = new MySqlCommand(cmd, conn))
+                    {
+                        command.Connection = conn;
+                        command.CommandText = cmd;
+                        command.ExecuteNonQuery();
 
+                        action?.Invoke();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                var a = e.Message;
+            }
         }
     }
 }
