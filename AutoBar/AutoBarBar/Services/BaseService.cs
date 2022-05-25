@@ -42,6 +42,36 @@ namespace AutoBarBar.Services
             }
         }
 
+        protected void GetItem<T>(string cmd, ref T result, Action<DbDataRecord, T> action)
+        {
+            try
+            {
+                using (var conn = new MySqlConnection(CONNECTION_STRING))
+                {
+                    conn.Open();
+                    using (var command = new MySqlCommand(cmd, conn))
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            var list = reader.GetEnumerator();
+                            if(list.MoveNext())
+                            {
+                                DbDataRecord dataRecord = (DbDataRecord)list.Current;
+
+                                action(dataRecord, result);
+                            }
+                        }
+                    }
+                }
+            }
+            // Tip: If the app breaks down, place the red dot on the "var a = e.Message" line.
+            catch (Exception e)
+            {
+                var a = e.Message;
+            }
+        }
+
         protected void AddItem<T>(string cmd, Action<DbDataRecord, T> action)
         {
             try

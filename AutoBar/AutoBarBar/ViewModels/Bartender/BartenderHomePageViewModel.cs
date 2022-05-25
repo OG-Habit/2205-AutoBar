@@ -23,6 +23,7 @@ namespace AutoBarBar.ViewModels
         readonly IProductService productService;
         readonly IActiveTabService activeTabService;
         readonly IOrderLineService orderLineService;
+        readonly IToastService toastService;
 
         public AsyncCommand GetReloadBalanceAmountCommand { get; }
         public AsyncCommand ShowScanCommand { get; }
@@ -50,6 +51,7 @@ namespace AutoBarBar.ViewModels
             productService = DependencyService.Get<IProductService>();
             activeTabService = DependencyService.Get<IActiveTabService>();
             orderLineService = DependencyService.Get<IOrderLineService>();
+            toastService = DependencyService.Get<IToastService>();
 
             Title = "Bartender Home Page";
             Customers = new ObservableRangeCollection<Customer>();
@@ -331,20 +333,21 @@ namespace AutoBarBar.ViewModels
             var newTotalCost = p.UnitPrice + TotalOrderLinesCost;
             if(newTotalCost > CurrentBalance)
             {
-                DependencyService.Get<IToastService>().ShowLongMessage("Insufficient balance.");
+                toastService.ShowLongMessage("Insufficient balance.");
                 return;
             }
 
             int x;
-            for(x = 0; x < NewOrderLines.Count && NewOrderLines[x].ProductName != p.Name; x++) { }
+            for(x = 0; x < NewOrderLines.Count && NewOrderLines[x].ProductID != p.ID; x++) { }
             if(x == NewOrderLines.Count)
             {
                 NewOrderLines.Add(new OrderLine
                 {
-                    CustomerName = SelectedUser.FirstName,
-                    ProductName = p.Name,
+                    ProductID = p.ID,
                     UnitPrice = p.UnitPrice,
                     Quantity = 1,
+                    CustomerName = SelectedUser.FirstName,
+                    ProductName = p.Name,
                     ProductImgUrl = p.ImageLink,
                     CreatedOn = DateTime.Now.ToString(),
                     SubTotal = p.UnitPrice
@@ -353,7 +356,7 @@ namespace AutoBarBar.ViewModels
             } 
             else
             {
-                DependencyService.Get<IToastService>().ShowShortMessage($"{p.Name} is already in the order.");
+                toastService.ShowShortMessage($"{p.Name} is already in the order.");
             }
         }
 
@@ -362,7 +365,7 @@ namespace AutoBarBar.ViewModels
             var newTotal = TotalOrderLinesCost + Ol.UnitPrice;
             if (newTotal > SelectedCustomer.Balance)
             {
-                DependencyService.Get<IToastService>().ShowLongMessage("Insufficient balance.");
+                toastService.ShowLongMessage("Insufficient balance.");
                 return;
             }
 

@@ -25,8 +25,8 @@ namespace AutoBarBar.Services
                 INNER JOIN Users
                 ON Orders.CustomerID = Customers.ID AND Customers.UserID = Users.ID
                 WHERE 
-                Orders.OrderStatus = 1 AND 
-                Users.IsDeleted = 0;
+                (Orders.OrderStatus = 1 AND 
+                Users.IsDeleted = 0);
             ";
 
             GetItems<ActiveTab>(cmd, (dataRecord, activeTab) =>
@@ -68,7 +68,7 @@ namespace AutoBarBar.Services
         {
             string cmd = $@"
                 UPDATE Customers
-                SET Balance={newBalance}, LastTransactionAt='{dateTime}' 
+                SET Balance={newBalance}, LastTransactionAt=""{dateTime}"" 
                 WHERE ID={customerID};
             ";
             UpdateItem(cmd);

@@ -20,5 +20,7 @@ namespace AutoBarBar.Models
         public int IsDeleted { get; set; }
 
         public string FullName { get; set; }
+        // Bartender or BarAdmin
+        public int StaffID { get; set; }
     }
 }
