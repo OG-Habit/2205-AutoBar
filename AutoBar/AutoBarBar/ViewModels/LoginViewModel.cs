@@ -4,6 +4,7 @@ using AutoBarBar.Views;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using Newtonsoft.Json;
 
 namespace AutoBarBar.ViewModels
 {
@@ -30,7 +31,7 @@ namespace AutoBarBar.ViewModels
 
             var list = (List<string>)obj;
             User u = await accountService.LoginUser(list[0], list[1]);
-
+            string userObj = JsonConvert.SerializeObject(u);
 
             if(u.UserType == 0)
             {
@@ -39,12 +40,14 @@ namespace AutoBarBar.ViewModels
             else if(u.UserType == 1)
             {
                 await Xamarin.Essentials.SecureStorage.SetAsync("isLogged", "1");
+                await Xamarin.Essentials.SecureStorage.SetAsync("user", $"{userObj}");
                 await Shell.Current.GoToAsync($"//{nameof(AHomePage)}");
             }
             else // u.UserType == 2
             {
                 await Xamarin.Essentials.SecureStorage.SetAsync("isLogged", "2");
-                await Shell.Current.GoToAsync($"//{nameof(BartenderHomePage)}");
+                await Xamarin.Essentials.SecureStorage.SetAsync("user", $"{userObj}");
+                await Shell.Current.GoToAsync($"//{nameof(BartenderHomePage)}?user={userObj}");
             }
 
             //accountService.LoginUser();
@@ -68,13 +71,14 @@ namespace AutoBarBar.ViewModels
         private async Task CheckLogin()
         {
             var isLoogged = Xamarin.Essentials.SecureStorage.GetAsync("isLogged").Result;
+            var user = Xamarin.Essentials.SecureStorage.GetAsync("user").Result;
             if (isLoogged == "1")
             {
                 await Shell.Current.GoToAsync($"//{nameof(AHomePage)}");
             }
             else if (isLoogged == "2")
             {
-                await Shell.Current.GoToAsync($"//{nameof(BartenderHomePage)}");
+                await Shell.Current.GoToAsync($"//{nameof(BartenderHomePage)}?user={user}&test=test");
             }
         }
     }

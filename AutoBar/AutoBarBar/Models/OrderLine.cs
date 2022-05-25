@@ -18,6 +18,8 @@ namespace AutoBarBar.Models
         public string CreatedOn { get; set; }
         public int IsCompleted { get; set; }
 
+
+        public string TempID { get; set; }
         public string CustomerName { get; set; }
         public string ProductName { get; set; }
         decimal subTotal;

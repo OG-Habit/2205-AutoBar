@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Text;
-using static AutoBarBar.Constants;
+using static AutoBar.Constants;
 
-namespace AutoBarBar.Services
+namespace AutoBar.Services
 {
     public class BaseService
     {

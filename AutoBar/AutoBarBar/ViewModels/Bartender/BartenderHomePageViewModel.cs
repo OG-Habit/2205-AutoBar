@@ -10,15 +10,17 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Windows.Input;
 using Xamarin.CommunityToolkit.ObjectModel;
 using Xamarin.Forms;
+using Newtonsoft.Json;
 using static AutoBarBar.Constants;
 using static AutoBarBar.DateTimeHelper;
 
 namespace AutoBarBar.ViewModels
 {
-    public class BartenderHomePageViewModel : BaseViewModel
+    public class BartenderHomePageViewModel : BaseViewModel, IQueryAttributable
     {
         readonly IProductService productService;
         readonly IActiveTabService activeTabService;
@@ -343,15 +345,18 @@ namespace AutoBarBar.ViewModels
             {
                 NewOrderLines.Add(new OrderLine
                 {
+                    TempID = Guid.NewGuid().ToString(),
+                    OrderID = CurrentOrder.ID,
                     ProductID = p.ID,
                     UnitPrice = p.UnitPrice,
                     Quantity = 1,
+                    CreatedBy = StaffUser.ID,
+
                     CustomerName = SelectedUser.FirstName,
                     ProductName = p.Name,
                     ProductImgUrl = p.ImageLink,
-                    CreatedOn = DateTime.Now.ToString(),
                     SubTotal = p.UnitPrice
-                });
+                }) ;
                 TotalOrderLinesCost = newTotalCost;
             } 
             else
@@ -371,7 +376,7 @@ namespace AutoBarBar.ViewModels
 
             foreach(var nol in NewOrderLines)
             {
-                if (nol.ID == Ol.ID)
+                if (nol.TempID == Ol.TempID)
                 {
                     nol.Quantity++;
                     nol.SubTotal += Ol.UnitPrice;
@@ -385,7 +390,7 @@ namespace AutoBarBar.ViewModels
         {
             foreach(var nol in NewOrderLines)
             {
-                if(nol.ID == Ol.ID)
+                if(nol.TempID == Ol.TempID)
                 {
                     if(--nol.Quantity == 0)
                     {   
@@ -401,6 +406,12 @@ namespace AutoBarBar.ViewModels
                     break;
                 }
             }
+        }
+
+        public void ApplyQueryAttributes(IDictionary<string, string> query)
+        {
+            string user = HttpUtility.UrlDecode(query["user"]);
+            StaffUser = JsonConvert.DeserializeObject<User>(Uri.UnescapeDataString(user));
         }
 
         #region Getters setters
@@ -440,6 +451,12 @@ namespace AutoBarBar.ViewModels
         {
             get { return selectedUser; }
             set { SetProperty(ref selectedUser, value); }
+        }
+
+        User staffUser;
+        public User StaffUser { 
+            get => staffUser;
+            set => SetProperty(ref staffUser, value);   
         }
         #endregion
 
