@@ -6,6 +6,7 @@ using Xamarin.Forms;
 using ZXing;
 using Newtonsoft.Json;
 using AutoBarBar.Services;
+using static AutoBarBar.Constants;
 using System.Threading.Tasks;
 
 namespace AutoBarBar.ViewModels
@@ -21,11 +22,6 @@ namespace AutoBarBar.ViewModels
             activeTabService = DependencyService.Get<IActiveTabService>();
 
             ScanResult = "Result...";
-            NewTab = new ActiveTab();
-            NewTab.ATOrder = new Order();
-            NewTab.ATUser = new User();
-            NewTab.ATCustomer = new Customer();
-            NewTab.ATUser.FullName = "It workis.";
 
             ScanCommand = new Command<Result>(Scan);
         }
@@ -49,7 +45,7 @@ namespace AutoBarBar.ViewModels
 
                 await App.Current.MainPage.DisplayAlert("Success", "User has been added.", "Ok");
                 IsBusy = false;
-                await Shell.Current.GoToAsync($"..?newTab={obj}");
+                await Shell.Current.GoToAsync($"..?{PARAM_NEW_TAB}={obj}");
             });
         }
 
@@ -60,7 +56,7 @@ namespace AutoBarBar.ViewModels
                 return;
             }
 
-            customerIDs = query["ids"];
+            customerIDs = query[$"{PARAM_CUSTOMER_IDS}"];
         }
 
         string customerIDs;
@@ -70,13 +66,6 @@ namespace AutoBarBar.ViewModels
         {
             get => scanResult;
             set => SetProperty(ref scanResult, value);
-        }
-
-        ActiveTab newTab;
-        public ActiveTab NewTab
-        {
-            get => newTab;
-            set => SetProperty(ref newTab, value);
         }
     }
 }

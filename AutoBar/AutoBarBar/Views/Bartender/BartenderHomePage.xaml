@@ -69,7 +69,7 @@
                     <Label Grid.Row="1" Grid.Column="2" Text="{Binding SelectedUser.Birthday, StringFormat='Birthday: {0}'}"/>
                     <Label Grid.Row="2" Grid.Column="2" Text="{Binding SelectedUser.Sex, StringFormat='Sex: {0}'}"/>
                     <Label Grid.Row="0" Grid.Column="3" Text="{Binding SelectedCustomer.CardStatus, StringFormat='Card Issued: {0}'}"/>
-                    <Label Grid.Row="1" Grid.Column="3" Text="{Binding CurrentBalance, StringFormat='Current Balance: PHP {0:F2}'}"/>
+                    <Label Grid.Row="1" Grid.Column="3" Text="{Binding SelectedCustomer.Balance, StringFormat='Current Balance: PHP {0:F2}'}"/>
                     <Label Grid.Row="2" Grid.Column="3" Text="{Binding SelectedCustomer.Points, StringFormat='Total Points: {0}'}"/>
                 </Grid>
                 <ListView 
@@ -201,9 +201,9 @@
                             ItemDisplayBinding="{Binding Name}">
                     </Picker>
                     <Label Grid.Row="0" Grid.Column="1" Text="Total Paid:"/>
-                    <Label Grid.Row="1" Grid.Column="1" Text="{Binding TotalOrderPrice, StringFormat='PHP {0:F2}'}"/>
+                    <Label Grid.Row="1" Grid.Column="1" Text="{Binding CurrentOrder.TotalPrice, StringFormat='PHP {0:F2}'}"/>
                     <Label Grid.Row="2" Grid.Column="1" Text="Points Received"/>
-                    <Label Grid.Row="3" Grid.Column="1" Text="{Binding PointsEarned}"/>
+                    <Label Grid.Row="3" Grid.Column="1" Text="{Binding CurrentOrder.PointsEarned}"/>
                     <Button Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Text="Reload Balance" Command="{Binding GetReloadBalanceAmountCommand}"/>
                     <Button Grid.Row="2" Grid.RowSpan="2" Grid.Column="2" Text="End Transaction" Command="{Binding EndTransactionCommand}"/>
                 </Grid>

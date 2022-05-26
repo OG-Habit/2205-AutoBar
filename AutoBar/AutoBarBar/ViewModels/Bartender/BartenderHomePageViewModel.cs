@@ -135,7 +135,7 @@ namespace AutoBarBar.ViewModels
                 orderLinesTask.Wait();
                 foreach(OrderLine ol in orderLinesTask.Result)
                 {
-                    ol.ProductName = Products.FirstOrDefault(p => p.ID == ol.ProductID).Name;
+                    ol.ProductName = _products.FirstOrDefault(p => p.ID == ol.ProductID).Name;
                     ol.SubTotal = ol.Quantity * ol.UnitPrice;
                     OrderLines.Add(ol);
                 }
@@ -154,7 +154,7 @@ namespace AutoBarBar.ViewModels
 
         async Task ShowScan()
         {
-            await Shell.Current.GoToAsync($"//{nameof(BartenderHomePage)}/{nameof(ScanPage)}?ids={_customerIDs}");
+            await Shell.Current.GoToAsync($"//{nameof(BartenderHomePage)}/{nameof(ScanPage)}?{PARAM_CUSTOMER_IDS}={_customerIDs}");
         }
         
         async Task GetReloadBalanceAmount()
@@ -162,14 +162,13 @@ namespace AutoBarBar.ViewModels
             string ans = await Application.Current.MainPage.DisplayPromptAsync("Balance", "Enter amount:", "Add", "Cancel", null, -1, Keyboard.Numeric, "");
             if(decimal.TryParse(ans, out decimal num))
             {
-                foreach(var c in Customers)
+                foreach(var c in _customers)
                 {
-                    if(c.ID == SelectedCustomer.ID)
+                    if(c.ID == _selectedCustomer.ID)
                     {
-                        c.Balance += num; 
                         await activeTabService.AddBalance(c.ID, c.Balance, GetPHTimeForDB());
                         await Application.Current.MainPage.DisplayAlert("Success", "Balance has been added.", "Ok");
-                        CurrentBalance = c.Balance;
+                        c.Balance += num;
                     }
                 }
             }
@@ -188,6 +187,7 @@ namespace AutoBarBar.ViewModels
         {
             Dictionary<string, string> phtime = GetPHTimeForBoth();
             string newOrderLinesStr = string.Empty;
+            int tempPointsEarned;
 
             for (var i = _newOrderLines.Count - 1; i >= 0; i--)
             {
@@ -199,7 +199,7 @@ namespace AutoBarBar.ViewModels
             }
             newOrderLinesStr = newOrderLinesStr.Remove(newOrderLinesStr.Length-1);
 
-            CurrentBalance = SelectedCustomer.Balance -= TotalOrderLinesCost;
+            SelectedCustomer.Balance -= TotalOrderLinesCost;
             await orderLineService.AddOrderLines(newOrderLinesStr, _selectedCustomer.ID, _selectedCustomer.Balance);
             var group = from ol in _newOrderLines
                         group ol by ol.CreatedOnForUI into newOl
@@ -211,8 +211,8 @@ namespace AutoBarBar.ViewModels
 
             NewOrderLines.Clear();
 
-            TotalOrderPrice = CurrentOrder.TotalPrice += Convert.ToDouble(TotalOrderLinesCost);
-            PointsEarned = CurrentOrder.PointsEarned += (PointsEarned = (int)CurrentOrder.TotalPrice / 1000) != 0 ? PointsEarned * 100 : 0;
+            CurrentOrder.TotalPrice += Convert.ToDouble(TotalOrderLinesCost);
+            CurrentOrder.PointsEarned += (tempPointsEarned = (int)CurrentOrder.TotalPrice / 1000) != 0 ? tempPointsEarned * 10 : 0;
             TotalOrderLinesCost = 0;
         }
 
@@ -242,11 +242,8 @@ namespace AutoBarBar.ViewModels
             SelectedUser = user;
             SelectedCustomer = Customers.FirstOrDefault(c => c.UserID == user.ID);
             // Extend BaseModel
-            CurrentBalance = SelectedCustomer.Balance;
             CurrentOrder = Orders.First(order => order.CustomerID == SelectedCustomer.ID);
             CurrentOrderLines = new ObservableCollection<OrderLine>(OrderLines.Where(ol => ol.OrderID == CurrentOrder.ID));
-            PointsEarned = CurrentOrder.PointsEarned;
-            TotalOrderPrice = CurrentOrder.TotalPrice;
 
             var group = from ol in CurrentOrderLines
                         group ol by ol.CreatedOnForUI into newGroup
@@ -270,7 +267,7 @@ namespace AutoBarBar.ViewModels
             SelectedProduct = null;
 
             var newTotalCost = p.UnitPrice + TotalOrderLinesCost;
-            if(newTotalCost > CurrentBalance)
+            if(newTotalCost > SelectedCustomer.Balance)
             {
                 toastService.ShowLongMessage("Insufficient balance.");
                 return;
@@ -353,15 +350,15 @@ namespace AutoBarBar.ViewModels
                 return;
             }
 
-            if (query.ContainsKey("user"))
+            if (query.ContainsKey($"{PARAM_USER}"))
             {
-                string user = HttpUtility.UrlDecode(query["user"]);
+                string user = HttpUtility.UrlDecode(query[$"{PARAM_USER}"]);
                 StaffUser = JsonConvert.DeserializeObject<User>(Uri.UnescapeDataString(user));
             }
 
-            if(query.ContainsKey("newTab"))
+            if(query.ContainsKey($"{PARAM_NEW_TAB}"))
             {
-                string at = HttpUtility.UrlDecode(query["newTab"]);
+                string at = HttpUtility.UrlDecode(query[$"{PARAM_NEW_TAB}"]);
                 ActiveTab activeTab = JsonConvert.DeserializeObject<ActiveTab>(Uri.UnescapeDataString(at));
 
                 Customers.Add(activeTab.ATCustomer);
@@ -393,13 +390,6 @@ namespace AutoBarBar.ViewModels
         {
             get => _customerIDs;
             set => SetProperty(ref _customerIDs, value);
-        }
-
-        decimal _currentBalance;
-        public decimal CurrentBalance
-        {
-            get => _currentBalance;
-            set => SetProperty(ref _currentBalance, value);
         }
         #endregion
 
@@ -461,20 +451,6 @@ namespace AutoBarBar.ViewModels
         {
             get => _orderIDs;
             set => SetProperty(ref _orderIDs, value);
-        }
-
-        double _totalOrderPrice;
-        public double TotalOrderPrice
-        {
-            get => _totalOrderPrice;
-            set => SetProperty(ref _totalOrderPrice, value);
-        }
-
-        decimal _pointsEarned;
-        public decimal PointsEarned
-        {
-            get => _pointsEarned;
-            set => SetProperty(ref _pointsEarned, value);
         }
         #endregion
 

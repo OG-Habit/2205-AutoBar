@@ -1,4 +1,5 @@
 ﻿using Xamarin.Forms;
+using static AutoBarBar.Constants;
 
 namespace AutoBarBar.ViewModels
 {
@@ -23,7 +24,7 @@ namespace AutoBarBar.ViewModels
             if (retryBool)
             {
                 // Prefixing with `//` switches to a different navigation stack instead of pushing to the active one
-                await Xamarin.Essentials.SecureStorage.SetAsync("isLogged", "0");
+                await Xamarin.Essentials.SecureStorage.SetAsync($"{KEY_ISLOGGED}", "0");
                 await Shell.Current.GoToAsync($"//LoginPage");
             }  
         }

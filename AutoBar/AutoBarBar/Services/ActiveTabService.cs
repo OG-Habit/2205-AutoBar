@@ -132,6 +132,7 @@ namespace AutoBarBar.Services
                 UPDATE Customers
                 SET Balance={newBalance}, LastTransactionAt=""{dateTime}"" 
                 WHERE ID={customerID};
+                    
             ";
             UpdateItem(cmd);
             return Task.CompletedTask;

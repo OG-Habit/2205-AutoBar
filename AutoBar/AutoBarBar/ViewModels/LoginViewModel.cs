@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Newtonsoft.Json;
+using static AutoBarBar.Constants;
 
 namespace AutoBarBar.ViewModels
 {
@@ -39,15 +40,15 @@ namespace AutoBarBar.ViewModels
             }
             else if(u.UserType == 1)
             {
-                await Xamarin.Essentials.SecureStorage.SetAsync("isLogged", "1");
-                await Xamarin.Essentials.SecureStorage.SetAsync("user", $"{userObj}");
+                await Xamarin.Essentials.SecureStorage.SetAsync($"{KEY_ISLOGGED}", "1");
+                await Xamarin.Essentials.SecureStorage.SetAsync($"{PARAM_USER}", $"{userObj}");
                 await Shell.Current.GoToAsync($"//{nameof(AHomePage)}");
             }
             else // u.UserType == 2
             {
-                await Xamarin.Essentials.SecureStorage.SetAsync("isLogged", "2");
-                await Xamarin.Essentials.SecureStorage.SetAsync("user", $"{userObj}");
-                await Shell.Current.GoToAsync($"//{nameof(BartenderHomePage)}?user={userObj}");
+                await Xamarin.Essentials.SecureStorage.SetAsync($"{KEY_ISLOGGED}", "2");
+                await Xamarin.Essentials.SecureStorage.SetAsync($"{PARAM_USER}", $"{userObj}");
+                await Shell.Current.GoToAsync($"//{nameof(BartenderHomePage)}?{PARAM_USER}={userObj}");
             }
 
             //accountService.LoginUser();
@@ -70,15 +71,15 @@ namespace AutoBarBar.ViewModels
 
         private async Task CheckLogin()
         {
-            var isLoogged = Xamarin.Essentials.SecureStorage.GetAsync("isLogged").Result;
-            var user = Xamarin.Essentials.SecureStorage.GetAsync("user").Result;
+            var isLoogged = Xamarin.Essentials.SecureStorage.GetAsync($"{KEY_ISLOGGED}").Result;
+            var user = Xamarin.Essentials.SecureStorage.GetAsync($"{PARAM_USER}").Result;
             if (isLoogged == "1")
             {
                 await Shell.Current.GoToAsync($"//{nameof(AHomePage)}");
             }
             else if (isLoogged == "2")
             {
-                await Shell.Current.GoToAsync($"//{nameof(BartenderHomePage)}?user={user}&test=test");
+                await Shell.Current.GoToAsync($"//{nameof(BartenderHomePage)}?{PARAM_USER}={user}");
             }
         }
     }

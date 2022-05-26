@@ -21,6 +21,11 @@ namespace AutoBarBar
 
         public static readonly string KEY_DB = "db";
         public static readonly string KEY_UI = "ui";
+        public static readonly string KEY_ISLOGGED = "isLogged";
+
+        public static readonly string PARAM_CUSTOMER_IDS = "customerIDs";
+        public static readonly string PARAM_USER = "user";
+        public static readonly string PARAM_NEW_TAB = "newTab";
 
         public static readonly int IMG_QR_LENGTH = 500;
     }
