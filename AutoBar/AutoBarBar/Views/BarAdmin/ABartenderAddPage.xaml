@@ -7,9 +7,8 @@
              Shell.NavBarIsVisible="False">
     <ContentPage.Content>
         <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
-            <Frame Padding="0" HorizontalOptions="Center" CornerRadius="200" WidthRequest="150" 
-                   HasShadow="False" IsClippedToBounds="True" Grid.Row="0">
-                <Image x:Name="ProfilePic" Source="default_pic" Aspect="AspectFit"/>
+            <Frame Padding="0" HorizontalOptions="Center" CornerRadius="200" WidthRequest="150" HasShadow="False" IsClippedToBounds="True">
+                <ImageButton x:Name="ProfilePic" Source="{Binding Image}" Aspect="AspectFit" Command="{Binding ImageCommand}"/>
             </Frame>
             <Grid Padding="0,10">
                 <Grid.ColumnDefinitions>
@@ -26,7 +25,12 @@
                 <Label Text="Name: " FontSize="20" VerticalOptions="Center" Grid.Column="0" Grid.Row="0"/>
                 <Entry Text="{Binding Name}" FontSize="20" VerticalOptions="Center"  Grid.Column="1" Grid.Row="0"/>
                 <Label Text="Sex: " FontSize="20" VerticalOptions="Center" Grid.Column="0" Grid.Row="1"/>
-                <Entry Text="{Binding Sex}" FontSize="20" VerticalOptions="Center" Grid.Column="1" Grid.Row="1"/>
+                <Picker SelectedItem="{Binding Sex}" FontSize="20" VerticalOptions="Center" Grid.Column="1" Grid.Row="1">
+                    <Picker.Items>
+                        <x:String>Male</x:String>
+                        <x:String>Female</x:String>
+                    </Picker.Items>
+                </Picker>
                 <Label Text="Birthday: " FontSize="20" VerticalOptions="Center" Grid.Column="0" Grid.Row="2"/>
                 <Entry Text="{Binding Birthday, StringFormat='{0:MMM dd, yyyy}'}" FontSize="20" VerticalOptions="Center" Grid.Column="1" Grid.Row="2"/>
                 <Label Text="Mobile No.: " FontSize="20" VerticalOptions="Center" Grid.Column="0" Grid.Row="3"/>

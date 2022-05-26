@@ -1,5 +1,6 @@
 ﻿using AutoBarBar.Models;
 using System;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace AutoBarBar.ViewModels
@@ -9,15 +10,18 @@ namespace AutoBarBar.ViewModels
         private string name;
         private double point;
         private string description;
-        private string image;
+        private ImageSource image;
 
         public Command CancelCommand { get; }
         public Command AddCommand { get; }
+        public Command ImageCommand { get; }
 
         public ARewardsAddViewModel()
         {
+            image = "default_pic.png";
             CancelCommand = new Command(OnCancelClicked);
             AddCommand = new Command(OnAddClicked);
+            ImageCommand = new Command(OnImageClicked);
         }
 
         public string Name
@@ -38,7 +42,7 @@ namespace AutoBarBar.ViewModels
             set => SetProperty(ref description, value);
         }
 
-        public string Image
+        public ImageSource Image
         {
             get => image;
             set => SetProperty(ref image, value);
@@ -54,15 +58,37 @@ namespace AutoBarBar.ViewModels
             bool retryBool = await App.Current.MainPage.DisplayAlert("Add", "Would you like to add to rewards?", "Yes", "No");
             if (retryBool)
             {
-                Reward item = new Reward();
-                item.Id = Guid.NewGuid().ToString();
-                item.Name = Name;
-                item.Points = Point;
-                item.Description = Description;
-                item.ImageLink = "default_pic";
-                await RewardDataStore.AddItemAsync(item);
-                await Shell.Current.GoToAsync("..");
+                if (Name != null && Description != null)
+                {
+                    Reward item = new Reward
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Name = Name,
+                        Points = Point,
+                        Description = Description,
+                        ImageLink = (Image is FileImageSource source) ? source.File : "default_pic"
+                    };
+                    await RewardDataStore.AddItemAsync(item);
+                    await Shell.Current.GoToAsync("..");
+                    }
+                else
+                {
+                    await App.Current.MainPage.DisplayAlert("Error", "Field/s are empty", "Okay");
+                } 
             }
+        }
+
+        async void OnImageClicked()
+        {
+            var result = await MediaPicker.PickPhotoAsync(new MediaPickerOptions
+            {
+                Title = "Please pick a photo"
+            });
+            if (result == null)
+                return;
+
+            var stream = await result.OpenReadAsync();
+            image = ImageSource.FromStream(() => stream);
         }
     }
 }

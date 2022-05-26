@@ -1,6 +1,7 @@
 ﻿using AutoBarBar.Models;
 using System;
 using System.Diagnostics;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace AutoBarBar.ViewModels
@@ -12,19 +13,21 @@ namespace AutoBarBar.ViewModels
         private string name;
         private double point;
         private string description;
-        private string image;
+        private ImageSource image;
 
         public string Id { get; set; }
 
         public Command CancelCommand { get; }
         public Command SaveCommand { get; }
         public Command DeleteCommand { get; }
+        public Command ImageCommand { get; }
 
         public ARewardsDetailViewModel()
         {
             CancelCommand = new Command(OnCancelClicked);
             SaveCommand = new Command(OnSaveClicked);
             DeleteCommand = new Command(OnDeleteClicked);
+            ImageCommand = new Command(OnImageClicked);
         }
 
         public string Name
@@ -45,7 +48,7 @@ namespace AutoBarBar.ViewModels
             set => SetProperty(ref description, value);
         }
 
-        public string Image
+        public ImageSource Image
         {
             get => image;
             set => SetProperty(ref image, value);
@@ -91,14 +94,23 @@ namespace AutoBarBar.ViewModels
             bool retryBool = await App.Current.MainPage.DisplayAlert("Save", "Would you like to save changes?", "Yes", "No");
             if (retryBool)
             {
-                Reward item = new Reward();
-                item.Id = ItemId;
-                item.Name = Name;
-                item.Points = Point;
-                item.Description = Description;
-                item.ImageLink = Image;
-                await RewardDataStore.UpdateItemAsync(item);
-                await Shell.Current.GoToAsync("..");
+                if (Name != null && Description != null) 
+                { 
+                    Reward item = new Reward
+                    {
+                        Id = ItemId,
+                        Name = Name,
+                        Points = Point,
+                        Description = Description,
+                        ImageLink = (Image is FileImageSource source) ? source.File : "default_pic"
+                    };
+                    await RewardDataStore.UpdateItemAsync(item);
+                    await Shell.Current.GoToAsync("..");
+                    }
+                else
+                {
+                    await App.Current.MainPage.DisplayAlert("Error", "Field/s are empty", "Okay");
+                }
             }
         }
 
@@ -110,6 +122,19 @@ namespace AutoBarBar.ViewModels
                 await RewardDataStore.DeleteItemAsync(ItemId);
                 await Shell.Current.GoToAsync("..");
             }
+        }
+
+        async void OnImageClicked()
+        {
+            var result = await MediaPicker.PickPhotoAsync(new MediaPickerOptions
+            {
+                Title = "Please pick a photo"
+            });
+            if (result == null)
+                return;
+
+            var stream = await result.OpenReadAsync();
+            image = ImageSource.FromStream(() => stream);
         }
     }
 }
