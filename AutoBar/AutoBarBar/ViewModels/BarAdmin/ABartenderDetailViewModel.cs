@@ -1,6 +1,7 @@
 ﻿using AutoBarBar.Models;
 using System;
 using System.Diagnostics;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace AutoBarBar.ViewModels
@@ -14,19 +15,21 @@ namespace AutoBarBar.ViewModels
         private string contact;
         private DateTime birthday;
         private string sex;
-        private string image;
+        private ImageSource image;
 
         public string Id { get; set; }
 
         public Command CancelCommand { get; }
         public Command SaveCommand { get; }
         public Command DeleteCommand { get; }
+        public Command ImageCommand { get; }
 
         public ABartenderDetailViewModel()
         {
             CancelCommand = new Command(OnCancelClicked);
             SaveCommand = new Command(OnSaveClicked);
             DeleteCommand = new Command(OnDeleteClicked);
+            ImageCommand = new Command(OnImageClicked);
         }
 
         public string Name
@@ -60,7 +63,7 @@ namespace AutoBarBar.ViewModels
             set => SetProperty(ref sex, value);
         }
 
-        public string Image
+        public ImageSource Image
         {
             get => image;
             set => SetProperty(ref image, value);
@@ -90,6 +93,7 @@ namespace AutoBarBar.ViewModels
                 Contact = item.Contact;
                 Birthday = item.Birthday;
                 Sex = item.Sex;
+                // set location for file
                 Image = item.ImageLink;
             }
             catch (Exception)
@@ -108,16 +112,25 @@ namespace AutoBarBar.ViewModels
             bool retryBool = await App.Current.MainPage.DisplayAlert("Save", "Would you like to save changes?", "Yes", "No");
             if (retryBool)
             {
-                Bartender item = new Bartender();
-                item.Id = ItemId;
-                item.Name = Name;
-                item.Email = Email;
-                item.Contact = Contact;
-                item.Birthday = Birthday;
-                item.Sex = Sex;
-                item.ImageLink = Image;
-                await BartenderDataStore.UpdateItemAsync(item);
-                await Shell.Current.GoToAsync("..");
+                if (Name != null && Email != null && Contact != null && Sex != null && Birthday != null)
+                {
+                    Bartender item = new Bartender
+                    {
+                        Id = ItemId,
+                        Name = Name,
+                        Email = Email,
+                        Contact = Contact,
+                        Birthday = Birthday,
+                        Sex = Sex,
+                        ImageLink = (Image is FileImageSource source) ? source.File : "default_pic"
+                    };
+                    await BartenderDataStore.UpdateItemAsync(item);
+                    await Shell.Current.GoToAsync("..");
+                }
+                else
+                {
+                    await App.Current.MainPage.DisplayAlert("Error", "Field/s are empty", "Okay");
+                }
             }
         }
 
@@ -129,6 +142,19 @@ namespace AutoBarBar.ViewModels
                 await BartenderDataStore.DeleteItemAsync(ItemId);
                 await Shell.Current.GoToAsync("..");
             }
+        }
+
+        async void OnImageClicked()
+        {
+            var result = await MediaPicker.PickPhotoAsync(new MediaPickerOptions
+            {
+                Title = "Please pick a photo"
+            });
+            if (result == null)
+                return;
+
+            var stream = await result.OpenReadAsync();
+            image = ImageSource.FromStream(() => stream);
         }
     }
 }
