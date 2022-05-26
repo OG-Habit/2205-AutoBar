@@ -19,6 +19,9 @@ namespace AutoBarBar
                 Database = DATABASE
             }.ConnectionString;
 
+        public static readonly string KEY_DB = "db";
+        public static readonly string KEY_UI = "ui";
+
         public static readonly int IMG_QR_LENGTH = 500;
     }
 }

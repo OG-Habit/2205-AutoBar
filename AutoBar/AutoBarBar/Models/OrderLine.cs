@@ -15,7 +15,8 @@ namespace AutoBarBar.Models
             set => SetProperty(ref quantity, value);
         } 
         public int CreatedBy { get; set; }
-        public string CreatedOn { get; set; }
+        public string CreatedOnForUI { get; set; }
+        public string CreatedOnForDB { get; set; }
         public int IsCompleted { get; set; }
 
 

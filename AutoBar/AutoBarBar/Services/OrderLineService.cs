@@ -11,20 +11,9 @@ namespace AutoBarBar.Services
 {
     public class OrderLineService : BaseService, IOrderLineService
     {
-        readonly List<OrderLine> orderLines = new List<OrderLine>();
         public async Task<IEnumerable<OrderLine>> GetOrderLines(string IDs)
         {
-            //if(IDs.Count == 0)
-            //{
-            //    return orderLines;
-            //}
-
-            //string str = "" + IDs[0];
-            //for(var i = 1; i < IDs.Count; i++)
-            //{
-            //    str += ", " + IDs[i];
-            //}
-
+            List<OrderLine> orderLines = new List<OrderLine>();
             string cmd = $"SELECT * FROM OrderLine WHERE OrderID IN ({IDs})";
 
             GetItems<OrderLine>(cmd, (dataRecord, ol) =>
@@ -34,33 +23,24 @@ namespace AutoBarBar.Services
                 ol.ProductID = dataRecord.GetInt32(2);
                 ol.UnitPrice = dataRecord.GetDecimal(3);
                 ol.Quantity = dataRecord.GetInt32(4);
-                ol.CreatedOn = dataRecord.GetValue(6).ToString();
+                ol.CreatedOnForUI = dataRecord.GetValue(6).ToString();
                 orderLines.Add(ol);
             });
 
             return await Task.FromResult(orderLines);
         }
 
-        public async Task<IEnumerable<OrderLine>> AddOrderLine()
+        public Task AddOrderLines(string orderLines, int customerID, decimal newBalance)
         {
-            string str = string.Empty;
-
             string cmd = $@"
-                
+                INSERT INTO OrderLine(`OrderID`, `ProductID`, `UnitPrice`, `Quantity`, `CreatedBy`, `CreatedOn`, `IsCompleted`)
+                VALUES {orderLines};
+                UPDATE Customers
+                SET Balance = {newBalance}
+                WHERE ID = {customerID};
             ";
-
-            GetItems<OrderLine>(cmd, (dataRecord, ol) =>
-            {
-                ol.ID = dataRecord.GetInt32(0);
-                ol.OrderID = dataRecord.GetInt32(1);
-                ol.ProductID = dataRecord.GetInt32(2);
-                ol.UnitPrice = dataRecord.GetDecimal(3);
-                ol.Quantity = dataRecord.GetInt32(4);
-                ol.CreatedOn = dataRecord.GetValue(6).ToString();
-                orderLines.Add(ol);
-            });
-
-            return await Task.FromResult(orderLines);
+            AddItem(cmd);
+            return Task.CompletedTask;
         }
     }
 }

@@ -9,5 +9,6 @@ namespace AutoBarBar.Services
     public interface IOrderLineService
     {
         Task<IEnumerable<OrderLine>> GetOrderLines(string IDs);
+        Task AddOrderLines(string orderLines, int customerID, decimal newBalance);
     }
 }

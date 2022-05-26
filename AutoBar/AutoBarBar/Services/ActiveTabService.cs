@@ -63,9 +63,9 @@ namespace AutoBarBar.Services
             return await Task.FromResult(activeTabs);
         }
 
-        public async Task<ActiveTab> CreateActiveTab(string qrKey)
+        public async Task<ActiveTab> CreateActiveTab(string qrKey, string customerIDs)
         {
-            ActiveTab activeTab = new ActiveTab();
+            ActiveTab activeTab = null;
             string cmd = $@"
                 SELECT 
                 Users.ID, Users.FirstName, Users.LastName, Users.Sex, Users.Birthday, Users.MobileNumber, Users.Email, Users.ImageLink,
@@ -73,15 +73,19 @@ namespace AutoBarBar.Services
                 FROM Customers
                 INNER JOIN Users
                 ON Users.ID = Customers.UserID
-                WHERE QRKey = ""{qrKey}"" 
+                WHERE QRKey = ""{qrKey}"" AND
+                Customers.ID NOT IN({customerIDs})
                 LIMIT 1;
             ";
 
             GetItem<ActiveTab>(cmd, ref activeTab, (dataRecord, at) =>
             {
-                activeTab.ATOrder = new Order();
-                activeTab.ATUser = new User();
-                activeTab.ATCustomer = new Customer();
+                activeTab = new ActiveTab
+                {
+                    ATOrder = new Order(),
+                    ATUser = new User(),
+                    ATCustomer = new Customer()
+                };
 
                 activeTab.ATUser.ID = dataRecord.GetInt32(0);
                 activeTab.ATUser.FirstName = dataRecord.GetString(1);
@@ -106,7 +110,10 @@ namespace AutoBarBar.Services
         public async Task<bool> CheckExistingTabs(string customerIDs)
         {
             string cmd = $@"
-                SELECT * FROM Customers WHERE ID IN ({customerIDs})
+                SELECT Orders.CustomerID FROM Orders
+                WHERE 
+                Orders.OrderStatus = 1 AND
+                Orders.CustomerID IN ({customerIDs}) 
                 LIMIT 1;
             ";
             bool ans = false;

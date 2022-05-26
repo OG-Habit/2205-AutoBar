@@ -18,6 +18,7 @@ using Newtonsoft.Json;
 using static AutoBarBar.Constants;
 using static AutoBarBar.DateTimeHelper;
 using ZXing;
+using System.Reflection;
 
 namespace AutoBarBar.ViewModels
 {
@@ -101,7 +102,7 @@ namespace AutoBarBar.ViewModels
                 var getRewardsTask = GetItemsAsync(Rewards, RewardDataStore);
                 var productsTask = productService.GetProducts();
                 var activeTabsTask = activeTabService.GetActiveTabs();
-                string orderIDs = customerIDs = string.Empty;
+                _orderIDs = _customerIDs = string.Empty;
 
                 Task[] tasks = new Task[]
                 {
@@ -117,20 +118,20 @@ namespace AutoBarBar.ViewModels
                     Customers.Add(at.ATCustomer);
                     Orders.Add(at.ATOrder);
                     Users.Add(at.ATUser);
-                    orderIDs += $", {at.ATOrder.ID}";
-                    customerIDs += $", {at.ATCustomer.ID}"; 
+                    _orderIDs += $",{at.ATOrder.ID}";
+                    _customerIDs += $",{at.ATCustomer.ID}"; 
                 }
 
-                if(!string.IsNullOrEmpty(orderIDs))
+                if(!string.IsNullOrEmpty(_orderIDs))
                 {
-                    orderIDs.Remove(0, 2);
+                    _orderIDs = _orderIDs.Remove(0, 1);
                 }
-                if (!string.IsNullOrEmpty(customerIDs))
+                if (!string.IsNullOrEmpty(_customerIDs))
                 {
-                    customerIDs.Remove(0, 2);
+                    _customerIDs = _customerIDs.Remove(0, 1);
                 }
 
-                var orderLinesTask = orderLineService.GetOrderLines(orderIDs);
+                var orderLinesTask = orderLineService.GetOrderLines(_orderIDs);
                 orderLinesTask.Wait();
                 foreach(OrderLine ol in orderLinesTask.Result)
                 {
@@ -153,7 +154,7 @@ namespace AutoBarBar.ViewModels
 
         async Task ShowScan()
         {
-            await Shell.Current.GoToAsync($"//{nameof(BartenderHomePage)}/{nameof(ScanPage)}?ids={customerIDs}");
+            await Shell.Current.GoToAsync($"//{nameof(BartenderHomePage)}/{nameof(ScanPage)}?ids={_customerIDs}");
         }
         
         async Task GetReloadBalanceAmount()
@@ -166,7 +167,7 @@ namespace AutoBarBar.ViewModels
                     if(c.ID == SelectedCustomer.ID)
                     {
                         c.Balance += num; 
-                        await activeTabService.AddBalance(c.ID, c.Balance, GetPHTime());
+                        await activeTabService.AddBalance(c.ID, c.Balance, GetPHTimeForDB());
                         await Application.Current.MainPage.DisplayAlert("Success", "Balance has been added.", "Ok");
                         CurrentBalance = c.Balance;
                     }
@@ -185,19 +186,33 @@ namespace AutoBarBar.ViewModels
 
         async Task AddOrderLine()
         {
-            await App.Current.MainPage.DisplayAlert("Success", "You have successfully ordered.", "Thanks");
-            string time = "9:45PM";
-            int pe;
-            var group = from ol in NewOrderLines
-                        group ol by time into newOl
-                        select newOl;
-            CurrentOrderLineGroup.Add(group.ElementAt(0));
-            OrderLines.AddRange(NewOrderLines);
-            NewOrderLines.Clear();
+            Dictionary<string, string> phtime = GetPHTimeForBoth();
+            string newOrderLinesStr = string.Empty;
+
+            for (var i = _newOrderLines.Count - 1; i >= 0; i--)
+            {
+                _newOrderLines[i].CreatedOnForDB = phtime[KEY_DB];
+                _newOrderLines[i].CreatedOnForUI = phtime[KEY_UI];
+                OrderLines.Insert(0, _newOrderLines[i]);
+
+                newOrderLinesStr += $@"({_newOrderLines[i].OrderID},{_newOrderLines[i].ProductID},{_newOrderLines[i].UnitPrice},{_newOrderLines[i].Quantity},{_newOrderLines[i].CreatedBy},""{_newOrderLines[i].CreatedOnForDB}"", 1),";                
+            }
+            newOrderLinesStr = newOrderLinesStr.Remove(newOrderLinesStr.Length-1);
 
             CurrentBalance = SelectedCustomer.Balance -= TotalOrderLinesCost;
+            await orderLineService.AddOrderLines(newOrderLinesStr, _selectedCustomer.ID, _selectedCustomer.Balance);
+            var group = from ol in _newOrderLines
+                        group ol by ol.CreatedOnForUI into newOl
+                        orderby newOl.Key descending
+                        select newOl;
+            CurrentOrderLineGroup.Insert(0, group.ElementAt(0));
+            CanAddNewOrderLine = false;
+            await App.Current.MainPage.DisplayAlert("Success", "You have successfully ordered.", "Thanks");
+
+            NewOrderLines.Clear();
+
             TotalOrderPrice = CurrentOrder.TotalPrice += Convert.ToDouble(TotalOrderLinesCost);
-            PointsEarned = CurrentOrder.PointsEarned += (pe = (int)CurrentOrder.TotalPrice / 1000) != 0 ? pe * 100 : 0;
+            PointsEarned = CurrentOrder.PointsEarned += (PointsEarned = (int)CurrentOrder.TotalPrice / 1000) != 0 ? PointsEarned * 100 : 0;
             TotalOrderLinesCost = 0;
         }
 
@@ -234,11 +249,12 @@ namespace AutoBarBar.ViewModels
             TotalOrderPrice = CurrentOrder.TotalPrice;
 
             var group = from ol in CurrentOrderLines
-                        group ol by ol.CreatedOn into newGroup
+                        group ol by ol.CreatedOnForUI into newGroup
                         orderby newGroup.Key descending
                         select newGroup;
             CurrentOrderLineGroup = new ObservableCollection<IGrouping<string, OrderLine>>(group);
             NewOrderLines.Clear();
+
             foreach (var colg in CurrentOrderLineGroup)
             {
                 decimal total = 0;
@@ -253,9 +269,6 @@ namespace AutoBarBar.ViewModels
         {
             SelectedProduct = null;
 
-            if (CanAddNewOrderLine == false)
-                CanAddNewOrderLine = true;
-
             var newTotalCost = p.UnitPrice + TotalOrderLinesCost;
             if(newTotalCost > CurrentBalance)
             {
@@ -267,6 +280,7 @@ namespace AutoBarBar.ViewModels
             for(x = 0; x < NewOrderLines.Count && NewOrderLines[x].ProductID != p.ID; x++) { }
             if(x == NewOrderLines.Count)
             {
+                CanAddNewOrderLine = true;
                 NewOrderLines.Add(new OrderLine
                 {
                     TempID = Guid.NewGuid().ToString(),
@@ -274,7 +288,7 @@ namespace AutoBarBar.ViewModels
                     ProductID = p.ID,
                     UnitPrice = p.UnitPrice,
                     Quantity = 1,
-                    CreatedBy = StaffUser.ID,
+                    CreatedBy = StaffUser.StaffID,
 
                     CustomerName = SelectedUser.FirstName,
                     ProductName = p.Name,
@@ -349,175 +363,187 @@ namespace AutoBarBar.ViewModels
             {
                 string at = HttpUtility.UrlDecode(query["newTab"]);
                 ActiveTab activeTab = JsonConvert.DeserializeObject<ActiveTab>(Uri.UnescapeDataString(at));
-                customerIDs += $", {activeTab.ATCustomer.ID}";
+
+                Customers.Add(activeTab.ATCustomer);
+                Orders.Add(activeTab.ATOrder);
+                Users.Add(activeTab.ATUser);
+                _orderIDs += $",{activeTab.ATOrder.ID}";
+                _customerIDs += $",{activeTab.ATCustomer.ID}";
             }
         }
 
         #region Getters setters
         #region Customers
-        ObservableRangeCollection<Customer> customers;
+        ObservableRangeCollection<Customer> _customers;
         public ObservableRangeCollection<Customer> Customers
         {
-            get { return customers; }
-            set { SetProperty(ref customers, value); }
+            get { return _customers; }
+            set { SetProperty(ref _customers, value); }
         }
 
-        Customer selectedCustomer;
+        Customer _selectedCustomer;
         public Customer SelectedCustomer
         {
-            get { return selectedCustomer; }
-            set { SetProperty(ref selectedCustomer, value); }
+            get { return _selectedCustomer; }
+            set { SetProperty(ref _selectedCustomer, value); }
         }
 
-        string customerIDs;
+        string _customerIDs;
         public string CustomerIDs
         {
-            get => customerIDs;
-            set => SetProperty(ref customerIDs, value);
+            get => _customerIDs;
+            set => SetProperty(ref _customerIDs, value);
         }
 
-        decimal currentBalance;
+        decimal _currentBalance;
         public decimal CurrentBalance
         {
-            get => currentBalance;
-            set => SetProperty(ref currentBalance, value);
+            get => _currentBalance;
+            set => SetProperty(ref _currentBalance, value);
         }
         #endregion
 
         #region Users
-        ObservableRangeCollection<User> users;
+        ObservableRangeCollection<User> _users;
         public ObservableRangeCollection<User> Users
         {
-            get => users;
-            set => SetProperty(ref users, value);
+            get => _users;
+            set => SetProperty(ref _users, value);
         }
 
-        User selectedUser;
+        User _selectedUser;
         public User SelectedUser
         {
-            get { return selectedUser; }
-            set { SetProperty(ref selectedUser, value); }
+            get { return _selectedUser; }
+            set { SetProperty(ref _selectedUser, value); }
         }
 
-        User staffUser;
+        User _staffUser;
         public User StaffUser { 
-            get => staffUser;
-            set => SetProperty(ref staffUser, value);   
+            get => _staffUser;
+            set => SetProperty(ref _staffUser, value);   
         }
         #endregion
 
         #region Products
-        ObservableRangeCollection<Product> products;
+        ObservableRangeCollection<Product> _products;
         public ObservableRangeCollection<Product> Products
         {
-            get { return products; }
-            set { SetProperty(ref products, value); }
+            get { return _products; }
+            set { SetProperty(ref _products, value); }
         }
 
-        Product selectedProduct;
+        Product _selectedProduct;
         public Product SelectedProduct
         {
-            get => selectedProduct;
-            set => SetProperty(ref selectedProduct, value);
+            get => _selectedProduct;
+            set => SetProperty(ref _selectedProduct, value);
         }
         #endregion
 
         #region Orders
-        ObservableRangeCollection<Order> orders;
+        ObservableRangeCollection<Order> _orders;
         public ObservableRangeCollection<Order> Orders
         {
-            get { return orders; }
-            set { SetProperty(ref orders, value); }
+            get { return _orders; }
+            set { SetProperty(ref _orders, value); }
         }
 
-        Order currentOrder;
+        Order _currentOrder;
         public Order CurrentOrder
         {
-            get { return currentOrder; }
-            set { SetProperty(ref currentOrder, value); }
+            get { return _currentOrder; }
+            set { SetProperty(ref _currentOrder, value); }
         }
 
-        double totalOrderPrice;
+        string _orderIDs;
+        public string OrderIDs
+        {
+            get => _orderIDs;
+            set => SetProperty(ref _orderIDs, value);
+        }
+
+        double _totalOrderPrice;
         public double TotalOrderPrice
         {
-            get => totalOrderPrice;
-            set => SetProperty(ref totalOrderPrice, value);
+            get => _totalOrderPrice;
+            set => SetProperty(ref _totalOrderPrice, value);
         }
 
-        decimal pointsEarned;
+        decimal _pointsEarned;
         public decimal PointsEarned
         {
-            get => pointsEarned;
-            set => SetProperty(ref pointsEarned, value);
+            get => _pointsEarned;
+            set => SetProperty(ref _pointsEarned, value);
         }
         #endregion
 
         #region OrderLines
-        ObservableRangeCollection<OrderLine> orderLines;
+        ObservableRangeCollection<OrderLine> _orderLines;
         public ObservableRangeCollection<OrderLine> OrderLines
         {
-            get { return orderLines; }
-            set { SetProperty(ref orderLines, value); }
+            get { return _orderLines; }
+            set { SetProperty(ref _orderLines, value); }
         }
 
-        ObservableCollection<OrderLine> currentOrderLines;
+        ObservableCollection<OrderLine> _currentOrderLines;
         public ObservableCollection<OrderLine> CurrentOrderLines
         {
-            get { return currentOrderLines; }
-            set { SetProperty(ref currentOrderLines, value); }
+            get { return _currentOrderLines; }
+            set { SetProperty(ref _currentOrderLines, value); }
         }
 
-        ObservableCollection<OrderLine> newOrderLines;
+        ObservableCollection<OrderLine> _newOrderLines;
         public ObservableCollection<OrderLine> NewOrderLines
         {
-            get => newOrderLines;
-            set => SetProperty(ref newOrderLines, value);
+            get => _newOrderLines;
+            set => SetProperty(ref _newOrderLines, value);
         }
 
-        ObservableCollection<IGrouping<string, OrderLine>> currentOrderLineGroup;
+        ObservableCollection<IGrouping<string, OrderLine>> _currentOrderLineGroup;
         public ObservableCollection<IGrouping<string, OrderLine>> CurrentOrderLineGroup
         {
-            get { return currentOrderLineGroup; }
-            set { SetProperty(ref currentOrderLineGroup, value); }
+            get { return _currentOrderLineGroup; }
+            set { SetProperty(ref _currentOrderLineGroup, value); }
         }
 
-        bool canAddNewOrderLine;
+        bool _canAddNewOrderLine;
         public bool CanAddNewOrderLine
         {
-            get => canAddNewOrderLine;
-            set => SetProperty(ref canAddNewOrderLine, value);
+            get => _canAddNewOrderLine;
+            set => SetProperty(ref _canAddNewOrderLine, value);
         }
 
-        decimal totalOrderLinesCost;
+        decimal _totalOrderLinesCost;
         public decimal TotalOrderLinesCost
         {
-            get => totalOrderLinesCost;
-            set => SetProperty(ref totalOrderLinesCost, value);
+            get => _totalOrderLinesCost;
+            set => SetProperty(ref _totalOrderLinesCost, value);
         }
         #endregion
 
         #region Rewards
-        ObservableRangeCollection<Reward> rewards;
+        ObservableRangeCollection<Reward> _rewards;
         public ObservableRangeCollection<Reward> Rewards
         {
-            get { return rewards; }
-            set { SetProperty(ref rewards, value); }
+            get { return _rewards; }
+            set { SetProperty(ref _rewards, value); }
         }
 
-        Reward selectedReward;
+        Reward _selectedReward;
         public Reward SelectedReward
         {
-            get { return selectedReward; }
-            set { SetProperty(ref selectedReward, value); }
+            get { return _selectedReward; }
+            set { SetProperty(ref _selectedReward, value); }
         }
         #endregion
 
         #region ActiveTabs
-        ObservableRangeCollection<ActiveTab> activeTabs;
+        ObservableRangeCollection<ActiveTab> _activeTabs;
         public ObservableRangeCollection<ActiveTab> ActiveTabs
         {
-            get => activeTabs;
-            set => SetProperty(ref activeTabs, value);
+            get => _activeTabs;
+            set => SetProperty(ref _activeTabs, value);
         }
         #endregion
         #endregion

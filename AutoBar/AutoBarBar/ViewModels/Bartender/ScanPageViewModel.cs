@@ -34,18 +34,21 @@ namespace AutoBarBar.ViewModels
         {
             Device.BeginInvokeOnMainThread(async () =>
             {
+                IsBusy = true;
                 ScanResult = result.Text;
 
-                if(activeTabService.CheckExistingTabs(customerIDs).Result)
+                ActiveTab at = await activeTabService.CreateActiveTab(result.Text, customerIDs);
+                if(at == null)
                 {
                     await App.Current.MainPage.DisplayAlert("Error", "Customer is already part of the tab system.", "Ok");
+                    IsBusy = false;
                     return;
                 }
 
-                ActiveTab at = await activeTabService.CreateActiveTab(result.Text);
                 string obj = JsonConvert.SerializeObject(at);
 
                 await App.Current.MainPage.DisplayAlert("Success", "User has been added.", "Ok");
+                IsBusy = false;
                 await Shell.Current.GoToAsync($"..?newTab={obj}");
             });
         }
@@ -60,14 +63,14 @@ namespace AutoBarBar.ViewModels
             customerIDs = query["ids"];
         }
 
+        string customerIDs;
+
         string scanResult;
         public string ScanResult
         {
             get => scanResult;
             set => SetProperty(ref scanResult, value);
         }
-
-        string customerIDs;
 
         ActiveTab newTab;
         public ActiveTab NewTab
