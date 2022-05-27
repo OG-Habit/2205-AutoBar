@@ -205,8 +205,12 @@
                     <Label Grid.Row="1" Grid.Column="1" Text="{Binding SelectedOrder.TotalPrice, StringFormat='PHP {0:F2}'}"/>
                     <Label Grid.Row="2" Grid.Column="1" Text="Points Received"/>
                     <Label Grid.Row="3" Grid.Column="1" Text="{Binding SelectedOrder.PointsEarned}"/>
-                    <Button Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Text="Reload Balance" Command="{Binding GetReloadBalanceAmountCommand}"/>
-                    <Button Grid.Row="2" Grid.RowSpan="2" Grid.Column="2" Text="End Transaction" Command="{Binding EndTransactionCommand}"/>
+                    <Button Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" 
+                            Text="Reload Balance" Command="{Binding GetReloadBalanceAmountCommand}"
+                            IsEnabled="{Binding IsEmpty}"/>
+                    <Button Grid.Row="2" Grid.RowSpan="2" Grid.Column="2" 
+                            Text="End Transaction" Command="{Binding EndTransactionCommand}"
+                            IsEnabled="{Binding IsEmpty}"/>
                 </Grid>
             </Grid>
         </Grid>

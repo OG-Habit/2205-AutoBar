@@ -87,7 +87,7 @@ namespace AutoBarBar.ViewModels
             Rewards.Add(DummyReward);
             SelectedProduct = null;
             TotalOrderLinesCost = 0;
-            CanAddNewOrderLine = false;
+            CanAddNewOrderLine = IsEmpty = false;
             SelectedReward = DummyReward;
             Date = DateTime.UtcNow.AddHours(8).ToString("MMM dd, yyyy");
 
@@ -120,6 +120,7 @@ namespace AutoBarBar.ViewModels
 
                 foreach (var at in ActiveTabs)
                 {
+                    at.ATOrder.CostTracker = (decimal)at.ATOrder.TotalPrice % 1000;
                     Customers.Add(at.ATCustomer);
                     Orders.Add(at.ATOrder);
                     Users.Add(at.ATUser);
@@ -172,7 +173,7 @@ namespace AutoBarBar.ViewModels
                 return;
             }
             
-            bool confirm = await Application.Current.MainPage.DisplayAlert("Warning", $"Are you sure you want to add PHP {ans:C} to {_selectedUser.FullName}'s balance", "Yes", "No");
+            bool confirm = await Application.Current.MainPage.DisplayAlert("Warning", $"Are you sure you want to add PHP {num} to {_selectedUser.FullName}'s balance", "Yes", "No");
             if(!confirm)
             {
                 return;
@@ -192,7 +193,7 @@ namespace AutoBarBar.ViewModels
 
         async Task EndTransaction()
         {
-            bool ans = await Application.Current.MainPage.DisplayAlert("Warning", $"Are you sure you want to remove the {_selectedUser.FullName} from the tab system?", "Yes", "No");
+            bool ans = await Application.Current.MainPage.DisplayAlert("Warning", $"Are you sure you want to remove {_selectedUser.FullName} from the tab system?", "Yes", "No");
             if (ans == false)
             {
                 return;
@@ -219,8 +220,18 @@ namespace AutoBarBar.ViewModels
 
             Dictionary<string, string> phtime = GetPHTimeForBoth();
             string newOrderLinesStr = string.Empty;
-            int tempVal, tempPointsEarned;
-            tempPointsEarned = (tempVal = (int)_totalOrderLinesCost / 1000) != 0 ? tempVal * 10 : 0;
+            decimal tempVal;
+            int tempPointsEarned;
+
+            _selectedOrder.CostTracker += TotalOrderLinesCost;
+            if ((tempVal = Math.Truncate(_selectedOrder.CostTracker / 1000)) > 0)
+            {
+                tempPointsEarned = (int)tempVal * 10;
+                _selectedOrder.CostTracker %= 1000;
+            } else
+            {
+                tempPointsEarned = 0;
+            }
 
             for (var i = _newOrderLines.Count - 1; i >= 0; i--)
             {
@@ -269,7 +280,7 @@ namespace AutoBarBar.ViewModels
             if (o == null)
                 return;
 
-            User user = o as User;
+            User user = o as User; 
 
             SelectedUser = user;
             SelectedCustomer = Customers.First(c => c.UserID == user.ID);
@@ -292,6 +303,9 @@ namespace AutoBarBar.ViewModels
                     total += ol.SubTotal;
                 }
             }
+
+            if (IsEmpty == false)
+                IsEmpty = true;
         }
 
         void AddProductToOrderLine (Product p)
@@ -377,13 +391,14 @@ namespace AutoBarBar.ViewModels
 
         void ClearSelectedProperties()
         {
-            SelectedUser = new User();
-            SelectedCustomer = new Customer();
+            SelectedUser = null;
+            SelectedCustomer = null;
             SelectedOrder = null;
             CurrentOrderLines = null;
             CurrentOrderLineGroup = null;
             SelectedReward = null;
             NewOrderLines.Clear();
+            IsEmpty = false;
         }
 
         public void ApplyQueryAttributes(IDictionary<string, string> query)
@@ -426,6 +441,13 @@ namespace AutoBarBar.ViewModels
         {
             get => _date;
             set => SetProperty(ref _date, value);
+        }
+
+        bool _isEmpty;
+        public bool IsEmpty
+        {
+            get => _isEmpty;
+            set => SetProperty(ref _isEmpty, value);
         }
         #region Customers
         ObservableRangeCollection<Customer> _customers;

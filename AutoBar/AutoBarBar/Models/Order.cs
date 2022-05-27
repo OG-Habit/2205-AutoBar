@@ -27,6 +27,12 @@ namespace AutoBarBar.Models
         public string ClosedOn { get; set; }
         public string Remarks { get; set; }
 
+        decimal _costTracker;
+        public decimal CostTracker
+        {
+            get => _costTracker;
+            set => SetProperty(ref _costTracker, value);
+        }
 
         public string CustomerName { get; set; }
         public string BartenderName { get; set; }
