@@ -62,9 +62,10 @@ namespace AutoBarBar.Services
             return await Task.FromResult(activeTabs);
         }
 
-        public async Task<ActiveTab> CreateActiveTab(string qrKey, string customerIDs)
+        public async Task<ActiveTab> CreateActiveTab(string qrKey, string customerIDs, string dateTime)
         {
             ActiveTab activeTab = null;
+            string condition = string.IsNullOrEmpty(customerIDs) ? "" : $"AND Customers.ID NOT IN({customerIDs})";
             string cmd = $@"
                 SELECT 
                 Users.ID, Users.FirstName, Users.LastName, Users.Sex, Users.Birthday, Users.MobileNumber, Users.Email, Users.ImageLink,
@@ -72,8 +73,8 @@ namespace AutoBarBar.Services
                 FROM Customers
                 INNER JOIN Users
                 ON Users.ID = Customers.UserID
-                WHERE QRKey = ""{qrKey}"" AND
-                Customers.ID NOT IN({customerIDs})
+                WHERE QRKey = ""{qrKey}"" 
+                {condition}
                 LIMIT 1;
             ";
 
@@ -101,6 +102,15 @@ namespace AutoBarBar.Services
                 activeTab.ATCustomer.Points = dataRecord.GetDecimal(11);
                 activeTab.ATCustomer.CardStatus = dataRecord.GetInt32(12);
             });
+
+            if(activeTab != null)
+            {
+                string cmd2 = $@"
+                    INSERT INTO Orders(CustomerID, OpenedOn)
+                    VALUES({activeTab.ATCustomer.ID},""{dateTime}"");
+                ";
+                AddItem(cmd2);
+            }
 
             return await Task.FromResult(activeTab);
         }

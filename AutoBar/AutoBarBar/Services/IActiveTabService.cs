@@ -10,7 +10,7 @@ namespace AutoBarBar.Services
     {
         Task<IEnumerable<ActiveTab>> GetActiveTabs();
         Task<bool> CheckExistingTabs(string customerIDs);
-        Task<ActiveTab> CreateActiveTab(string qrKey, string customerIDs);
+        Task<ActiveTab> CreateActiveTab(string qrKey, string customerIDs, string dateTime);
         Task AddBalance(int customerID, int bartenderID, decimal amount, string dateTime);
         Task CloseTab(int customerID, Order o, Reward r, int hasReward, string dateTime);
     }

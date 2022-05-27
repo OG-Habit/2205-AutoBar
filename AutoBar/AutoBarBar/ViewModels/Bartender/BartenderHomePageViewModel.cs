@@ -52,7 +52,7 @@ namespace AutoBarBar.ViewModels
         };
         public string[] times = { "7:30PM", "8:30PM", "10:30PM" };
 
-        public BartenderHomePageViewModel()
+        private BartenderHomePageViewModel()
         {
             productService = DependencyService.Get<IProductService>();
             activeTabService = DependencyService.Get<IActiveTabService>();
@@ -89,6 +89,7 @@ namespace AutoBarBar.ViewModels
             TotalOrderLinesCost = 0;
             CanAddNewOrderLine = false;
             SelectedReward = DummyReward;
+            Date = DateTime.UtcNow.AddHours(8).ToString("MMM dd, yyyy");
 
             Test = new Command(TestMe);
         }
@@ -126,6 +127,7 @@ namespace AutoBarBar.ViewModels
                     _customerIDs += $",{at.ATCustomer.ID}"; 
                 }
                 AllUsers = Users;
+                AllProducts = Products;
 
                 if(!string.IsNullOrEmpty(_orderIDs))
                 {
@@ -203,13 +205,7 @@ namespace AutoBarBar.ViewModels
             Customers.Remove(_selectedCustomer);
             Orders.Remove(_selectedOrder);
             OrderLines.RemoveRange(_currentOrderLines);
-            SelectedUser = null;
-            SelectedCustomer = null;
-            SelectedOrder = null;
-            CurrentOrderLines = null;
-            CurrentOrderLineGroup = null;
-            SelectedReward = null;
-            NewOrderLines.Clear();
+            ClearSelectedProperties();
             await App.Current.MainPage.DisplayAlert("Success", "Customer transaction has ended.", "Ok");
         }
 
@@ -258,11 +254,13 @@ namespace AutoBarBar.ViewModels
 
         void SearchProduct(string arg)
         {
-            Products.Where(p => p.Name.ToLowerInvariant().Contains(arg.ToLowerInvariant()));
+            Products = new ObservableRangeCollection<Product>(AllProducts.Where(p => p.Name.ToLowerInvariant().Contains(arg.ToLowerInvariant())));
         }
 
         void SearchCustomer(string arg)
         {
+            ClearSelectedProperties();
+            TotalOrderLinesCost = 0;
             Users = new ObservableRangeCollection<User>(AllUsers.Where(u => u.FullName.ToLowerInvariant().Contains(arg.ToLowerInvariant())));
         }
 
@@ -377,6 +375,17 @@ namespace AutoBarBar.ViewModels
             }
         }
 
+        void ClearSelectedProperties()
+        {
+            SelectedUser = new User();
+            SelectedCustomer = new Customer();
+            SelectedOrder = null;
+            CurrentOrderLines = null;
+            CurrentOrderLineGroup = null;
+            SelectedReward = null;
+            NewOrderLines.Clear();
+        }
+
         public void ApplyQueryAttributes(IDictionary<string, string> query)
         {
             if(query.Count == 0)
@@ -393,17 +402,31 @@ namespace AutoBarBar.ViewModels
             if(query.ContainsKey($"{PARAM_NEW_TAB}"))
             {
                 string at = HttpUtility.UrlDecode(query[$"{PARAM_NEW_TAB}"]);
+                string comma = string.IsNullOrEmpty(_orderIDs) ? "" : ",";
                 ActiveTab activeTab = JsonConvert.DeserializeObject<ActiveTab>(Uri.UnescapeDataString(at));
 
                 Customers.Add(activeTab.ATCustomer);
                 Orders.Add(activeTab.ATOrder);
                 Users.Add(activeTab.ATUser);
-                _orderIDs += $",{activeTab.ATOrder.ID}";
-                _customerIDs += $",{activeTab.ATCustomer.ID}";
+                _orderIDs += $"{comma}{activeTab.ATOrder.ID}";
+                _customerIDs += $"{comma}{activeTab.ATCustomer.ID}";
             }
         }
 
         #region Getters setters
+        string _time;
+        public string Time
+        {
+            get => _time;
+            set => SetProperty(ref _time, value);
+        }
+
+        string _date;
+        public string Date
+        {
+            get => _date;
+            set => SetProperty(ref _date, value);
+        }
         #region Customers
         ObservableRangeCollection<Customer> _customers;
         public ObservableRangeCollection<Customer> Customers
@@ -462,6 +485,13 @@ namespace AutoBarBar.ViewModels
         {
             get { return _products; }
             set { SetProperty(ref _products, value); }
+        }
+
+        ObservableRangeCollection<Product> _allProducts;
+        public ObservableRangeCollection<Product> AllProducts
+        {
+            get => _allProducts;
+            set => SetProperty(ref _allProducts, value);
         }
 
         Product _selectedProduct;

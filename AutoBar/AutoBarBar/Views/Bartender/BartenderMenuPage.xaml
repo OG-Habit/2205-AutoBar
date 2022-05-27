@@ -17,7 +17,7 @@
                         Direction="Row" JustifyContent="SpaceBetween">
                 <StackLayout>
                     <Label Text="LOGO"/>
-                    <Label Text="Nov 7, 2022"/>
+                    <Label Text="{Binding Date}"/>
                 </StackLayout>
                 <SearchBar Grid.Row="0" Grid.RowSpan="2" BackgroundColor="Blue"
                            Grid.Column="1" x:Name="searchBar"
@@ -93,7 +93,7 @@
                             Direction="Column"
                             JustifyContent="Center">
                     <Label Text="{Binding TotalOrderLinesCost, StringFormat='Total Cost: PHP {0:F2}'}" VerticalOptions="Center"/>
-                    <Label Text="Time: 11:58PM" VerticalOptions="Center"/>
+                    <Label Text="{Binding Time, StringFormat='Time: {0}'}" VerticalOptions="Center"/>
                 </FlexLayout>
                 <ListView Grid.Row="2"  BackgroundColor="Red" Footer="Footer"
                           CachingStrategy="RecycleElement"

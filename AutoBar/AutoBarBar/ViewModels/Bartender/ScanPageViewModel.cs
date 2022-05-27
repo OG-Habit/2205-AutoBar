@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using AutoBarBar.Services;
 using static AutoBarBar.Constants;
 using System.Threading.Tasks;
+using static AutoBarBar.DateTimeHelper;
 
 namespace AutoBarBar.ViewModels
 {
@@ -33,7 +34,7 @@ namespace AutoBarBar.ViewModels
                 IsBusy = true;
                 ScanResult = result.Text;
 
-                ActiveTab at = await activeTabService.CreateActiveTab(result.Text, customerIDs);
+                ActiveTab at = await activeTabService.CreateActiveTab(result.Text, customerIDs, GetPHTimeForDB());
                 if(at == null)
                 {
                     await App.Current.MainPage.DisplayAlert("Error", "Customer is already part of the tab system.", "Ok");

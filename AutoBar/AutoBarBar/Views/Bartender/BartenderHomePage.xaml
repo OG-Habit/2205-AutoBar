@@ -4,6 +4,7 @@
              xmlns:models="clr-namespace:AutoBarBar.Models"
              xmlns:vm="clr-namespace:AutoBarBar.ViewModels"
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             xmlns:helpers="clr-namespace:AutoBarBar.Helpers"
              x:Name="HomePage"
              x:Class="AutoBarBar.Views.BartenderHomePage"
              x:DataType="vm:BartenderHomePageViewModel"
@@ -12,6 +13,7 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <xct:ItemSelectedEventArgsConverter x:Key="ItemSelectedEventArgsConverter"/>
+            <helpers:CardStatusConverter x:Key="cardStatusConverter"/>
         </ResourceDictionary>
     </ContentPage.Resources>
     
@@ -21,7 +23,7 @@
                 RowDefinitions="*, *" ColumnDefinitions="4*, *, *">
                 <StackLayout Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
                     <Label Text="LOGO"/>
-                    <Label Text="Nov 7, 2022"/>
+                    <Label Text="{Binding Date}"/>
                 </StackLayout>
                 <SearchBar Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"
                            x:Name="searchBar"
@@ -60,17 +62,16 @@
                   RowDefinitions="*, *, *" 
                   ColumnDefinitions="*, *, *, *">
                     <Image Grid.Row="0" Grid.RowSpan="3"
-                       Grid.Column="0"  
-                    Source="default_pic.png"/>
+                        Grid.Column="0"  
+                        Source="{Binding SelectedUser.ImageLink}"/>
                     <Label Grid.Row="0" Grid.Column="1" Text="{Binding SelectedUser.FullName, StringFormat='Name: {0}'}"/>
-                    <Label Grid.Row="1" Grid.Column="1" Text="Status: Member"/>
-                    <Label Grid.Row="2" Grid.Column="1" Text="{Binding SelectedUser.Email, StringFormat='Email: {0}'}"/>
-                    <Label Grid.Row="0" Grid.Column="2" Text="{Binding SelectedUser.MobileNumber, StringFormat='Contact: {0}'}"/>
+                    <Label Grid.Row="1" Grid.Column="1" Text="{Binding SelectedUser.Email, StringFormat='Email: {0}'}"/>
+                    <Label Grid.Row="2" Grid.Column="1" Text="{Binding SelectedUser.MobileNumber, StringFormat='Contact: {0}'}"/>
+                    <Label Grid.Row="0" Grid.Column="2" Text="{Binding SelectedUser.Sex, StringFormat='Sex: {0}'}"/>
                     <Label Grid.Row="1" Grid.Column="2" Text="{Binding SelectedUser.Birthday, StringFormat='Birthday: {0}'}"/>
-                    <Label Grid.Row="2" Grid.Column="2" Text="{Binding SelectedUser.Sex, StringFormat='Sex: {0}'}"/>
-                    <Label Grid.Row="0" Grid.Column="3" Text="{Binding SelectedCustomer.CardStatus, StringFormat='Card Issued: {0}'}"/>
-                    <Label Grid.Row="1" Grid.Column="3" Text="{Binding SelectedCustomer.Balance, StringFormat='Current Balance: PHP {0:F2}'}"/>
-                    <Label Grid.Row="2" Grid.Column="3" Text="{Binding SelectedCustomer.Points, StringFormat='Total Points: {0}'}"/>
+                    <Label Grid.Row="2" Grid.Column="2" Text="{Binding SelectedCustomer.CardStatus, Converter={StaticResource cardStatusConverter}, StringFormat='Card Issued: {0}'}"/>
+                    <Label Grid.Row="0" Grid.Column="3" Text="{Binding SelectedCustomer.Balance, StringFormat='Current Balance: PHP {0:F2}'}"/>
+                    <Label Grid.Row="1" Grid.Column="3" Text="{Binding SelectedCustomer.Points, StringFormat='Total Points: {0}'}"/>
                 </Grid>
                 <ListView 
                     Grid.Row="1"
