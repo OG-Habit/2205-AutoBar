@@ -13,7 +13,12 @@ namespace AutoBarBar.Models
             set => SetProperty(ref _balance, value); 
         }
 
-        public decimal Points { get; set; }
+        decimal _points;
+        public decimal Points {
+            get => _points;
+            set => SetProperty(ref _points, value);
+        }
+
         public int CardStatus { get; set; }
         public string LastTransactionAt { get; set; }
         public string QRKey { get; set; }

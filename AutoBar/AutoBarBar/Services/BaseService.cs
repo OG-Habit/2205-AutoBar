@@ -24,6 +24,7 @@ namespace AutoBarBar.Services
                             var list = reader.GetEnumerator();
                             while (list.MoveNext())
                             {
+                                // Sample - User temp = new User();
                                 T temp = (T)Activator.CreateInstance(typeof(T));
                                 DbDataRecord dataRecord = (DbDataRecord)list.Current;
                                 // All of the code above action() are required to query from the remote database.

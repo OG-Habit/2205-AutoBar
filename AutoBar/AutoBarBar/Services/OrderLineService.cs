@@ -30,14 +30,19 @@ namespace AutoBarBar.Services
             return await Task.FromResult(orderLines);
         }
 
-        public Task AddOrderLines(string orderLines, int customerID, decimal newBalance)
+        public Task AddOrderLines(string orderLines, int customerID, int orderID, decimal cost, int pointsEarned, string dateTime)
         {
             string cmd = $@"
                 INSERT INTO OrderLine(`OrderID`, `ProductID`, `UnitPrice`, `Quantity`, `CreatedBy`, `CreatedOn`, `IsCompleted`)
                 VALUES {orderLines};
+
                 UPDATE Customers
-                SET Balance = {newBalance}
+                SET Balance = Balance - {cost}, Points = Points + {pointsEarned}, LastTransactionAt = ""{dateTime}""
                 WHERE ID = {customerID};
+
+                UPDATE Orders
+                SET TotalPrice = TotalPrice + {cost}, PointsEarned = PointsEarned + {pointsEarned}
+                WHERE ID = {orderID};
             ";
             AddItem(cmd);
             return Task.CompletedTask;

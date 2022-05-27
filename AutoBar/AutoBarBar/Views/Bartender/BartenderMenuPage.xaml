@@ -85,9 +85,9 @@
                            WidthRequest="100"
                            HeightRequest="{Binding Source={x:RelativeSource Self}, Path=WidthRequest}"/>
                     <Label Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" 
-                           Text="{Binding SelectedUser.FirstName}" VerticalOptions="Center"/>
+                           Text="{Binding SelectedUser.FullName}" VerticalOptions="Center"/>
                     <Label Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" 
-                           Text="{Binding CurrentBalance, StringFormat='Current Balance: PHP {0:F2}'}" VerticalOptions="Center"/>
+                           Text="{Binding SelectedCustomer.Balance, StringFormat='Current Balance: PHP {0:F2}'}" VerticalOptions="Center"/>
                 </Grid>
                 <FlexLayout Grid.Row="1" 
                             Direction="Column"

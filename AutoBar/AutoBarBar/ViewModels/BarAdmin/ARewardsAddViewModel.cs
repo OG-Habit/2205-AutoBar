@@ -62,9 +62,9 @@ namespace AutoBarBar.ViewModels
                 {
                     Reward item = new Reward
                     {
-                        Id = Guid.NewGuid().ToString(),
+                        ID = 1,
                         Name = Name,
-                        Points = Point,
+                        //Points = Point,
                         Description = Description,
                         ImageLink = (Image is FileImageSource source) ? source.File : "default_pic"
                     };

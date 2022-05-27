@@ -32,7 +32,6 @@ namespace AutoBarBar.Services
                 u.ID = dataRecord.GetInt32(0);
                 u.FirstName = dataRecord.GetString(1);
                 u.LastName = dataRecord.GetString(2);
-                u.FullName = String.Concat(u.FirstName, u.LastName);
                 u.Email = dataRecord.GetString(3);
                 u.ImageLink = dataRecord.GetValue(4).ToString();
                 u.UserType = dataRecord.GetInt32(5);

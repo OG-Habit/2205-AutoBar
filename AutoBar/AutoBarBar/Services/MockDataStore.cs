@@ -56,11 +56,11 @@ namespace AutoBarBar.Services
             //    new Order { Id = "11", OpenedOn = DateTime.Today, ClosedOn = DateTime.Today, CustomerName="Bam Carousel", TotalPrice=227.5, PointsEarned = 0, OrderStatus=false, CustomerId="2", BartenderName="Bartender Three", Reward="No Reward"}
             //};
 
-            rewards = new List<Reward>()
-            {
-                new Reward { Id = Guid.NewGuid().ToString(), Name = "Egg", Description = "The egg is big, dark orange, and fresh", ImageLink = "default_pic.png", Points = 100.00 },
-                new Reward { Id = Guid.NewGuid().ToString(), Name = "Apple", Description = "The apple is red, plump, and fresh", ImageLink = "default_pic.png", Points = 400.00 }
-            };
+            //rewards = new List<Reward>()
+            //{
+            //    new Reward { Id = Guid.NewGuid().ToString(), Name = "Egg", Description = "The egg is big, dark orange, and fresh", ImageLink = "default_pic.png", Points = 100.00 },
+            //    new Reward { Id = Guid.NewGuid().ToString(), Name = "Apple", Description = "The apple is red, plump, and fresh", ImageLink = "default_pic.png", Points = 400.00 }
+            //};
 
             bartenders = new List<Bartender>()
             {
@@ -228,8 +228,8 @@ namespace AutoBarBar.Services
 
         public async Task<bool> UpdateItemAsync(Reward item)
         {
-            var oldItem = rewards.Where((Reward arg) => arg.Id == item.Id).FirstOrDefault();
-            rewards.Remove(oldItem);
+            //var oldItem = rewards.Where((Reward arg) => arg.Id == item.Id).FirstOrDefault();
+            //rewards.Remove(oldItem);
             rewards.Add(item);
 
             return await Task.FromResult(true);
@@ -237,15 +237,16 @@ namespace AutoBarBar.Services
 
         async Task<bool> IDataStore<Reward>.DeleteItemAsync(string id)
         {
-            var oldItem = rewards.Where((Reward arg) => arg.Id == id).FirstOrDefault();
-            rewards.Remove(oldItem);
+            //var oldItem = rewards.Where((Reward arg) => arg.Id == id).FirstOrDefault();
+            //rewards.Remove(oldItem);
 
             return await Task.FromResult(true);
         }
 
         async Task<Reward> IDataStore<Reward>.GetItemAsync(string id)
         {
-            return await Task.FromResult(rewards.FirstOrDefault(s => s.Id == id));
+            //return await Task.FromResult(rewards.FirstOrDefault(s => s.Id == id));
+            return rewards[0];
         }
 
         async Task<IEnumerable<Reward>> IDataStore<Reward>.GetItemsAsync(bool forceRefresh)

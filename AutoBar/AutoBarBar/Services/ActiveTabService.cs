@@ -49,7 +49,6 @@ namespace AutoBarBar.Services
                 activeTab.ATUser.MobileNumber = dataRecord.GetString(11);
                 activeTab.ATUser.Email = dataRecord.GetString(12);
                 activeTab.ATUser.ImageLink = dataRecord.GetValue(13).ToString();
-                activeTab.ATUser.FullName = activeTab.ATUser.FirstName + " " + activeTab.ATUser.LastName;
 
                 activeTab.ATCustomer.ID = dataRecord.GetInt32(14);
                 activeTab.ATCustomer.UserID = dataRecord.GetInt32(15);
@@ -95,7 +94,6 @@ namespace AutoBarBar.Services
                 activeTab.ATUser.MobileNumber = dataRecord.GetString(5);
                 activeTab.ATUser.Email = dataRecord.GetString(6);
                 activeTab.ATUser.ImageLink = dataRecord.GetValue(7).ToString();
-                activeTab.ATUser.FullName = activeTab.ATUser.FirstName + " " + activeTab.ATUser.LastName;
 
                 activeTab.ATCustomer.ID = dataRecord.GetInt32(8);
                 activeTab.ATCustomer.UserID = dataRecord.GetInt32(9);
@@ -126,13 +124,38 @@ namespace AutoBarBar.Services
             return await Task.FromResult(ans);
         }
 
-        public Task AddBalance(int customerID, decimal newBalance, string dateTime)
+        public Task AddBalance(int customerID, int bartenderID, decimal amount, string dateTime)
         {
             string cmd = $@"
                 UPDATE Customers
-                SET Balance={newBalance}, LastTransactionAt=""{dateTime}"" 
+                SET Balance=Balance+{amount}, LastTransactionAt=""{dateTime}"" 
                 WHERE ID={customerID};
-                    
+
+                INSERT INTO Reloads (CustomerID, BartenderID, CreditedBalance, CreatedOn) 
+                VALUES ({customerID},{bartenderID},{amount},""{dateTime}"");
+            ";
+            UpdateItem(cmd);
+            return Task.CompletedTask;
+        }
+
+        public Task CloseTab(int customerID, Order o, Reward r, int hasReward, string dateTime)
+        {
+            string insertUsedReward = hasReward == 1 ? $@"
+                INSERT INTO UsedRewards(CustomerID, RewardID, OrderID, PointsDeducted, CreatedOn)
+                VALUES({customerID},{r.ID},{o.ID},{r.Points},""{dateTime}"");
+            " : "";
+            string cmd = $@"
+                UPDATE Orders
+                SET ClosedOn=""{dateTime}"",
+                HasReward = {hasReward}, OrderStatus = 2
+                WHERE ID={o.ID};
+
+                {insertUsedReward}
+
+                UPDATE Customers
+                SET Points=Points-{r.Points},
+                LastTransactionAt=""{dateTime}""
+                WHERE ID={customerID};
             ";
             UpdateItem(cmd);
             return Task.CompletedTask;

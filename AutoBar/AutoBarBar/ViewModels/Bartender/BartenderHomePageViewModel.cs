@@ -24,18 +24,19 @@ namespace AutoBarBar.ViewModels
 {
     public class BartenderHomePageViewModel : BaseViewModel, IQueryAttributable
     {
-        readonly IProductService productService;
-        readonly IActiveTabService activeTabService;
-        readonly IOrderLineService orderLineService;
-        readonly IToastService toastService;
+        IProductService productService;
+        IActiveTabService activeTabService;
+        IOrderLineService orderLineService;
+        IToastService toastService;
+        IRewardService rewardService;
 
         public AsyncCommand GetReloadBalanceAmountCommand { get; }
         public AsyncCommand ShowScanCommand { get; }
         public AsyncCommand EndTransactionCommand { get; }
         public AsyncCommand AddOrderLineCommand { get; }
-        public AsyncCommand<string> SearchProductCommand { get; }
-        public AsyncCommand<string> SearchCustomerCommand { get; }
 
+        public Command<string> SearchProductCommand { get; }
+        public Command<string> SearchCustomerCommand { get; }
         public Command SwitchUserCommand { get; }
         public Command AddProductToOrderLineCommand { get; }
         public Command IncreaseQuantityCommand { get; }
@@ -45,8 +46,9 @@ namespace AutoBarBar.ViewModels
 
         Reward DummyReward = new Reward()
         {
-            Id = "dummy",
-            Name = "-- None --"
+            ID = -1,
+            Name = "-- None --",
+            Points = 0
         };
         public string[] times = { "7:30PM", "8:30PM", "10:30PM" };
 
@@ -56,6 +58,7 @@ namespace AutoBarBar.ViewModels
             activeTabService = DependencyService.Get<IActiveTabService>();
             orderLineService = DependencyService.Get<IOrderLineService>();
             toastService = DependencyService.Get<IToastService>();
+            rewardService = DependencyService.Get<IRewardService>();
 
             Title = "Bartender Home Page";
             Customers = new ObservableRangeCollection<Customer>();
@@ -65,7 +68,6 @@ namespace AutoBarBar.ViewModels
             Orders = new ObservableRangeCollection<Order>();
             Rewards = new ObservableRangeCollection<Reward>();
             ActiveTabs = new ObservableRangeCollection<ActiveTab>();
-
             NewOrderLines = new ObservableCollection<OrderLine>();
             
             PopulateData();
@@ -74,13 +76,15 @@ namespace AutoBarBar.ViewModels
             GetReloadBalanceAmountCommand = new AsyncCommand(GetReloadBalanceAmount);
             EndTransactionCommand = new AsyncCommand(EndTransaction);
             AddOrderLineCommand = new AsyncCommand(AddOrderLine);
-            SearchCustomerCommand = new AsyncCommand<string>(SearchCustomer);
-            SearchProductCommand = new AsyncCommand<string>(SearchProduct);
+
+            SearchCustomerCommand = new Command<string>(SearchCustomer);
+            SearchProductCommand = new Command<string>(SearchProduct);
             SwitchUserCommand = new Command<object>(SwitchUser);
             AddProductToOrderLineCommand = new Command<Product>(AddProductToOrderLine);
             IncreaseQuantityCommand = new Command<OrderLine>(IncreaseQuantity);
             DecreaseQuantityCommand = new Command<OrderLine>(DecreaseQuantity);
 
+            Rewards.Add(DummyReward);
             SelectedProduct = null;
             TotalOrderLinesCost = 0;
             CanAddNewOrderLine = false;
@@ -91,27 +95,27 @@ namespace AutoBarBar.ViewModels
 
         void TestMe()
         {
-            var a = SelectedUser;
+            
         }
 
         void PopulateData()
         {
             try
             {
-                //List<int> orderIDs = new List<int>();
-                var getRewardsTask = GetItemsAsync(Rewards, RewardDataStore);
+                var rewardsTask = rewardService.GetRewards();
                 var productsTask = productService.GetProducts();
                 var activeTabsTask = activeTabService.GetActiveTabs();
                 _orderIDs = _customerIDs = string.Empty;
 
                 Task[] tasks = new Task[]
                 {
-                getRewardsTask, productsTask, activeTabsTask
+                rewardsTask, productsTask, activeTabsTask
                 };
                 Task.WaitAll(tasks);
 
                 ActiveTabs.AddRange(activeTabsTask.Result);
                 Products.AddRange(productsTask.Result);
+                Rewards.AddRange(rewardsTask.Result);
 
                 foreach (var at in ActiveTabs)
                 {
@@ -121,6 +125,7 @@ namespace AutoBarBar.ViewModels
                     _orderIDs += $",{at.ATOrder.ID}";
                     _customerIDs += $",{at.ATCustomer.ID}"; 
                 }
+                AllUsers = Users;
 
                 if(!string.IsNullOrEmpty(_orderIDs))
                 {
@@ -146,12 +151,6 @@ namespace AutoBarBar.ViewModels
             }
         }
 
-        async Task GetItemsAsync<TModel>(ObservableRangeCollection<TModel> list, IDataStore<TModel> dataStore)
-        {
-            var listFromDb = await dataStore.GetItemsAsync();
-            list.AddRange(listFromDb);
-        }
-
         async Task ShowScan()
         {
             await Shell.Current.GoToAsync($"//{nameof(BartenderHomePage)}/{nameof(ScanPage)}?{PARAM_CUSTOMER_IDS}={_customerIDs}");
@@ -159,35 +158,73 @@ namespace AutoBarBar.ViewModels
         
         async Task GetReloadBalanceAmount()
         {
-            string ans = await Application.Current.MainPage.DisplayPromptAsync("Balance", "Enter amount:", "Add", "Cancel", null, -1, Keyboard.Numeric, "");
-            if(decimal.TryParse(ans, out decimal num))
+            string ans = await Application.Current.MainPage.DisplayPromptAsync("Balance", "Enter amount:", "Add", "Cancel", "Amount to be added...", -1, Keyboard.Numeric, "");
+            if (string.IsNullOrEmpty(ans))
             {
-                foreach(var c in _customers)
+                return;
+            }
+
+            if (!decimal.TryParse(ans, out decimal num) || num <= 0)
+            {
+                await Application.Current.MainPage.DisplayAlert("Error", "Please input numbers that are greater than 0 only.", "Ok");
+                return;
+            }
+            
+            bool confirm = await Application.Current.MainPage.DisplayAlert("Warning", $"Are you sure you want to add PHP {ans:C} to {_selectedUser.FullName}'s balance", "Yes", "No");
+            if(!confirm)
+            {
+                return;
+            }
+            
+            foreach(var c in _customers)
+            {
+                if(c.ID == _selectedCustomer.ID)
                 {
-                    if(c.ID == _selectedCustomer.ID)
-                    {
-                        await activeTabService.AddBalance(c.ID, c.Balance, GetPHTimeForDB());
-                        await Application.Current.MainPage.DisplayAlert("Success", "Balance has been added.", "Ok");
-                        c.Balance += num;
-                    }
+                    await activeTabService.AddBalance(c.ID, StaffUser.StaffID, num, GetPHTimeForDB());
+                    await Application.Current.MainPage.DisplayAlert("Success", "Balance has been added.", "Ok");
+                    c.Balance += num;
+                    break;
                 }
             }
         }
 
         async Task EndTransaction()
         {
-            await App.Current.MainPage.DisplayAlert("Success", "Customer transaction has ended.", "Ok");
+            bool ans = await Application.Current.MainPage.DisplayAlert("Warning", $"Are you sure you want to remove the {_selectedUser.FullName} from the tab system?", "Yes", "No");
+            if (ans == false)
+            {
+                return;
+            }
 
-            CurrentOrder.OrderStatus = 2;
-            Orders.Add(CurrentOrder);
-            Customers.Remove(SelectedCustomer);
+            int hasReward = _selectedReward.ID == -1 ? 0 : 1;
+
+            await activeTabService.CloseTab(_selectedCustomer.ID, _selectedOrder, _selectedReward, hasReward, GetPHTimeForDB());
+            Users.Remove(_selectedUser);
+            Customers.Remove(_selectedCustomer);
+            Orders.Remove(_selectedOrder);
+            OrderLines.RemoveRange(_currentOrderLines);
+            SelectedUser = null;
+            SelectedCustomer = null;
+            SelectedOrder = null;
+            CurrentOrderLines = null;
+            CurrentOrderLineGroup = null;
+            SelectedReward = null;
+            NewOrderLines.Clear();
+            await App.Current.MainPage.DisplayAlert("Success", "Customer transaction has ended.", "Ok");
         }
 
         async Task AddOrderLine()
         {
+            bool ans = await Application.Current.MainPage.DisplayAlert("Warning", "Are you sure you want to add these orders?", "Yes", "No");
+            if(ans == false)
+            {
+                return;
+            }
+
             Dictionary<string, string> phtime = GetPHTimeForBoth();
             string newOrderLinesStr = string.Empty;
-            int tempPointsEarned;
+            int tempVal, tempPointsEarned;
+            tempPointsEarned = (tempVal = (int)_totalOrderLinesCost / 1000) != 0 ? tempVal * 10 : 0;
 
             for (var i = _newOrderLines.Count - 1; i >= 0; i--)
             {
@@ -199,37 +236,34 @@ namespace AutoBarBar.ViewModels
             }
             newOrderLinesStr = newOrderLinesStr.Remove(newOrderLinesStr.Length-1);
 
-            SelectedCustomer.Balance -= TotalOrderLinesCost;
-            await orderLineService.AddOrderLines(newOrderLinesStr, _selectedCustomer.ID, _selectedCustomer.Balance);
+            await orderLineService.AddOrderLines(newOrderLinesStr, _selectedCustomer.ID, _selectedOrder.ID,  _totalOrderLinesCost, tempPointsEarned, GetPHTimeForDB());
+
+            SelectedCustomer.Balance -= _totalOrderLinesCost;
+            SelectedCustomer.Points += tempPointsEarned;
             var group = from ol in _newOrderLines
                         group ol by ol.CreatedOnForUI into newOl
                         orderby newOl.Key descending
                         select newOl;
             CurrentOrderLineGroup.Insert(0, group.ElementAt(0));
             CanAddNewOrderLine = false;
+
             await App.Current.MainPage.DisplayAlert("Success", "You have successfully ordered.", "Thanks");
 
             NewOrderLines.Clear();
 
-            CurrentOrder.TotalPrice += Convert.ToDouble(TotalOrderLinesCost);
-            CurrentOrder.PointsEarned += (tempPointsEarned = (int)CurrentOrder.TotalPrice / 1000) != 0 ? tempPointsEarned * 10 : 0;
+            SelectedOrder.TotalPrice += Convert.ToDouble(_totalOrderLinesCost);
+            SelectedOrder.PointsEarned += tempPointsEarned;
             TotalOrderLinesCost = 0;
         }
 
-        async Task SearchProduct(string arg)
+        void SearchProduct(string arg)
         {
-            await SearchItemsAsync<Product>(Products, ProductDataStore, arg.ToLowerInvariant());
+            Products.Where(p => p.Name.ToLowerInvariant().Contains(arg.ToLowerInvariant()));
         }
 
-        async Task SearchCustomer(string arg)
+        void SearchCustomer(string arg)
         {
-            await SearchItemsAsync<Customer>(Customers, CustomerDataStore, arg.ToLowerInvariant());
-        }
-
-        async Task SearchItemsAsync<TModel>(ObservableRangeCollection<TModel> List, IDataStore<TModel> dataStore, string arg)
-        {
-            var list = await dataStore.GetSearchResults(arg);
-            List.ReplaceRange(list);
+            Users = new ObservableRangeCollection<User>(AllUsers.Where(u => u.FullName.ToLowerInvariant().Contains(arg.ToLowerInvariant())));
         }
 
         void SwitchUser(object o)
@@ -238,12 +272,12 @@ namespace AutoBarBar.ViewModels
                 return;
 
             User user = o as User;
-            
+
             SelectedUser = user;
-            SelectedCustomer = Customers.FirstOrDefault(c => c.UserID == user.ID);
-            // Extend BaseModel
-            CurrentOrder = Orders.First(order => order.CustomerID == SelectedCustomer.ID);
-            CurrentOrderLines = new ObservableCollection<OrderLine>(OrderLines.Where(ol => ol.OrderID == CurrentOrder.ID));
+            SelectedCustomer = Customers.First(c => c.UserID == user.ID);
+            SelectedOrder = Orders.First(or => or.CustomerID == _selectedCustomer.ID);
+
+            CurrentOrderLines = new ObservableCollection<OrderLine>(OrderLines.Where(ol => ol.OrderID == SelectedOrder.ID));
 
             var group = from ol in CurrentOrderLines
                         group ol by ol.CreatedOnForUI into newGroup
@@ -267,7 +301,7 @@ namespace AutoBarBar.ViewModels
             SelectedProduct = null;
 
             var newTotalCost = p.UnitPrice + TotalOrderLinesCost;
-            if(newTotalCost > SelectedCustomer.Balance)
+            if(newTotalCost > _selectedCustomer.Balance)
             {
                 toastService.ShowLongMessage("Insufficient balance.");
                 return;
@@ -281,13 +315,13 @@ namespace AutoBarBar.ViewModels
                 NewOrderLines.Add(new OrderLine
                 {
                     TempID = Guid.NewGuid().ToString(),
-                    OrderID = CurrentOrder.ID,
+                    OrderID = _selectedOrder.ID,
                     ProductID = p.ID,
                     UnitPrice = p.UnitPrice,
                     Quantity = 1,
                     CreatedBy = StaffUser.StaffID,
 
-                    CustomerName = SelectedUser.FirstName,
+                    CustomerName = _selectedUser.FullName,
                     ProductName = p.Name,
                     ProductImgUrl = p.ImageLink,
                     SubTotal = p.UnitPrice
@@ -303,7 +337,7 @@ namespace AutoBarBar.ViewModels
         void IncreaseQuantity(OrderLine Ol)
         {
             var newTotal = TotalOrderLinesCost + Ol.UnitPrice;
-            if (newTotal > SelectedCustomer.Balance)
+            if (newTotal > _selectedCustomer.Balance)
             {
                 toastService.ShowLongMessage("Insufficient balance.");
                 return;
@@ -381,8 +415,8 @@ namespace AutoBarBar.ViewModels
         Customer _selectedCustomer;
         public Customer SelectedCustomer
         {
-            get { return _selectedCustomer; }
-            set { SetProperty(ref _selectedCustomer, value); }
+            get => _selectedCustomer;
+            set => SetProperty(ref _selectedCustomer, value);
         }
 
         string _customerIDs;
@@ -404,8 +438,15 @@ namespace AutoBarBar.ViewModels
         User _selectedUser;
         public User SelectedUser
         {
-            get { return _selectedUser; }
-            set { SetProperty(ref _selectedUser, value); }
+            get=> _selectedUser;
+            set => SetProperty(ref _selectedUser, value);
+        }
+
+        ObservableRangeCollection<User> _allUsers;
+        public ObservableRangeCollection<User> AllUsers
+        {
+            get => _allUsers;
+            set => SetProperty(ref _allUsers, value);
         }
 
         User _staffUser;
@@ -439,11 +480,11 @@ namespace AutoBarBar.ViewModels
             set { SetProperty(ref _orders, value); }
         }
 
-        Order _currentOrder;
-        public Order CurrentOrder
+        Order _selectedOrder;
+        public Order SelectedOrder
         {
-            get { return _currentOrder; }
-            set { SetProperty(ref _currentOrder, value); }
+            get => _selectedOrder;
+            set => SetProperty(ref _selectedOrder, value);
         }
 
         string _orderIDs;
