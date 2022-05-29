@@ -460,6 +460,7 @@ namespace AutoBarBar.ViewModels
             SelectedReward = null;
             NewOrderLines.Clear();
             IsEmpty = false;
+            TotalOrderLinesCost = 0;
         }
 
         public void ApplyQueryAttributes(IDictionary<string, string> query)
