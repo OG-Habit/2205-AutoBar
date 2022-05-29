@@ -13,15 +13,16 @@
         <Grid 
             RowDefinitions="*, 9*"
             ColumnDefinitions="2*, *">
-            <FlexLayout Grid.Column="0" Grid.Row="0"
-                        Direction="Row" JustifyContent="SpaceBetween">
-                <StackLayout>
+            <Grid Grid.Column="0" Grid.Row="0"
+                  ColumnDefinitions="*, 2*">
+                <StackLayout Grid.Column="0">
                     <Label Text="LOGO"/>
                     <Label Text="{Binding Date}"/>
                 </StackLayout>
-                <SearchBar Grid.Row="0" Grid.RowSpan="2" BackgroundColor="Blue"
+                <SearchBar Grid.Row="0" Grid.RowSpan="2" 
                            Grid.Column="1" x:Name="searchBar"
-                           Placeholder="Search">
+                           Placeholder="Search" 
+                           BackgroundColor="Blue">
                     <SearchBar.Behaviors>
                         <xct:EventToCommandBehavior
                             EventName="TextChanged"
@@ -29,7 +30,7 @@
                             CommandParameter="{Binding Source={Reference searchBar}, Path=Text}"/>
                     </SearchBar.Behaviors>
                 </SearchBar>
-            </FlexLayout>
+            </Grid>
 
             <StackLayout Grid.Row="1"
                          Grid.Column="0"
@@ -39,8 +40,7 @@
                     SelectedItem="{Binding SelectedProduct, Mode=OneWay}"
                     SelectionChangedCommand="{Binding AddProductToOrderLineCommand}"
                     SelectionChangedCommandParameter="{Binding Source={x:RelativeSource Self}, Path=SelectedItem}"
-                    SelectionMode="Single"
-                    Footer="footer">
+                    SelectionMode="Single">
                     <CollectionView.Header>
                         <Label Text="Menu"
                                FontSize="Large"
@@ -95,7 +95,7 @@
                     <Label Text="{Binding TotalOrderLinesCost, StringFormat='Total Cost: PHP {0:F2}'}" VerticalOptions="Center"/>
                     <Label Text="{Binding Time, StringFormat='Time: {0}'}" VerticalOptions="Center"/>
                 </FlexLayout>
-                <ListView Grid.Row="2"  BackgroundColor="Red" Footer="Footer"
+                <ListView Grid.Row="2"  BackgroundColor="Red" 
                           CachingStrategy="RecycleElement"
                           HasUnevenRows="True"
                           SelectionMode="None"
