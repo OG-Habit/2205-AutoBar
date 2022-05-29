@@ -354,6 +354,12 @@ namespace AutoBarBar.ViewModels
 
         void AddProductToOrderLine (Product p)
         {
+            if(_isEmpty == false)
+            {
+                toastService.ShowLongMessage("Choose a tab first.");
+                return;
+            }
+
             SelectedProduct = null;
 
             var newTotalCost = p.UnitPrice + TotalOrderLinesCost;

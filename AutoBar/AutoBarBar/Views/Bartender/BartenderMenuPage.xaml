@@ -99,7 +99,6 @@
                           CachingStrategy="RecycleElement"
                           HasUnevenRows="True"
                           SelectionMode="None"
-                          IsEnabled="{Binding IsEmpty}"
                           ItemsSource="{Binding NewOrderLines}">
                     <ListView.ItemTemplate>
                         <DataTemplate x:DataType="model:OrderLine">
