@@ -50,9 +50,10 @@ namespace AutoBarBar.ViewModels
         {
             ID = -1,
             Name = "-- None --",
-            Points = -1
+            Points = 0
         };
         Reward previousSelectedReward;
+        string customerIDs, orderIDs;
         private BartenderHomePageViewModel()
         {
             productService = DependencyService.Get<IProductService>();
@@ -150,7 +151,7 @@ namespace AutoBarBar.ViewModels
 
         async Task ShowScan()
         {
-            await Shell.Current.GoToAsync($"//{nameof(BartenderHomePage)}/{nameof(ScanPage)}?{PARAM_CUSTOMER_IDS}={_customerIDs}");
+            await Shell.Current.GoToAsync($"//{nameof(BartenderHomePage)}/{nameof(ScanPage)}?{PARAM_CUSTOMER_IDS}={customerIDs}");
         }
         
         async Task GetReloadBalanceAmount()
@@ -196,6 +197,8 @@ namespace AutoBarBar.ViewModels
             int hasReward = _selectedReward.ID == -1 ? 0 : 1;
 
             await activeTabService.CloseTab(_selectedCustomer.ID, _selectedOrder, _selectedReward, hasReward, GetPHTimeForDB());
+            RemoveIDFromStr(ref customerIDs, _selectedCustomer.ID.ToString());
+            RemoveIDFromStr(ref orderIDs, _selectedOrder.ID.ToString());
             Users.Remove(_selectedUser);
             Customers.Remove(_selectedCustomer);
             Orders.Remove(_selectedOrder);
@@ -259,7 +262,7 @@ namespace AutoBarBar.ViewModels
 
         void PopulateModelsFromActiveTabs()
         {
-            _orderIDs = _customerIDs = string.Empty;
+            orderIDs = customerIDs = string.Empty;
             foreach (var at in ActiveTabs)
             {
                 string atFName = at.ATUser.FullName;
@@ -279,17 +282,17 @@ namespace AutoBarBar.ViewModels
                 {
                     Users.Add(at.ATUser);
                 }
-                _orderIDs += $",{at.ATOrder.ID}";
-                _customerIDs += $",{at.ATCustomer.ID}";
+                orderIDs += $",{at.ATOrder.ID}";
+                customerIDs += $",{at.ATCustomer.ID}";
             }
 
-            if (!string.IsNullOrEmpty(_orderIDs))
+            if (!string.IsNullOrEmpty(orderIDs))
             {
-                _orderIDs = _orderIDs.Remove(0, 1);
+                orderIDs = orderIDs.Remove(0, 1);
             }
-            if (!string.IsNullOrEmpty(_customerIDs))
+            if (!string.IsNullOrEmpty(customerIDs))
             {
-                _customerIDs = _customerIDs.Remove(0, 1);
+                customerIDs = customerIDs.Remove(0, 1);
             }
 
             GetOrderLines();
@@ -297,7 +300,7 @@ namespace AutoBarBar.ViewModels
 
         void GetOrderLines()
         {
-            var orderLinesTask = orderLineService.GetOrderLines(_orderIDs);
+            var orderLinesTask = orderLineService.GetOrderLines(orderIDs);
             foreach (OrderLine ol in orderLinesTask.Result)
             {
                 ol.ProductName = _products.FirstOrDefault(p => p.ID == ol.ProductID).Name;
@@ -327,7 +330,7 @@ namespace AutoBarBar.ViewModels
 
             SelectedUser = user;
             SelectedCustomer = Customers.First(c => c.UserID == user.ID);
-            SelectedOrder = Orders.First(or => or.CustomerID == _selectedCustomer.ID);
+            SelectedOrder = Orders.FirstOrDefault(or => or.CustomerID == _selectedCustomer.ID);
             SelectedReward = previousSelectedReward = DummyReward;
 
             CurrentOrderLines = new ObservableCollection<OrderLine>(OrderLines.Where(ol => ol.OrderID == SelectedOrder.ID));
@@ -468,6 +471,27 @@ namespace AutoBarBar.ViewModels
             IsEmpty = false;
             TotalOrderLinesCost = 0;
         }
+        void RemoveIDFromStr(ref string IDs, string IDToDel)
+        {
+            string temp = string.Empty;
+            int x;
+            for (x = IDs.Length-1; x >= 0 && IDs[x] != ','; x--)
+            {
+                temp = IDs[x] + temp;
+            }
+            if(x < 0)
+            {
+                IDs = IDs.Remove(0);
+            }
+            else if ((string.Compare(IDToDel, temp)) == 0)
+            {
+                IDs = IDs.Remove(x);
+            }
+            else 
+            {
+                IDs = IDs.Replace(IDToDel + ",", "");
+            }
+        }
 
         public void ApplyQueryAttributes(IDictionary<string, string> query)
         {
@@ -485,7 +509,7 @@ namespace AutoBarBar.ViewModels
             if(query.ContainsKey($"{PARAM_NEW_TAB}"))
             {
                 string at = HttpUtility.UrlDecode(query[$"{PARAM_NEW_TAB}"]);
-                string comma = string.IsNullOrEmpty(_orderIDs) ? "" : ",";
+                string comma = string.IsNullOrEmpty(orderIDs) ? "" : ",";
                 int usersCount = Users.Count, x;
                 ActiveTab activeTab = JsonConvert.DeserializeObject<ActiveTab>(Uri.UnescapeDataString(at));
                 string atFName = activeTab.ATUser.FullName;
@@ -504,8 +528,8 @@ namespace AutoBarBar.ViewModels
                 {
                     Users.Add(activeTab.ATUser);
                 }
-                _orderIDs += $"{comma}{activeTab.ATOrder.ID}";
-                _customerIDs += $"{comma}{activeTab.ATCustomer.ID}";
+                orderIDs += $"{comma}{activeTab.ATOrder.ID}";
+                customerIDs += $"{comma}{activeTab.ATCustomer.ID}";
             }
         }
 
@@ -543,13 +567,6 @@ namespace AutoBarBar.ViewModels
         {
             get => _selectedCustomer;
             set => SetProperty(ref _selectedCustomer, value);
-        }
-
-        string _customerIDs;
-        public string CustomerIDs
-        {
-            get => _customerIDs;
-            set => SetProperty(ref _customerIDs, value);
         }
         #endregion
 
@@ -618,13 +635,6 @@ namespace AutoBarBar.ViewModels
         {
             get => _selectedOrder;
             set => SetProperty(ref _selectedOrder, value);
-        }
-
-        string _orderIDs;
-        public string OrderIDs
-        {
-            get => _orderIDs;
-            set => SetProperty(ref _orderIDs, value);
         }
         #endregion
 

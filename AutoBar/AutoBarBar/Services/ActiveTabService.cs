@@ -66,6 +66,7 @@ namespace AutoBarBar.Services
         public async Task<ActiveTab> CreateActiveTab(string qrKey, string customerIDs, string dateTime)
         {
             ActiveTab activeTab = null;
+            Order o = null;
             string condition = string.IsNullOrEmpty(customerIDs) ? "" : $"AND Customers.ID NOT IN({customerIDs})";
             string cmd = $@"
                 SELECT 
@@ -112,6 +113,25 @@ namespace AutoBarBar.Services
                     VALUES({activeTab.ATCustomer.ID},""{dateTime}"");
                 ";
                 AddItem(cmd2);
+
+                cmd2 = $@"
+                    SELECT Orders.ID, Orders.CustomerID, Orders.TotalPrice, Orders.PointsEarned, Orders.HasReward, Orders.OpenedOn
+                    FROM Orders
+                    WHERE (Orders.OrderStatus = 1 AND {activeTab.ATCustomer.ID} = Orders.CustomerID)
+                    LIMIT 1;
+                ";
+                GetItem<Order>(cmd2, ref o, (dataRecord, order) =>
+                {
+                    o = new Order();
+                    o.ID = dataRecord.GetInt32(0);
+                    o.CustomerID = dataRecord.GetInt32(1);
+                    o.TotalPrice = dataRecord.GetDouble(2);
+                    o.PointsEarned = dataRecord.GetDecimal(3);
+                    o.HasReward = dataRecord.GetInt32(4);
+                    o.OpenedOn = dataRecord.GetDateTime(5).ToString();
+                });
+
+                activeTab.ATOrder = o;
             }
 
             return await Task.FromResult(activeTab);

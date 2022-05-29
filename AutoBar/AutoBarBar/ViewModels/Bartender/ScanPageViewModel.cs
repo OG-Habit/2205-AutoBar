@@ -15,6 +15,7 @@ namespace AutoBarBar.ViewModels
     public class ScanPageViewModel : BaseViewModel, IQueryAttributable
     {
         IActiveTabService activeTabService;
+        string customerIDs;
 
         public Command ScanCommand { get; }
 
@@ -54,13 +55,12 @@ namespace AutoBarBar.ViewModels
         {
             if(query.Count == 0)
             {
+                customerIDs = "";
                 return;
             }
 
             customerIDs = query[$"{PARAM_CUSTOMER_IDS}"];
         }
-
-        string customerIDs;
 
         string scanResult;
         public string ScanResult

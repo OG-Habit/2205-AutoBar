@@ -12,14 +12,15 @@
         {
             get
             {
-                if(Points == 0)
+                if(string.Equals(Name, "-- None --"))
+                {
+                    return Name;
+                }
+                else if (Points == 0)
                 {
                     return Name + " - Free";
                 }
-                else if(Points == -1)
-                {
-                    return Name;
-                } else
+                else
                 {
                     return Name + " - " + Points;
                 }

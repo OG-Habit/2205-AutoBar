@@ -28,7 +28,9 @@
                 <SearchBar Grid.Row="0" Grid.RowSpan="2"
                            Grid.Column="1" Grid.ColumnSpan="3"
                            x:Name="searchBar"
-                           Placeholder="Search">
+                           TextColor="Black"
+                           Placeholder="Search"
+                           PlaceholderColor="Gray">
                     <SearchBar.Behaviors>
                         <xct:EventToCommandBehavior
                             EventName="TextChanged"
