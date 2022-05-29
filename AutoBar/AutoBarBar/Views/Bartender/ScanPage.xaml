@@ -18,8 +18,8 @@
     
     <ContentPage.Content>
         <Grid RowDefinitions="1*, 1*, 8*">
-            <Label Text="{Binding ScanResult}" TextColor="Black" Grid.Row="0" />
-            <Label x:Name="LabelSha" Grid.Row="1"/>
+            <!--<Label Text="{Binding ScanResult}" TextColor="Black" Grid.Row="0" />
+            <Label x:Name="LabelSha" Grid.Row="1"/>-->
             <zxing:ZXingScannerView Grid.Row="2" 
                                     IsScanning="True"
                                     IsAnalyzing="{Binding Path=IsBusy, Converter={StaticResource isBusyConverter}}"

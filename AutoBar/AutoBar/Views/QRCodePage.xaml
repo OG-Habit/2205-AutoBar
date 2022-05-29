@@ -10,8 +10,8 @@
     </ContentPage.BindingContext>
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="{Binding QRKey}"/>
-            <Label Text="{Binding QR}"/>
+            <!--<Label Text="{Binding QRKey}"/>
+            <Label Text="{Binding QR}"/>-->
             <zxing:ZXingBarcodeImageView x:Name="ImgQR" BarcodeFormat="QR_CODE"
                                          VerticalOptions="CenterAndExpand"
                                          HeightRequest="{Binding AdjustedQRLength}" WidthRequest="{Binding AdjustedQRLength}"
