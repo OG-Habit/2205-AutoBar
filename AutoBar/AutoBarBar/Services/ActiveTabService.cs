@@ -45,7 +45,8 @@ namespace AutoBarBar.Services
                 activeTab.ATUser.FirstName = dataRecord.GetString(7);
                 activeTab.ATUser.LastName = dataRecord.GetString(8);
                 activeTab.ATUser.Sex = dataRecord.GetString(9);
-                activeTab.ATUser.Birthday = dataRecord.GetValue(10).ToString();
+                var bday = dataRecord.GetValue(10).ToString();
+                activeTab.ATUser.Birthday = bday.Substring(0, bday.IndexOf(" "));
                 activeTab.ATUser.MobileNumber = dataRecord.GetString(11);
                 activeTab.ATUser.Email = dataRecord.GetString(12);
                 activeTab.ATUser.ImageLink = dataRecord.GetValue(13).ToString();
@@ -91,7 +92,8 @@ namespace AutoBarBar.Services
                 activeTab.ATUser.FirstName = dataRecord.GetString(1);
                 activeTab.ATUser.LastName = dataRecord.GetString(2);
                 activeTab.ATUser.Sex = dataRecord.GetString(3);
-                activeTab.ATUser.Birthday = dataRecord.GetValue(4).ToString();
+                var bday = dataRecord.GetValue(4).ToString();
+                activeTab.ATUser.Birthday = bday.Substring(0, bday.IndexOf(" "));
                 activeTab.ATUser.MobileNumber = dataRecord.GetString(5);
                 activeTab.ATUser.Email = dataRecord.GetString(6);
                 activeTab.ATUser.ImageLink = dataRecord.GetValue(7).ToString();
