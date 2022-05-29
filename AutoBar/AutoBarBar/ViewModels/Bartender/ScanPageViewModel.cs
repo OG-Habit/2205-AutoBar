@@ -44,7 +44,7 @@ namespace AutoBarBar.ViewModels
 
                 string obj = JsonConvert.SerializeObject(at);
 
-                await App.Current.MainPage.DisplayAlert("Success", "User has been added.", "Ok");
+                await App.Current.MainPage.DisplayAlert("Success", $"{at.ATUser.FullName} has been added.", "Ok");
                 IsBusy = false;
                 await Shell.Current.GoToAsync($"..?{PARAM_NEW_TAB}={obj}");
             });
