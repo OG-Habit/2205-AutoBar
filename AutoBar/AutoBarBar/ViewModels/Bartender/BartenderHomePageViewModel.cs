@@ -317,7 +317,6 @@ namespace AutoBarBar.ViewModels
         void SearchCustomer(string arg)
         {
             ClearSelectedProperties();
-            TotalOrderLinesCost = 0;
             Users = new ObservableRangeCollection<User>(AllUsers.Where(u => u.FullName.ToLowerInvariant().Contains(arg.ToLowerInvariant())));
         }
 
@@ -341,6 +340,7 @@ namespace AutoBarBar.ViewModels
                         select newGroup;
             CurrentOrderLineGroup = new ObservableCollection<IGrouping<string, OrderLine>>(group);
             NewOrderLines.Clear();
+            TotalOrderLinesCost = 0;
 
             foreach (var colg in CurrentOrderLineGroup)
             {
@@ -465,6 +465,7 @@ namespace AutoBarBar.ViewModels
             SelectedCustomer = null;
             SelectedOrder = null;
             CurrentOrderLines = null;
+            TotalOrderLinesCost = 0;
             CurrentOrderLineGroup = null;
             SelectedReward = null;
             NewOrderLines.Clear();
