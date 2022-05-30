@@ -15,7 +15,7 @@
             ColumnDefinitions="2*, *">
             <Grid Grid.Column="0" Grid.Row="0"
                   ColumnDefinitions="*, 2*">
-                <StackLayout Grid.Column="0" Padding="20,20,0,0">
+               <StackLayout Grid.Column="0" Padding="20,20,0,0">
                     <Image Source="AutobarLogo_Black.png" HeightRequest="20" HorizontalOptions="Start"/>
                     <Label Text="{Binding Date}"/>
                 </StackLayout>
