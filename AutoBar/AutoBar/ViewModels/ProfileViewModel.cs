@@ -1,4 +1,6 @@
-﻿using AutoBar.Views;
+﻿using AutoBar.Models;
+using AutoBar.Views;
+using Newtonsoft.Json;
 using System;
 using Xamarin.Forms;
 
@@ -11,9 +13,10 @@ namespace AutoBar.ViewModels
         public Command QRCodeClicked { get; }
         public Command ReportClicked { get; }
 
-        public string Name { get; }
-        public string Email { get; }
+        public string Name { get; set; }
+        public string Email { get; set; }
         public string ImageLink { get; }
+
 
         public ProfileViewModel()
         {
@@ -21,11 +24,16 @@ namespace AutoBar.ViewModels
             EwalletClicked = new Command(OnEwalletClicked);
             QRCodeClicked = new Command(OnQRCodeClicked);
             ReportClicked = new Command(OnReportClicked);
-            Name = "Test Testing Tester";
-            Email = "test@email.com";
             ImageLink = "default_pic";
+            SetUserDetails();
         }
-
+        async void SetUserDetails()
+        {
+            var UserString = await Xamarin.Essentials.SecureStorage.GetAsync("user");
+            Customer u = JsonConvert.DeserializeObject<Customer>(UserString);
+            Name = u.UserDetails.FullName;
+            Email = u.UserDetails.Email;
+        }
         private async void OnLogoutClicked(object obj)
         {
             bool retryBool = await App.Current.MainPage.DisplayAlert("Log out", "Would you like to log out?", "Yes", "No");

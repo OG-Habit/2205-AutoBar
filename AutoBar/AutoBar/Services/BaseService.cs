@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Diagnostics;
 using System.Text;
 using static AutoBar.Constants;
 
@@ -39,6 +40,7 @@ namespace AutoBar.Services
             catch (Exception e)
             {
                 var a = e.Message;
+                Debug.Write(a);
             }
         }
 

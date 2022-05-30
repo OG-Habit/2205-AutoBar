@@ -1,9 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="AutoBar.Views.EwalletPage"
-             xmlns:viewmodels="clr-namespace:AutoBar.ViewModels" 
-             x:DataType="viewmodels:EwalletViewModel">
+             xmlns:vm="clr-namespace:AutoBar.ViewModels"
+             xmlns:model="clr-namespace:AutoBar.Models"
+             x:Class="AutoBar.Views.EwalletPage">
+
+    <ContentPage.BindingContext>
+        <vm:EwalletViewModel />
+    </ContentPage.BindingContext>
+    
     <ContentPage.Content>
         <StackLayout Padding="10,0" HorizontalOptions="Center">
             <Frame Padding="0,20,0,0" HorizontalOptions="Center" CornerRadius="200" HeightRequest="200" WidthRequest="200" 
@@ -12,6 +17,60 @@
             </Frame>
             <Label Text="{Binding Balance, StringFormat='PHP {0:#.00}'}" HorizontalTextAlignment="Center" FontSize="20"/>
             <Label Text="Available Balance" HorizontalTextAlignment="Center" FontSize="12" Margin="0,0,0,20"/>
+            <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="StartAndExpand" Margin="5,10,5,0">
+                <Label Padding="0,0,0,0" Text="TRANSACTION HISTORY" LineBreakMode="NoWrap" FontSize="18" TextDecorations="Underline"/>
+                <Grid RowDefinitions="Auto" ColumnDefinitions="*,*,*">
+                    <Label Text="Timestamp" LineBreakMode="NoWrap" FontSize="14" Grid.Column="0" HorizontalTextAlignment="Center"/>
+                    <Label Text="Type" LineBreakMode="NoWrap" FontSize="14" Grid.Column="1" HorizontalTextAlignment="Center"/>
+                    <Label Text="Amount" LineBreakMode="NoWrap" FontSize="14" Grid.Column="2" HorizontalTextAlignment="Center"/>
+                </Grid>
+            </StackLayout>
+            <RefreshView x:DataType="vm:EwalletViewModel" Command="{Binding LoadItemCommand}" 
+                         IsRefreshing="{Binding IsBusy, Mode=TwoWay}" x:Name="TransactionList">
+                <CollectionView x:Name="ListView1" ItemsSource="{Binding Item1}" SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout Padding="5,5,5,5" x:DataType="model:TransactionHistory">
+                                <Grid ColumnDefinitions="*,*,*">
+                                    <Label Text="{Binding TimeStamp, StringFormat='{0:MMM dd, yyyy HH:MM}'}" LineBreakMode="NoWrap" FontSize="12" Grid.Column="0"
+                                               VerticalOptions="Center" HorizontalTextAlignment="Center"/>
+                                    <Label Text="{Binding Type}" LineBreakMode="NoWrap" FontSize="12" Grid.Column="1"
+                                               VerticalOptions="Center" HorizontalTextAlignment="Center"/>
+                                    <Label Text="{Binding Amount, StringFormat='{0:#.00}'}" LineBreakMode="NoWrap" FontSize="12" Grid.Column="2"
+                                               VerticalOptions="Center" HorizontalTextAlignment="Center"/>
+                                </Grid>
+                            </StackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </RefreshView>
+            <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="StartAndExpand" Margin="5,10,5,0">
+                <Label Padding="0,0,0,0" Text="POINTS HISTORY" LineBreakMode="NoWrap" FontSize="18" TextDecorations="Underline"/>
+                <Grid RowDefinitions="Auto" ColumnDefinitions="*,*,*">
+                    <Label Text="Timestamp" LineBreakMode="NoWrap" FontSize="14" Grid.Column="0" HorizontalTextAlignment="Center"/>
+                    <Label Text="Type" LineBreakMode="NoWrap" FontSize="14" Grid.Column="1" HorizontalTextAlignment="Center"/>
+                    <Label Text="Amount" LineBreakMode="NoWrap" FontSize="14" Grid.Column="2" HorizontalTextAlignment="Center"/>
+                </Grid>
+            </StackLayout>
+            <RefreshView x:DataType="vm:EwalletViewModel" Command="{Binding LoadItemCommand}" 
+                         IsRefreshing="{Binding IsBusy, Mode=TwoWay}"  x:Name="PointsList">
+                <CollectionView x:Name="ListView2" ItemsSource="{Binding Item2}" SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout Padding="5,5,5,5" x:DataType="model:PointsHistory">
+                                <Grid ColumnDefinitions="*,*,*">
+                                    <Label Text="{Binding TimeStamp, StringFormat='{0:MMM dd, yyyy HH:MM}'}" LineBreakMode="NoWrap" FontSize="12" Grid.Column="0"
+                                               VerticalOptions="Center" HorizontalTextAlignment="Center"/>
+                                    <Label Text="{Binding Type}" LineBreakMode="NoWrap" FontSize="12" Grid.Column="1"
+                                               VerticalOptions="Center" HorizontalTextAlignment="Center"/>
+                                    <Label Text="{Binding Points, StringFormat='{0:#.00}'}" LineBreakMode="NoWrap" FontSize="12" Grid.Column="2"
+                                               VerticalOptions="Center" HorizontalTextAlignment="Center"/>
+                                </Grid>
+                            </StackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </RefreshView>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

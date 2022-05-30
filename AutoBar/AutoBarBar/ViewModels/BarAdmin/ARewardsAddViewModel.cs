@@ -66,7 +66,7 @@ namespace AutoBarBar.ViewModels
                         Name = Name,
                         //Points = Point,
                         Description = Description,
-                        ImageLink = (Image is FileImageSource source) ? source.File : "default_pic"
+                        ImageLink = (Image is FileImageSource source) ? source.File : "default_reward"
                     };
                     await RewardDataStore.AddItemAsync(item);
                     await Shell.Current.GoToAsync("..");
