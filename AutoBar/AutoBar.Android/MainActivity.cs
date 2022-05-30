@@ -23,7 +23,7 @@ namespace AutoBar.Droid
             if (Device.Idiom == TargetIdiom.Phone)
                 App.ScreenHeight = (16 * App.ScreenWidth) / 9;
 
-            if (Device.Idiom == TargetIdiom.Tablet)
+            if (Device.Idiom == TargetIdiom.Tablet) 
                 App.ScreenWidth = (9 * App.ScreenHeight) / 16;
 
             base.OnCreate(savedInstanceState);
