@@ -45,7 +45,8 @@ namespace AutoBarBar.Services
                 activeTab.ATUser.FirstName = dataRecord.GetString(7);
                 activeTab.ATUser.LastName = dataRecord.GetString(8);
                 activeTab.ATUser.Sex = dataRecord.GetString(9);
-                activeTab.ATUser.Birthday = dataRecord.GetValue(10).ToString();
+                var bday = dataRecord.GetValue(10).ToString();
+                activeTab.ATUser.Birthday = bday.Substring(0, bday.IndexOf(" "));
                 activeTab.ATUser.MobileNumber = dataRecord.GetString(11);
                 activeTab.ATUser.Email = dataRecord.GetString(12);
                 activeTab.ATUser.ImageLink = dataRecord.GetValue(13).ToString();
@@ -65,6 +66,7 @@ namespace AutoBarBar.Services
         public async Task<ActiveTab> CreateActiveTab(string qrKey, string customerIDs, string dateTime)
         {
             ActiveTab activeTab = null;
+            Order o = null;
             string condition = string.IsNullOrEmpty(customerIDs) ? "" : $"AND Customers.ID NOT IN({customerIDs})";
             string cmd = $@"
                 SELECT 
@@ -91,7 +93,8 @@ namespace AutoBarBar.Services
                 activeTab.ATUser.FirstName = dataRecord.GetString(1);
                 activeTab.ATUser.LastName = dataRecord.GetString(2);
                 activeTab.ATUser.Sex = dataRecord.GetString(3);
-                activeTab.ATUser.Birthday = dataRecord.GetValue(4).ToString();
+                var bday = dataRecord.GetValue(4).ToString();
+                activeTab.ATUser.Birthday = bday.Substring(0, bday.IndexOf(" "));
                 activeTab.ATUser.MobileNumber = dataRecord.GetString(5);
                 activeTab.ATUser.Email = dataRecord.GetString(6);
                 activeTab.ATUser.ImageLink = dataRecord.GetValue(7).ToString();
@@ -110,6 +113,25 @@ namespace AutoBarBar.Services
                     VALUES({activeTab.ATCustomer.ID},""{dateTime}"");
                 ";
                 AddItem(cmd2);
+
+                cmd2 = $@"
+                    SELECT Orders.ID, Orders.CustomerID, Orders.TotalPrice, Orders.PointsEarned, Orders.HasReward, Orders.OpenedOn
+                    FROM Orders
+                    WHERE (Orders.OrderStatus = 1 AND {activeTab.ATCustomer.ID} = Orders.CustomerID)
+                    LIMIT 1;
+                ";
+                GetItem<Order>(cmd2, ref o, (dataRecord, order) =>
+                {
+                    o = new Order();
+                    o.ID = dataRecord.GetInt32(0);
+                    o.CustomerID = dataRecord.GetInt32(1);
+                    o.TotalPrice = dataRecord.GetDouble(2);
+                    o.PointsEarned = dataRecord.GetDecimal(3);
+                    o.HasReward = dataRecord.GetInt32(4);
+                    o.OpenedOn = dataRecord.GetDateTime(5).ToString();
+                });
+
+                activeTab.ATOrder = o;
             }
 
             return await Task.FromResult(activeTab);
