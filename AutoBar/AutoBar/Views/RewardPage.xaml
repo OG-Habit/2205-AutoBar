@@ -12,13 +12,12 @@
 
     <ContentPage.Content>
         <StackLayout>
-            <Grid BackgroundColor="#2196F3" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand"
-                  ColumnDefinitions="2" Padding="20,10">
+            <Grid BackgroundColor="#3f3f4e" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand"
+                  ColumnDefinitions="2" Padding="15">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="40"/>
-                    <RowDefinition Height="30"/>
                 </Grid.RowDefinitions>
-                <Label Text="AUTOBAR" FontSize="25" Grid.Column="1" Grid.Row="0" TextColor="White" VerticalOptions="Center"/>
+                <Image Source="AutobarLogo_Horizontal.png" HeightRequest="20" Grid.Column="1"/>
                 <Frame Grid.Column="2" Grid.Row="0" HasShadow="False" CornerRadius="20" Padding="10" BackgroundColor="gray"
                        VerticalOptions="Center" HorizontalOptions="End">
                     <Label Text="{Binding Balance, StringFormat='Total Points: {0}'}" FontSize="15"  TextColor="White"/>
@@ -31,8 +30,8 @@
                     <RowDefinition Height="40"/>
                 </Grid.RowDefinitions>
                 <Label Text="Rewards" LineBreakMode="NoWrap" FontSize="20" Grid.Column="1" HorizontalOptions="Start" 
-                       VerticalOptions="Center"/>
-                <Button Text="Sort" CornerRadius="100" Grid.Column="2" HorizontalOptions="End" VerticalOptions="Center"
+                       VerticalOptions="Center" Padding="0,10,0,0"/>
+                <Button Text="Sort" CornerRadius="100" Grid.Column="2" HorizontalOptions="End" VerticalOptions="Center" BackgroundColor="gray"
                         CommandParameter="{Binding .}" Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RewardViewModel}},
                         Path=ItemSort}"/>
             </Grid>

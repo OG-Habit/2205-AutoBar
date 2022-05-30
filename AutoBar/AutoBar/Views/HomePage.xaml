@@ -12,13 +12,12 @@
 
     <ContentPage.Content>
         <StackLayout>
-            <Grid BackgroundColor="#2196F3" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand"
-                  ColumnDefinitions="2" Padding="20,10">
+            <Grid BackgroundColor="#3f3f4e" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand"
+                  ColumnDefinitions="2" Padding="15">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="40"/>
-                    <RowDefinition Height="30"/>
                 </Grid.RowDefinitions>
-                <Label Text="AUTOBAR" FontSize="25" Grid.Column="1" Grid.Row="0" TextColor="White" VerticalOptions="Center"/>
+                <Image Source="AutobarLogo_Horizontal.png" HeightRequest="20" Grid.Column="1"/>
                 <Frame Grid.Column="2" Grid.Row="0" HasShadow="False" CornerRadius="20" Padding="10" BackgroundColor="gray"
                        VerticalOptions="Center" HorizontalOptions="End">
                     <Label Text="{Binding Balance, StringFormat='PHP {0:#.00}'}" FontSize="15"  TextColor="White"/>
@@ -30,11 +29,11 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="40"/>
                 </Grid.RowDefinitions>
-                <Label Text="Bar Menu" LineBreakMode="NoWrap" FontSize="20" Grid.Column="1" HorizontalOptions="Start" 
-                       VerticalOptions="Center"/>
+                <Label Text="Bar Menu" LineBreakMode="NoWrap" FontSize="25" Grid.Column="1" HorizontalOptions="Start" 
+                       VerticalOptions="Center" Padding="0,10,0,0"/>
                 <Button Text="Sort" CornerRadius="100" Grid.Column="2" HorizontalOptions="End" VerticalOptions="Center"
                         CommandParameter="{Binding .}" Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HomeViewModel}},
-                        Path=ItemSort}"/>
+                        Path=ItemSort}" BackgroundColor="gray"/>
             </Grid>
             <RefreshView x:DataType="vm:HomeViewModel" Command="{Binding LoadItemCommand}" 
                          IsRefreshing="{Binding IsBusy, Mode=TwoWay}" Padding="30,10">

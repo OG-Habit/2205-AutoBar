@@ -6,21 +6,27 @@
              xmlns:helpers="clr-namespace:AutoBar.Helpers"
              mc:Ignorable="d"
              x:Class="AutoBar.Views.LoginPage"
-             Shell.NavBarIsVisible="False">
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="#3f3f4e">
     <ContentPage.Resources>
         <helpers:LoginCredentialsConverter x:Key="loginCredentialsConverter"/>
     </ContentPage.Resources>
     <ContentPage.Content>
         <StackLayout Padding="10,0,10,0" VerticalOptions="Center" HorizontalOptions="Center">
-            <Label Text="Email"/>
-            <Entry x:Name="EntryEmail"/>
-            <Label Text="Password"/>
-            <Entry x:Name="EntryPass"/>
-            <Button Text="Login" WidthRequest="400" CornerRadius="100" Command="{Binding LoginCommand}">
+            <Frame BackgroundColor="#3f3f4e" Padding="0">
+                <Image Source="AutobarLogo_White.png" HeightRequest="200"/>
+            </Frame>
+            <Label Text="Email" TextColor="White"/>
+            <Entry TextColor="White" x:Name="EntryEmail"/>
+            <Label Text="Password" TextColor="White"/>
+            <Entry x:Name="EntryPass" TextColor="White"/>
+            <Button Text="Login"  WidthRequest="400" CornerRadius="100" Command="{Binding LoginCommand}" BackgroundColor="gray">
                 <Button.CommandParameter>
                     <MultiBinding Converter="{StaticResource loginCredentialsConverter}">
-                        <Binding Path="Text" Source="{x:Reference EntryEmail}"/>
-                        <Binding Path="Text" Source="{x:Reference EntryPass}"/>
+                        <MultiBinding.Bindings>
+                            <Binding Path="Text" Source="{x:Reference EntryEmail}"/>
+                            <Binding Path="Text" Source="{x:Reference EntryPass}"/>
+                        </MultiBinding.Bindings>
                     </MultiBinding>
                 </Button.CommandParameter>
             </Button>

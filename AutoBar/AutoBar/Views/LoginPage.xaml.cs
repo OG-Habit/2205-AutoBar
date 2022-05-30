@@ -4,6 +4,7 @@ using Xamarin.Forms.Xaml;
 
 namespace AutoBar.Views
 {
+
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class LoginPage : ContentPage
     {

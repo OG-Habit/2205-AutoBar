@@ -12,10 +12,15 @@
 
     <ContentPage.Content>
         <StackLayout>
-            <Grid BackgroundColor="#2196F3" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand"
-                  ColumnDefinitions="2" Padding="20">
-                <Label Text="{Binding Today, StringFormat='{0:MMMM dd, yyyy}'}" FontSize="25" Grid.Column="1" TextColor="White"/>
-                <SearchBar Placeholder="Search" Grid.Column="2" BackgroundColor="White" 
+            <Grid BackgroundColor="#3f3f4e" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand"
+                  ColumnDefinitions="2" Padding="15">
+                <Frame Padding="13,0,0,0" BackgroundColor="#3f3f4e" Grid.Column="1">
+                    <StackLayout HorizontalOptions="Start" Padding="0,0,0,0">
+                        <Image Source="AutobarLogo_Horizontal.png" HeightRequest="30"/>
+                        <Label Text="{Binding Today, StringFormat='{0:MMMM dd, yyyy}'}" FontSize="25" TextColor="White" Padding="7,0,0,35"/>
+                    </StackLayout>
+                </Frame>
+                <SearchBar Placeholder="Search" Grid.Column="2"
                            TextChanged="SearchBarChange"/>
             </Grid>
             <Grid ColumnDefinitions="2" Padding="30,5">

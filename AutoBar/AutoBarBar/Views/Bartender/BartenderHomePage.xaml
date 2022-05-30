@@ -8,7 +8,7 @@
              x:Name="HomePage"
              x:Class="AutoBarBar.Views.BartenderHomePage"
              x:DataType="vm:BartenderHomePageViewModel"
-             Shell.TabBarBackgroundColor="Aqua"
+             Shell.TabBarBackgroundColor="#3f3f4e"
              Shell.NavBarIsVisible="False">
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -18,16 +18,19 @@
     </ContentPage.Resources>
     
     <ContentPage.Content>
-        <Grid RowDefinitions="*, 4.5*">
+        <Grid RowDefinitions="*, 7.5*">
             <Grid Grid.Row="0" Padding="{Binding Converter={StaticResource scale}, ConverterParameter='thickness=15,10'}"
-                RowDefinitions="*, *" ColumnDefinitions="4*, *, *">
+                RowDefinitions="*, *" ColumnDefinitions="1.3*, *, *">
                 <StackLayout Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
-                    <Label Text="LOGO"/>
+                    <Image Source="AutobarLogo_Black.png" HeightRequest="20" HorizontalOptions="Start"/>
                     <Label Text="{Binding Date}"/>
                 </StackLayout>
-                <SearchBar Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"
+                <SearchBar Grid.Row="0" Grid.RowSpan="2"
+                           Grid.Column="1" Grid.ColumnSpan="3"
                            x:Name="searchBar"
-                           Placeholder="Search">
+                           TextColor="Black"
+                           Placeholder="Search"
+                           PlaceholderColor="Gray">
                     <SearchBar.Behaviors>
                         <xct:EventToCommandBehavior
                             EventName="TextChanged"
@@ -35,34 +38,50 @@
                             CommandParameter="{Binding Source={Reference searchBar}, Path=Text}"/>
                     </SearchBar.Behaviors>
                 </SearchBar>
-                <CollectionView x:Name="CVCustomer" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" 
+            </Grid>
+            <Grid Grid.Row="1" 
+                  RowDefinitions="*, 3*, 1.5*"
+                  ColumnDefinitions="*, 6*">
+                <StackLayout Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Padding="10">
+                    <Button 
+                        Padding="{Binding Converter={StaticResource scale}, ConverterParameter='thickness=8,0'}"
+                    Text="SCAN CARD" Command="{Binding ShowScanCommand}"/>
+                    <RefreshView BackgroundColor="White"
+                             IsRefreshing="{Binding IsBusy}"
+                             RefreshColor="Gray"
+                             Command="{Binding RefreshTabCommand}">
+                        <CollectionView x:Name="CVCustomer" 
+                                BackgroundColor="White"
                                 SelectionMode="Single" SelectedItem="{Binding SelectedUser}"
                                 SelectionChangedCommand="{Binding SwitchUserCommand}"
                                 SelectionChangedCommandParameter="{Binding SelectedItem, Source={x:Reference CVCustomer}}"
-                                ItemsLayout="HorizontalList" ItemsSource="{Binding Users}">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="models:User">
-                            <Label Text="{Binding FullName}" FontSize="Large" 
-                                   Margin="{Binding Converter={StaticResource scale}, ConverterParameter='thickness=0,0,10,0'}">
-                            </Label>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                    <CollectionView.EmptyView>
-                        <Label Text="No one is here."/>
-                    </CollectionView.EmptyView>
-                </CollectionView>
-                <Button Grid.Row="1" Grid.Column="2" 
-                    Text="SCAN CARD" Command="{Binding ShowScanCommand}"/>
-            </Grid>
-            <Grid Grid.Row="1" 
-                  RowDefinitions="*, 3*, 1.5*">
-                <Grid Grid.Row="0" ColumnSpacing="{Binding Converter={StaticResource scale}, ConverterParameter='height=30'}" 
+                                ItemsLayout="VerticalList" ItemsSource="{Binding Users}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:User">
+                                    <Label Text="{Binding FullName}" FontSize="Large"
+                                           LineBreakMode="WordWrap" 
+                                           HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                                           Margin="{Binding Converter={StaticResource scale}, ConverterParameter='thickness=0,0,10,0'}">
+                                    </Label>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                            <CollectionView.EmptyView>
+                                <Label Text="No one is here."/>
+                            </CollectionView.EmptyView>
+                        </CollectionView>
+                    </RefreshView>
+                </StackLayout>
+                <Grid Grid.Row="0" Grid.Column="1" 
+                      ColumnSpacing="{Binding Converter={StaticResource scale}, ConverterParameter='height=10'}" 
                       RowSpacing="{Binding Converter={StaticResource scale}, ConverterParameter='width=10'}"
-                    HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" x:DataType="vm:BartenderHomePageViewModel"
+                    HorizontalOptions="FillAndExpand" VerticalOptions="StartAndExpand" x:DataType="vm:BartenderHomePageViewModel"
                   RowDefinitions="*, *, *" 
-                  ColumnDefinitions="*, *, *, *">
-                    <Image Grid.Row="0" Grid.RowSpan="3"
+                  ColumnDefinitions="0.5*, *, *, 1.2*">
+                    <Image Grid.Row="0" Grid.RowSpan="3" 
                         Grid.Column="0"  
+                        WidthRequest="{Binding Converter={StaticResource scale}, ConverterParameter='height=80'}"
+                        HorizontalOptions="StartAndExpand" 
+                        VerticalOptions="CenterAndExpand"
                         Source="{Binding SelectedUser.ImageLink}"/>
                     <Label Grid.Row="0" Grid.Column="1" Text="{Binding SelectedUser.FullName, StringFormat='Name: {0}'}"/>
                     <Label Grid.Row="1" Grid.Column="1" Text="{Binding SelectedUser.Email, StringFormat='Email: {0}'}"/>
@@ -70,22 +89,21 @@
                     <Label Grid.Row="0" Grid.Column="2" Text="{Binding SelectedUser.Sex, StringFormat='Sex: {0}'}"/>
                     <Label Grid.Row="1" Grid.Column="2" Text="{Binding SelectedUser.Birthday, StringFormat='Birthday: {0}'}"/>
                     <Label Grid.Row="2" Grid.Column="2" Text="{Binding SelectedCustomer.CardStatus, Converter={StaticResource cardStatusConverter}, StringFormat='Card Issued: {0}'}"/>
-                    <Label Grid.Row="0" Grid.Column="3" Text="{Binding SelectedCustomer.Balance, StringFormat='Current Balance: PHP {0:F2}'}"/>
-                    <Label Grid.Row="1" Grid.Column="3" Text="{Binding SelectedCustomer.Points, StringFormat='Total Points: {0}'}"/>
+                    <Label Grid.Row="0" Grid.Column="3" Text="{Binding SelectedCustomer.Balance, StringFormat='Balance: PHP {0:F2}'}"/>
+                    <Label Grid.Row="1" Grid.Column="3" Text="{Binding SelectedCustomer.Points, StringFormat='Points: {0}'}"/>
                 </Grid>
                 <ListView 
-                    Grid.Row="1"
+                    Grid.Row="1" Grid.Column="1"
                     HasUnevenRows="True"
                     CachingStrategy="RecycleElement"
                     ItemsSource="{Binding CurrentOrderLineGroup}"
                     IsGroupingEnabled="True"
                     GroupDisplayBinding="{Binding Key}"
-                    SelectionMode="None"
-                    Footer="Foasdfasdfoter">
+                    SelectionMode="None">
                     <ListView.GroupHeaderTemplate>
                         <DataTemplate x:DataType="{x:Null}">
                             <ViewCell>
-                                <Label Text="{Binding Key}" FontSize="Large" TextColor="Green"/>
+                                <Label Text="{Binding Key}" FontSize="Large" TextColor="Gray"/>
                             </ViewCell>
                         </DataTemplate>
                     </ListView.GroupHeaderTemplate>
@@ -93,7 +111,7 @@
                         <DataTemplate x:DataType="models:OrderLine">
                             <ViewCell>
                                 <Grid ColumnDefinitions="*,*,*,*" VerticalOptions="Center"  
-                                    BackgroundColor="Yellow">
+                                    BackgroundColor="White">
                                     <Label Grid.Column="0" Text="{Binding ProductName}"/>
                                     <Label Grid.Column="1" Text="{Binding Quantity}"/>
                                     <Label Grid.Column="2" Text="{Binding UnitPrice, StringFormat='PHP {0:F2}'}"/>
@@ -189,17 +207,25 @@
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>-->
-                <Grid Grid.Row="2" BackgroundColor="LightGray" RowSpacing="0" ColumnSpacing="10"
+                <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                      BackgroundColor="LightGray" RowSpacing="0" ColumnSpacing="10"
                       RowDefinitions="*, *, *, *"  x:DataType="vm:BartenderHomePageViewModel"
-                      ColumnDefinitions="*, *, *">
+                      ColumnDefinitions="*, *, *" Padding="25,15,0,0">
                     <Label Grid.Row="0" Grid.Column="0" Text="Time Opened: "/>
                     <Label Grid.Row="1" Grid.Column="0" Text="{Binding SelectedOrder.OpenedOn}"/>
                     <Label Grid.Row="2" Grid.Column="0" Text="Select Reward"/>
-                    <Picker Grid.Row="3" Grid.Column="0"
+                    <Picker Grid.Row="3" Grid.Column="0" x:Name="PickerReward"
                             Title="Select a reward" FontSize="Small"
                             ItemsSource="{Binding Rewards}"
                             SelectedItem="{Binding SelectedReward}"
-                            ItemDisplayBinding="{Binding Name}">
+                            IsEnabled="{Binding IsEmpty}" 
+                            ItemDisplayBinding="{Binding NamePoints}">
+                        <Picker.Behaviors>
+                            <xct:EventToCommandBehavior
+                                EventName="SelectedIndexChanged"
+                                Command="{Binding CheckRewardCommand}"
+                                CommandParameter="{Binding SelectedItem, Source={Reference PickerReward}}"/>
+                        </Picker.Behaviors>
                     </Picker>
                     <Label Grid.Row="0" Grid.Column="1" Text="Total Paid:"/>
                     <Label Grid.Row="1" Grid.Column="1" Text="{Binding SelectedOrder.TotalPrice, StringFormat='PHP {0:F2}'}"/>

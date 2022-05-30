@@ -64,7 +64,7 @@
                     <TapGestureRecognizer Command="{Binding ReportClicked}" NumberOfTapsRequired="1"/>
                 </Grid.GestureRecognizers>
             </Grid>
-            <Button Text="Log out" WidthRequest="250" CornerRadius="100" Command="{Binding LogoutCommand}" Margin="0,30,0,0"/>
+            <Button Text="Log out" WidthRequest="250" CornerRadius="100" Command="{Binding LogoutCommand}" Margin="0,30,0,0" BackgroundColor="gray"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

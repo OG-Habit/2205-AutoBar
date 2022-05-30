@@ -22,10 +22,10 @@ namespace AutoBar.Services
                 new Product { Id = "3", Name = "Carrots", Description = "The carrot is orange, healthy, and fresh", ImageLink = "default_pic.png", Price = 60.75 },
                 new Product { Id = "4", Name = "Duck", Description = "The duck is tasty, juicy, and free range", ImageLink = "default_pic.png", Price = 399.99 },
                 new Product { Id = "5", Name = "Egg", Description = "The egg is big, dark orange, and fresh", ImageLink = "default_pic.png", Price = 10.00 },
-                new Product { Id = "6", Name = "Egg", Description = "The egg is big, dark orange, and fresh", ImageLink = "default_pic.png", Price = 10.00 },
-                new Product { Id = "7", Name = "Egg", Description = "The egg is big, dark orange, and fresh", ImageLink = "default_pic.png", Price = 10.00 },
-                new Product { Id = "8", Name = "Egg", Description = "The egg is big, dark orange, and fresh", ImageLink = "default_pic.png", Price = 10.00 },
-                new Product { Id = "9", Name = "Egg", Description = "The egg is big, dark orange, and fresh", ImageLink = "default_pic.png", Price = 10.00 },
+                new Product { Id = "6", Name = "Fish", Description = "The egg is big, dark orange, and fresh", ImageLink = "default_pic.png", Price = 10.00 },
+                new Product { Id = "7", Name = "Beer 1", Description = "Beer 1 beer 1 beer 1", ImageLink = "default_pic.png", Price = 10.00 },
+                new Product { Id = "8", Name = "Beer 2", Description = "The egg is big, dark orange, and fresh", ImageLink = "default_pic.png", Price = 10.00 },
+                new Product { Id = "9", Name = "Beer 3", Description = "The egg is big, dark orange, and fresh", ImageLink = "default_pic.png", Price = 10.00 },
             };
 
             orderLines = new List<OrderLine>()
