@@ -1,4 +1,6 @@
-﻿using Xamarin.Forms;
+﻿using AutoBarBar.Models;
+using Newtonsoft.Json;
+using Xamarin.Forms;
 using static AutoBarBar.Constants;
 
 namespace AutoBarBar.ViewModels
@@ -13,8 +15,12 @@ namespace AutoBarBar.ViewModels
         public ProfileViewModel()
         {
             LogoutCommand = new Command(OnLogoutClicked);
-            Name = "Test Testing Tester";
-            Email = "test@email.com";
+
+
+            var obj = Xamarin.Essentials.SecureStorage.GetAsync($"{PARAM_USER}").Result;
+            User u = JsonConvert.DeserializeObject<User>(obj);
+            Name = $"{u.FullName}";
+            Email = $"{u.Email}";
             ImageLink = "default_pic";
         }
 
