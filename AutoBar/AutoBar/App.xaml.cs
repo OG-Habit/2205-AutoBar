@@ -1,4 +1,5 @@
-﻿using AutoBar.Services;
+﻿using AutoBar.Helpers;
+using AutoBar.Services;
 using AutoBar.Views;
 using System;
 using Xamarin.Forms;

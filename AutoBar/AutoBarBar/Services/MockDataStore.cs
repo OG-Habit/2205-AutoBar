@@ -41,7 +41,7 @@ namespace AutoBarBar.Services
                 c.CurrentBalance = dataRecord.GetDouble(5);
                 c.Email = dataRecord.GetString(6);
                 c.Sex = dataRecord.GetString(7);
-                c.TotalPoints = "100";
+                c.Points = 100;
                 c.ImageLink = "default_pic.png";
                 customers.Add(c);
             });

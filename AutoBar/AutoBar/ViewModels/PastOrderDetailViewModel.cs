@@ -19,7 +19,7 @@ namespace AutoBar.ViewModels
 
         public double Balance { get; set;  }
 
-        private string itemId;
+        private int itemId;
         private double points;
         private string reward;
         private DateTime time;
@@ -63,7 +63,7 @@ namespace AutoBar.ViewModels
             set => SetProperty(ref time, value);
         }
 
-        public string ItemId
+        public int ItemId
         {
             get
             {
@@ -95,6 +95,7 @@ namespace AutoBar.ViewModels
             }
             catch (Exception ex)
             {
+                var a = ex.Message;
                 Debug.WriteLine(ex);
             }
             finally

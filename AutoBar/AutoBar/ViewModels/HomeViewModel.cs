@@ -1,5 +1,6 @@
 ﻿using AutoBar.Models;
 using AutoBar.Views;
+using Newtonsoft.Json;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -28,9 +29,9 @@ namespace AutoBar.ViewModels
 
         private async void SetBalance()
         {
-            string BalString = await Xamarin.Essentials.SecureStorage.GetAsync("balance");
-            double Bal = Convert.ToDouble(BalString);
-            Balance = Bal;
+            string user = await Xamarin.Essentials.SecureStorage.GetAsync("user");
+            var c = JsonConvert.DeserializeObject<Customer>(user);
+            Balance = Convert.ToDouble(c.Balance);
         }
 
         async Task ExecuteLoadItemsCommand()

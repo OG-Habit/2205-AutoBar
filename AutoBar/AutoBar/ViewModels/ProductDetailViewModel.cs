@@ -7,13 +7,13 @@ namespace AutoBar.ViewModels
     [QueryProperty(nameof(ItemId), nameof(ItemId))]
     public class ProductDetailViewModel : BaseViewModel
     {
-        private string itemId;
+        private int itemId;
         private string name;
         private double price;
         private string description;
         private string image;
 
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         public string Name
         {
@@ -39,7 +39,7 @@ namespace AutoBar.ViewModels
             set => SetProperty(ref image, value);
         }
 
-        public string ItemId
+        public int ItemId
         {
             get
             {
@@ -52,11 +52,11 @@ namespace AutoBar.ViewModels
             }
         }
 
-        public async void LoadItemId(string itemId)
+        public async void LoadItemId(int itemId)
         {
             try
             {
-                var item = await ProductDataStore.GetItemAsync(itemId);
+                var item = await ProductDataStore.GetItemAsync(Convert.ToInt32(itemId));
                 Id = item.Id;
                 Name = item.Name;
                 Price = item.Price;

@@ -1,5 +1,6 @@
 ﻿using AutoBar.Models;
 using AutoBar.Views;
+using Newtonsoft.Json;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -19,17 +20,21 @@ namespace AutoBar.ViewModels
 
         public double Balance { get; set; }
         public DateTime Today { get; }
-        public string UserID { get; }
+        public int UserID { get; }
+        public Customer currentCustoemr;
 
         public PastOrderViewModel()
         {
             SetBalance();
             Today = DateTime.Now;
-            UserID = "1";
             Order = new ObservableCollection<Order>();
             LoadOrderCommand = new Command(async () => await ExecuteLoadItemsCommand());
             ItemTapped = new Command<Order>(OnItemSelected);
             SwitchTapped = new Command(OnSwitchSelected);
+
+            string UserString = Xamarin.Essentials.SecureStorage.GetAsync("user").Result;
+            currentCustoemr = JsonConvert.DeserializeObject<Customer>(UserString);
+            UserID = currentCustoemr.UserDetails.ID;
         }
         private async void SetBalance()
         {
@@ -44,10 +49,10 @@ namespace AutoBar.ViewModels
             try
             {
                 Order.Clear();
-                var items = await OrderDataStore.GetSearchResults(UserID);
+                var items = await OrderDataStore.GetSearchResults(currentCustoemr.ID);
                 foreach (var item in items.OrderByDescending(x => x.ClosedOn.Date))
                 {
-                    if (item.OpenedOn.Date != Today.Date)
+                    if (item.OrderStatus != 1)
                     {
                         Order.Add(item);
                     }

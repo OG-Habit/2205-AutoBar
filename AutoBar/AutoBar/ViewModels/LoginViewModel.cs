@@ -1,4 +1,5 @@
-﻿using AutoBar.Models;
+﻿using AutoBar.Helpers;
+using AutoBar.Models;
 using AutoBar.Services;
 using AutoBar.Views;
 using Newtonsoft.Json;
@@ -19,6 +20,7 @@ namespace AutoBar.ViewModels
             accountService = DependencyService.Get<IAccountService>();
 
             LoginCommand = new Command(OnLoginClicked);
+
         }
 
         private async void OnLoginClicked(object obj)

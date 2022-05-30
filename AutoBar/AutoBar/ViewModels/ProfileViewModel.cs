@@ -4,6 +4,7 @@ using Xamarin.Forms;
 using static AutoBar.Constants;
 using Newtonsoft.Json;
 using AutoBar.Models;
+using AutoBar.Helpers;
 
 namespace AutoBar.ViewModels
 {
@@ -18,14 +19,16 @@ namespace AutoBar.ViewModels
         public string Email { get; set;  }
         public string ImageLink { get; }
 
+
         public ProfileViewModel()
         {
             LogoutCommand = new Command(OnLogoutClicked);
             EwalletClicked = new Command(OnEwalletClicked);
             QRCodeClicked = new Command(OnQRCodeClicked);
             ReportClicked = new Command(OnReportClicked);
-            SetProfile();
+            
             ImageLink = "default_pic";
+            SetProfile();
         }
 
         private async void OnLogoutClicked(object obj)

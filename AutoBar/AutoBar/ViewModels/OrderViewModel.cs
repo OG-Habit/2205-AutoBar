@@ -26,14 +26,18 @@ namespace AutoBar.ViewModels
         private DateTime time;
         private double total;
 
+        private DateTime timeXaml;
+
         public OrderViewModel()
         {
             SetBalance();
-            Today = DateTime.Now;
+            Today = DateTime.Now.AddHours(8);
             Order = new ObservableCollection<OrderLine>();
             LoadOrderCommand = new Command(async () => await ExecuteLoadItemsCommand());
             ItemTapped = new Command<OrderLine>(OnItemSelected);
             SwitchTapped = new Command(OnSwitchSelected);
+
+            timeXaml = DateTime.UtcNow.AddHours(8);
         }
 
         private async void SetBalance()
@@ -65,6 +69,12 @@ namespace AutoBar.ViewModels
         {
             get => time;
             set => SetProperty(ref time, value);
+        }
+
+        public DateTime TimeXaml
+        {
+            get => timeXaml;
+            set => SetProperty(ref timeXaml, value);
         }
 
         async Task ExecuteLoadItemsCommand()

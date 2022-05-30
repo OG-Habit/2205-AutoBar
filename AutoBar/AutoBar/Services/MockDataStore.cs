@@ -30,7 +30,7 @@ namespace AutoBar.Services
 
             GetItems<Product>(cmd1, (dataRecord, product) =>
             {
-                product.Id = dataRecord.GetInt32(0).ToString();
+                product.Id = dataRecord.GetInt32(0);
                 product.Name = dataRecord.GetString(1);
                 product.Description = dataRecord.GetString(2);
                 product.Price = Convert.ToDouble(dataRecord.GetDecimal(3));
@@ -46,9 +46,9 @@ namespace AutoBar.Services
 
             GetItems<OrderLine>(cmd2, (dataRecord, ol) =>
             {
-                ol.Id = dataRecord.GetInt32(0).ToString();
-                ol.OrderId = dataRecord.GetInt32(1).ToString();
-                ol.ProductId = dataRecord.GetInt32(2).ToString();
+                ol.Id = dataRecord.GetInt32(0);
+                ol.OrderId = dataRecord.GetInt32(1);
+                ol.ProductId = dataRecord.GetInt32(2);
                 ol.Price = Convert.ToDouble(dataRecord.GetDecimal(3));
                 ol.Quantity = dataRecord.GetInt32(4);
                 ol.CreatedOn = dataRecord.GetDateTime(5);
@@ -60,30 +60,30 @@ namespace AutoBar.Services
             });
 
             string cmd3 = $@" 
-                SELECT o.ID, o.OpenedOn, o.ClosedOn, CONCAT(u.FirstName,"" "",u.LastName) AS ""Name"", o.TotalPrice, o.PointsEarned, ""None"" AS ""Reward""
+                SELECT o.ID, o.OpenedOn, o.ClosedOn, CONCAT(u.FirstName,"" "",u.LastName) AS ""Name"", o.TotalPrice, o.PointsEarned, ""None"" AS ""Reward"", o.OrderStatus, c.ID
                 FROM Orders o, Bartenders b, Customers c, Users u
-                WHERE o.CustomerID=c.ID AND c.UserID=u.ID 
-                AND u.ID={UserID} AND o.HasReward=0 AND o.TotalPrice<>0
+                WHERE(o.CustomerID = c.ID AND c.UserID = u.ID
+                AND u.ID = {UserID} AND o.HasReward = 0 AND o.TotalPrice <> 0)
                 UNION
-                SELECT o.ID, o.OpenedOn, o.ClosedOn, CONCAT(u.FirstName,"" "",u.LastName) AS ""Name"", o.TotalPrice, o.PointsEarned, r.Name AS ""Reward""
+                SELECT o.ID, o.OpenedOn, o.ClosedOn, CONCAT(u.FirstName, "" "", u.LastName) AS ""Name"", o.TotalPrice, o.PointsEarned, r.Name AS ""Reward"", o.OrderStatus, c.ID
                 FROM Orders o, Bartenders b, Customers c, Users u, UsedRewards ur, Rewards r
-                WHERE o.CustomerID=c.ID AND c.UserID=u.ID 
-                AND ur.OrderID=o.ID AND ur.RewardID=r.ID
-                AND u.ID={UserID} AND o.HasReward=1 AND o.TotalPrice<>0
+                WHERE(o.CustomerID = c.ID AND c.UserID = u.ID
+                AND ur.OrderID = o.ID AND ur.RewardID = r.ID
+                AND u.ID = {UserID} AND o.HasReward = 1 AND o.TotalPrice <> 0)
                 GROUP BY o.ID";
 
             GetItems<Order>(cmd3, (dataRecord, o) =>
             {
-                o.Id = dataRecord.GetInt32(0).ToString();
+                o.Id = dataRecord.GetInt32(0);
                 o.OpenedOn = dataRecord.GetDateTime(1);
                 o.ClosedOn = dataRecord.GetDateTime(2);
                 o.CustomerName = dataRecord.GetString(3);
-                o.TotalPrice = Convert.ToDouble(dataRecord.GetDecimal(4));
+                o.TotalPrice = dataRecord.GetDouble(4);
                 o.PointsEarned = Convert.ToDouble(dataRecord.GetDecimal(5));
-                o.OrderStatus = false;
-                o.CustomerId = UserID.ToString();
                 o.BartenderName = "Ivan Woogue"; //temporary workaround since there's a field on it, need to change
                 o.Reward = dataRecord.GetString(6);
+                o.OrderStatus = dataRecord.GetInt32(7);
+                o.CustomerId = dataRecord.GetInt32(8);
                 orders.Add(o);
             });
 
@@ -175,7 +175,7 @@ namespace AutoBar.Services
         }
 
         #region Product
-        public async Task<Product> GetItemAsync(string id)
+        public async Task<Product> GetItemAsync(int id)
         {
             return await Task.FromResult(products.FirstOrDefault(s => s.Id == id));
         }
@@ -202,7 +202,7 @@ namespace AutoBar.Services
         #endregion
 
         #region OrderLine
-        async Task<OrderLine> IDataStore<OrderLine>.GetItemAsync(string id)
+        async Task<OrderLine> IDataStore<OrderLine>.GetItemAsync(int id)
         {
             return await Task.FromResult(orderLines.FirstOrDefault(s => s.Id == id));
         }
@@ -214,7 +214,7 @@ namespace AutoBar.Services
 
         async Task<IEnumerable<OrderLine>> IDataStore<OrderLine>.GetSearchResults(string query)
         {
-            return await Task.FromResult(orderLines.Where(s => s.OrderId == query));
+            return await Task.FromResult(orderLines.Where(s => s.OrderId.ToString() == query));
         }
 
         Task<OrderLine> IDataStore<OrderLine>.GetTodayResults(DateTime today)
@@ -224,7 +224,7 @@ namespace AutoBar.Services
         #endregion
 
         #region Order
-        async Task<Order> IDataStore<Order>.GetItemAsync(string id)
+        async Task<Order> IDataStore<Order>.GetItemAsync(int id)
         {
             return await Task.FromResult(orders.FirstOrDefault(s => s.Id == id));
         }
@@ -240,6 +240,13 @@ namespace AutoBar.Services
             return await Task.FromResult(orders.Where(c => c.BartenderName.ToLowerInvariant().Contains(query)));
         }
 
+        async Task<IEnumerable<Order>> IDataStore<Order>.GetSearchResults(int id)
+        {
+            var list = orders;
+            return await Task.FromResult(orders.Where(o => o.CustomerId == id));
+        }
+
+
         async Task<Order> IDataStore<Order>.GetTodayResults(DateTime today)
         {
             return await Task.FromResult(orders.FirstOrDefault(s => s.OpenedOn.Date == today.Date));
@@ -247,9 +254,9 @@ namespace AutoBar.Services
         #endregion
 
         #region Reward
-        async Task<Reward> IDataStore<Reward>.GetItemAsync(string id)
+        async Task<Reward> IDataStore<Reward>.GetItemAsync(int id)
         {
-            return await Task.FromResult(rewards.FirstOrDefault(s => s.Id == id));
+            return await Task.FromResult(rewards.FirstOrDefault(s => s.Id == id.ToString()));
         }
 
         async Task<IEnumerable<Reward>> IDataStore<Reward>.GetItemsAsync(bool forceRefresh)
@@ -285,7 +292,7 @@ namespace AutoBar.Services
         #endregion
 
         #region TransactionHistory
-        Task<TransactionHistory> IDataStore<TransactionHistory>.GetItemAsync(string id)
+        Task<TransactionHistory> IDataStore<TransactionHistory>.GetItemAsync(int id)
         {
             throw new NotImplementedException();
         }
@@ -306,7 +313,7 @@ namespace AutoBar.Services
             throw new NotImplementedException();
         }
 
-        Task<PointsHistory> IDataStore<PointsHistory>.GetItemAsync(string id)
+        Task<PointsHistory> IDataStore<PointsHistory>.GetItemAsync(int id)
         {
             throw new NotImplementedException();
         }
@@ -323,6 +330,31 @@ namespace AutoBar.Services
         }
 
         Task<IEnumerable<PointsHistory>> IDataStore<PointsHistory>.GetSearchResults(string query)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Product>> GetSearchResults(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        async Task<IEnumerable<OrderLine>> IDataStore<OrderLine>.GetSearchResults(int id)
+        {
+            return await Task.FromResult(orderLines.Where(ol => ol.OrderId == id));
+        }
+
+        Task<IEnumerable<Reward>> IDataStore<Reward>.GetSearchResults(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<IEnumerable<TransactionHistory>> IDataStore<TransactionHistory>.GetSearchResults(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<IEnumerable<PointsHistory>> IDataStore<PointsHistory>.GetSearchResults(int id)
         {
             throw new NotImplementedException();
         }
