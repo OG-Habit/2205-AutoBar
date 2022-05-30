@@ -21,7 +21,7 @@ namespace AutoBarBar.ViewModels
         private string sex;
         private string contact;
         private string email;
-        private int points;
+        private double points;
         private string bartender;
         private string reward;
 
@@ -96,7 +96,7 @@ namespace AutoBarBar.ViewModels
             set => SetProperty(ref email, value);
         }
 
-        public int Points
+        public double Points
         {
             get => points;
             set => SetProperty(ref points, value);
@@ -131,22 +131,22 @@ namespace AutoBarBar.ViewModels
         {
             try
             {
-                //var item = await OrderDataStore.GetItemAsync(itemId);
-                //var customer = await CustomerDataStore.GetItemAsync(item.CustomerId);
-                //Id = customer.Id;
-                //Name = customer.Name;
-                //Status = customer.Status;
-                //Image = customer.ImageLink;
-                //Birthday = customer.Birthday;
-                //CardIssued = customer.CardIssued;
-                //Sex = customer.Sex;
-                //Contact = customer.Contact;
-                //Email = customer.Email;
-                //Time = item.ClosedOn;
-                //Price = item.TotalPrice;
-                //Points = item.PointsEarned;
-                //Bartender = item.BartenderName;
-                //Reward = item.Reward;
+                var item = await OrderDataStore.GetItemAsync(itemId);
+                var customer = await CustomerDataStore.GetItemAsync(item.CustomerID.ToString());
+                Id = customer.Id;
+                Name = customer.Name;
+                Status = customer.Status;
+                Image = customer.ImageLink;
+                Birthday = customer.Birthday;
+                CardIssued = customer.CardIssued;
+                Sex = customer.Sex;
+                Contact = customer.Contact;
+                Email = customer.Email;
+                Time = item.ClosedOn;
+                Price = item.TotalPrice;
+                Points = item.PointsEarned;
+                Bartender = item.BartenderName;
+                Reward = item.Reward;
             }
             catch (Exception)
             {

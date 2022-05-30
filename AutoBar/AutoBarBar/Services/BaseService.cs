@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Text;
 using static AutoBarBar.Constants;
+using System.Diagnostics;
 
 namespace AutoBarBar.Services
 {
@@ -40,6 +41,7 @@ namespace AutoBarBar.Services
             catch (Exception e)
             {
                 var a = e.Message;
+                Debug.Write(a);
             }
         }
 
@@ -70,6 +72,7 @@ namespace AutoBarBar.Services
             catch (Exception e)
             {
                 var a = e.Message;
+                Debug.Write(a);
             }
         }
 
@@ -93,12 +96,32 @@ namespace AutoBarBar.Services
             catch (Exception e)
             {
                 var a = e.Message;
+                Debug.Write(a);
             }
         }
 
-        protected void DeleteItem<T>(string cmd, Action<DbDataRecord, T> action)
+        protected void DeleteItem(string cmd, Action action = null)
         {
+            try
+            {
+                using (var conn = new MySqlConnection(CONNECTION_STRING))
+                {
+                    conn.Open();
+                    using (var command = new MySqlCommand(cmd, conn))
+                    {
+                        command.Connection = conn;
+                        command.CommandText = cmd;
+                        command.ExecuteNonQuery();
 
+                        action?.Invoke();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                var a = e.Message;
+                Debug.Write(a);
+            }
         }
 
         protected void UpdateItem(string cmd, Action action = null)
@@ -121,6 +144,7 @@ namespace AutoBarBar.Services
             catch (Exception e)
             {
                 var a = e.Message;
+                Debug.Write(a);
             }
         }
     }

@@ -12,10 +12,11 @@
     </ContentPage.Resources>
     <ContentPage.Content>
         <StackLayout Padding="10,0,10,0" VerticalOptions="Center" HorizontalOptions="Center">
+            <Label Text="Sign In" HorizontalTextAlignment="Center"/>
             <Label Text="Email"/>
-            <Entry x:Name="EntryEmail"/>
+            <Entry x:Name="EntryEmail" Keyboard="Email"/>
             <Label Text="Password"/>
-            <Entry x:Name="EntryPass"/>
+            <Entry x:Name="EntryPass" IsPassword="True"/>
             <Button Text="Login" WidthRequest="400" CornerRadius="100" 
                     Command="{Binding LoginCommand}">
                 <Button.CommandParameter>

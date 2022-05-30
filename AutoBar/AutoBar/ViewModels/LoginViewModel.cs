@@ -43,6 +43,9 @@ namespace AutoBar.ViewModels
             // Prefixing with `//` switches to a different navigation stack instead of pushing to the active one
             await Xamarin.Essentials.SecureStorage.SetAsync("isLogged", "1");
             await Xamarin.Essentials.SecureStorage.SetAsync("qr", $"{u.QRKey}");
+            await Xamarin.Essentials.SecureStorage.SetAsync("balance", $"{u.Balance}");
+            await Xamarin.Essentials.SecureStorage.SetAsync("points", $"{u.Points}");
+            await Xamarin.Essentials.SecureStorage.SetAsync("cardStatus", $"{u.CardStatus}");
             await Xamarin.Essentials.SecureStorage.SetAsync("user", $"{userObj}");
             await Shell.Current.GoToAsync($"//{nameof(HomePage)}");
         }

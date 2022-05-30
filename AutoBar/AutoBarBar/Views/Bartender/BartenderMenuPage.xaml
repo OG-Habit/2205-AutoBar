@@ -16,7 +16,7 @@
             <FlexLayout Grid.Column="0" Grid.Row="0"
                         Direction="Row" JustifyContent="SpaceBetween">
                 <StackLayout>
-                    <Label Text="LOGO"/>
+                    <Label Text="AUTOBAR"/>
                     <Label Text="{Binding Date}"/>
                 </StackLayout>
                 <SearchBar Grid.Row="0" Grid.RowSpan="2" BackgroundColor="Blue"

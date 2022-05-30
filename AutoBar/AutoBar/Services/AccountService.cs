@@ -16,12 +16,12 @@ namespace AutoBar.Services
         {
             string cmd = $@"
                 SELECT Users.ID, Users.FirstName, Users.LastName, Users.Email, Users.ImageLink, 
-                Customers.QRKey
+                Customers.QRKey, Customers.ID, Customers.Balance, Customers.Points, Customers.CardStatus
                 FROM Users
                 INNER JOIN Customers
                 ON Users.ID = Customers.UserID
                 WHERE
-                (Users.Email = ""{email}"" AND Users.Password = ""{password}"")
+                (Users.Email = ""{email}"" AND Users.Password = ""{password}"" AND Users.UserType=3)
                 LIMIT 1
             ";
 
@@ -35,6 +35,11 @@ namespace AutoBar.Services
                 c.UserDetails.Email = dataRecord.GetString(3);
                 c.UserDetails.ImageLink = dataRecord.GetValue(4).ToString();
                 c.QRKey = dataRecord.GetString(5);
+                c.ID = dataRecord.GetInt32(6);
+                c.Balance = dataRecord.GetDecimal(7);
+                c.Points = dataRecord.GetDecimal(8);
+                c.CardStatus = dataRecord.GetInt32(9);
+
             });
 
             return await Task.FromResult(c);

@@ -16,14 +16,21 @@ namespace AutoBar.ViewModels
         public Command LoadItemCommand { get; }
         public Command<Reward> ItemTapped { get; }
 
-        public double Balance { get; }
+        public double Balance { get; set;  }
 
         public RewardViewModel()
         {
-            Balance = 500.00;
+            SetBalance();
             Item = new ObservableCollection<Reward>();
             LoadItemCommand = new Command(async () => await ExecuteLoadItemsCommand());
             ItemTapped = new Command<Reward>(OnItemSelected);
+        }
+
+        private async void SetBalance()
+        {
+            string BalString = await Xamarin.Essentials.SecureStorage.GetAsync("points");
+            double Bal = Convert.ToDouble(BalString);
+            Balance = Bal;
         }
 
         async Task ExecuteLoadItemsCommand()

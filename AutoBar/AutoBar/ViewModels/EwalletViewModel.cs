@@ -1,16 +1,23 @@
 ﻿using Xamarin.Forms;
+using System;
 
 namespace AutoBar.ViewModels
 {
     public class EwalletViewModel
     {
-        public double Balance { get; }
+        public double Balance { get; set; }
         public string ImageLink { get; }
 
         public EwalletViewModel()
         {
-            Balance = 1200.00;
+            SetBalance();
             ImageLink = "default_pic";
+        }
+        private async void SetBalance()
+        {
+            string BalString = await Xamarin.Essentials.SecureStorage.GetAsync("balance");
+            double Bal = Convert.ToDouble(BalString);
+            Balance = Bal;
         }
     }
 }

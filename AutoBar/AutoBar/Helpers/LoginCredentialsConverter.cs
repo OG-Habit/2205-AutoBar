@@ -10,15 +10,14 @@ namespace AutoBar.Helpers
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            if(values.Length ==0 || values[0] == null || values[1] == null)
+            if (values.Length == 2 && values[0] != null && values[1] != null)
             {
-                return null;
+                string email = values[0].ToString();
+                string password = values[1].ToString();
+                return new List<string> { email, password };
             }
 
-            string email = (string)values[0];
-            string password = (string)values[1];
-
-            return new List<string> { email, password };
+            return null;
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

@@ -61,7 +61,7 @@ namespace AutoBar.ViewModels
                 Name = item.Name;
                 Price = item.Price;
                 Description = item.Description;
-                Image = item.ImageLink;
+                Image = "default_menu.png"; //item.ImageLink;
             }
             catch (Exception)
             {

@@ -1,20 +1,21 @@
 ﻿using Xamarin.Forms;
+using Newtonsoft.Json;
 using static AutoBarBar.Constants;
+using AutoBarBar.Models;
 
 namespace AutoBarBar.ViewModels
 {
     public class ProfileViewModel
     {
         public Command LogoutCommand { get; }
-        public string Name { get; }
-        public string Email { get; }
+        public string Name { get; set; }
+        public string Email { get; set; }
         public string ImageLink { get; }
 
         public ProfileViewModel()
         {
             LogoutCommand = new Command(OnLogoutClicked);
-            Name = "Test Testing Tester";
-            Email = "test@email.com";
+            SetProfile();
             ImageLink = "default_pic";
         }
 
@@ -27,6 +28,14 @@ namespace AutoBarBar.ViewModels
                 await Xamarin.Essentials.SecureStorage.SetAsync($"{KEY_ISLOGGED}", "0");
                 await Shell.Current.GoToAsync($"//LoginPage");
             }  
+        }
+
+        private async void SetProfile()
+        {
+            string UserString = await Xamarin.Essentials.SecureStorage.GetAsync($"{PARAM_USER}");
+            User CurrentUser = JsonConvert.DeserializeObject<User>(UserString);
+            Name = CurrentUser.FullName;
+            Email = CurrentUser.Email;
         }
     }
 }

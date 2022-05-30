@@ -1,6 +1,9 @@
 ﻿using AutoBar.Views;
 using System;
 using Xamarin.Forms;
+using static AutoBar.Constants;
+using Newtonsoft.Json;
+using AutoBar.Models;
 
 namespace AutoBar.ViewModels
 {
@@ -11,8 +14,8 @@ namespace AutoBar.ViewModels
         public Command QRCodeClicked { get; }
         public Command ReportClicked { get; }
 
-        public string Name { get; }
-        public string Email { get; }
+        public string Name { get; set;  }
+        public string Email { get; set;  }
         public string ImageLink { get; }
 
         public ProfileViewModel()
@@ -21,8 +24,7 @@ namespace AutoBar.ViewModels
             EwalletClicked = new Command(OnEwalletClicked);
             QRCodeClicked = new Command(OnQRCodeClicked);
             ReportClicked = new Command(OnReportClicked);
-            Name = "Test Testing Tester";
-            Email = "test@email.com";
+            SetProfile();
             ImageLink = "default_pic";
         }
 
@@ -58,6 +60,14 @@ namespace AutoBar.ViewModels
                     Console.WriteLine("Lost Card Reported and Deactivated");
                 }
             }
+        }
+
+        private async void SetProfile()
+        {
+            string UserString = await Xamarin.Essentials.SecureStorage.GetAsync("user");
+            Customer CurrentUser = JsonConvert.DeserializeObject<Customer>(UserString);
+            Name = CurrentUser.UserDetails.FullName;
+            Email = CurrentUser.UserDetails.Email;
         }
     }
 }

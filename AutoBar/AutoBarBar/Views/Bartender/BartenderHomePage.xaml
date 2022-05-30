@@ -22,7 +22,7 @@
             <Grid Grid.Row="0" Padding="{Binding Converter={StaticResource scale}, ConverterParameter='thickness=15,10'}"
                 RowDefinitions="*, *" ColumnDefinitions="4*, *, *">
                 <StackLayout Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
-                    <Label Text="LOGO"/>
+                    <Label Text="AUTOBAR"/>
                     <Label Text="{Binding Date}"/>
                 </StackLayout>
                 <SearchBar Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"

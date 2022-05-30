@@ -17,13 +17,13 @@ namespace AutoBar.ViewModels
         public Command<Order> ItemTapped { get; }
         public Command SwitchTapped { get; }
 
-        public double Balance { get; }
+        public double Balance { get; set; }
         public DateTime Today { get; }
         public string UserID { get; }
 
         public PastOrderViewModel()
         {
-            Balance = 1200.00;
+            SetBalance();
             Today = DateTime.Now;
             UserID = "1";
             Order = new ObservableCollection<Order>();
@@ -31,7 +31,12 @@ namespace AutoBar.ViewModels
             ItemTapped = new Command<Order>(OnItemSelected);
             SwitchTapped = new Command(OnSwitchSelected);
         }
-
+        private async void SetBalance()
+        {
+            string BalString = await Xamarin.Essentials.SecureStorage.GetAsync("balance");
+            double Bal = Convert.ToDouble(BalString);
+            Balance = Bal;
+        }
         async Task ExecuteLoadItemsCommand()
         {
             IsBusy = true;

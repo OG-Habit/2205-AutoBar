@@ -33,7 +33,7 @@ namespace AutoBarBar.Services
                 product.Name = dataRecord.GetString(1);
                 product.Description = dataRecord.GetString(2);
                 product.UnitPrice = dataRecord.GetDecimal(3);
-                product.ImageLink = "default_pic.png";
+                product.ImageLink = "default_menu.png";
                 products.Add(product);
             });
 

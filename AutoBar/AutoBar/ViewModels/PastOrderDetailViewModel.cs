@@ -17,20 +17,26 @@ namespace AutoBar.ViewModels
         public Command LoadOrderCommand { get; }
         public Command<OrderLine> ItemTapped { get; }
 
-        public double Balance { get; }
+        public double Balance { get; set;  }
 
         private string itemId;
-        private int points;
+        private double points;
         private string reward;
         private DateTime time;
         private double total;
 
         public PastOrderDetailViewModel()
         {
-            Balance = 1200.00;
+            SetBalance();
             Order = new ObservableCollection<OrderLine>();
             LoadOrderCommand = new Command(async () => await ExecuteLoadItemsCommand());
             ItemTapped = new Command<OrderLine>(OnItemSelected);
+        }
+        private async void SetBalance()
+        {
+            string BalString = await Xamarin.Essentials.SecureStorage.GetAsync("balance");
+            double Bal = Convert.ToDouble(BalString);
+            Balance = Bal;
         }
 
         public double Total
@@ -39,7 +45,7 @@ namespace AutoBar.ViewModels
             set => SetProperty(ref total, value);
         }
 
-        public int Points
+        public double Points
         {
             get => points;
             set => SetProperty(ref points, value);

@@ -18,7 +18,7 @@ namespace AutoBarBar.ViewModels
 
         public ARewardsAddViewModel()
         {
-            image = "default_pic.png";
+            image = "default_reward.png";
             CancelCommand = new Command(OnCancelClicked);
             AddCommand = new Command(OnAddClicked);
             ImageCommand = new Command(OnImageClicked);

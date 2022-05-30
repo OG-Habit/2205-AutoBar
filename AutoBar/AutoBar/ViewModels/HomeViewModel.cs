@@ -12,18 +12,25 @@ namespace AutoBar.ViewModels
     public class HomeViewModel : BaseViewModel
     {
         private Product _selectedItem;
-        public ObservableCollection<Product> Item { get; }
+        public ObservableCollection<Product> Item { get; set; }
         public Command LoadItemCommand { get; }
         public Command<Product> ItemTapped { get; }
 
-        public double Balance { get; }
+        public double Balance { get; set; }
 
         public HomeViewModel()
         {
-            Balance = 1200.00;
+            SetBalance();
             Item = new ObservableCollection<Product>();
             LoadItemCommand = new Command(async () => await ExecuteLoadItemsCommand());
             ItemTapped = new Command<Product>(OnItemSelected);
+        }
+
+        private async void SetBalance()
+        {
+            string BalString = await Xamarin.Essentials.SecureStorage.GetAsync("balance");
+            double Bal = Convert.ToDouble(BalString);
+            Balance = Bal;
         }
 
         async Task ExecuteLoadItemsCommand()

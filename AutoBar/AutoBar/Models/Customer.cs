@@ -9,6 +9,9 @@ namespace AutoBar.Models
     {
         public int ID { get; set; }
         public string QRKey { get; set; }
+        public int CardStatus { get; set; }
+        public decimal Balance { get; set; }
+        public decimal Points { get; set; }
         public User UserDetails { get; set; }
     }
 }
