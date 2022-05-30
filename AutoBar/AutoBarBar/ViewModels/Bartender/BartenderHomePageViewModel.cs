@@ -341,6 +341,7 @@ namespace AutoBarBar.ViewModels
             CurrentOrderLineGroup = new ObservableCollection<IGrouping<string, OrderLine>>(group);
             NewOrderLines.Clear();
             TotalOrderLinesCost = 0;
+            CanAddNewOrderLine = false;
 
             foreach (var colg in CurrentOrderLineGroup)
             {
