@@ -24,7 +24,7 @@
     </TabBar>
 
     <TabBar Title="Admin">
-        <!--ShellContent Title="Home" Icon="icon_about.png" Route="AHomePage" ContentTemplate="{DataTemplate local:AHomePage}" /-->
+        <ShellContent Title="Home" Icon="icon_about.png" Route="AHomePage" ContentTemplate="{DataTemplate local:AHomePage}" />
         <ShellContent Title="Bartender" Icon="icon_about.png" Route="ABartenderPage" ContentTemplate="{DataTemplate local:ABartenderPage}" />
         <ShellContent Title="Menu" Icon="icon_about.png" Route="AMenuPage" ContentTemplate="{DataTemplate local:AMenuPage}" />
         <ShellContent Title="Rewards" Icon="icon_about.png" Route="ARewardsPage" ContentTemplate="{DataTemplate local:ARewardsPage}" />

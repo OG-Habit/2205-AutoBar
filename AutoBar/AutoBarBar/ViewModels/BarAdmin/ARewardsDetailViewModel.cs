@@ -71,12 +71,12 @@ namespace AutoBarBar.ViewModels
         {
             try
             {
-                //var item = await RewardDataStore.GetItemAsync(itemId);
-                //Id = item.Id;
-                //Name = item.Name;
-                //Point = item.Points;
-                //Description = item.Description;
-                //Image = item.ImageLink;
+                var item = await RewardDataStore.GetItemAsync(itemId);
+                Id = item.ID.ToString(); //temp
+                Name = item.Name;
+                Point = Convert.ToDouble(item.Points);
+                Description = item.Description;
+                Image = item.ImageLink;
             }
             catch (Exception)
             {
@@ -98,9 +98,9 @@ namespace AutoBarBar.ViewModels
                 { 
                     Reward item = new Reward
                     {
-                        ID = 1,
+                        ID = Convert.ToInt32(Id),
                         Name = Name,
-                        //Points = Point,
+                        Points = Convert.ToDecimal(Point),
                         Description = Description,
                         ImageLink = (Image is FileImageSource source) ? source.File : "default_reward"
                     };
