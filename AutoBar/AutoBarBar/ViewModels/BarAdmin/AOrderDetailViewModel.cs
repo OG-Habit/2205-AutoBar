@@ -133,18 +133,17 @@ namespace AutoBarBar.ViewModels
             {
                 var item = await OrderDataStore.GetItemAsync(itemId);
                 var customer = await CustomerDataStore.GetItemAsync(item.CustomerID.ToString());
-                Id = customer.Id;
+                Id = customer.ID.ToString();
                 Name = customer.Name;
-                Status = customer.Status;
                 Image = customer.ImageLink;
                 Birthday = customer.Birthday;
                 CardIssued = customer.CardIssued;
                 Sex = customer.Sex;
                 Contact = customer.Contact;
                 Email = customer.Email;
-                Time = item.ClosedOn;
+                Time = DateTime.UtcNow; //temporary
                 Price = item.TotalPrice;
-                Points = item.PointsEarned;
+                Points = Convert.ToDouble(item.PointsEarned);
                 Bartender = item.BartenderName;
                 Reward = item.Reward;
             }

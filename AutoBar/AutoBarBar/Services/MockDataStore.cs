@@ -41,7 +41,7 @@ namespace AutoBarBar.Services
                 c.CurrentBalance = dataRecord.GetDouble(5);
                 c.Email = dataRecord.GetString(6);
                 c.Sex = dataRecord.GetString(7);
-                c.Points = 100;
+                c.Points = dataRecord.GetDecimal(7);
                 c.ImageLink = "default_pic.png";
                 customers.Add(c);
             });
@@ -51,8 +51,20 @@ namespace AutoBarBar.Services
             //    new Customer { Id = "3", Name = "Caroline Smith", Birthday = Convert.ToDateTime("Mar 1, 2001"), CardIssued = Convert.ToDateTime("Mar 2, 2010"), Contact = "09123294756", CurrentBalance = 1500, Email = "caroline@gmail.com", Sex="Female", TotalPoints="300", ImageLink = "default_pic.png", Status="Member"},
             //    new Customer { Id = "4", Name = "Diana Wonderwoman", Birthday = Convert.ToDateTime("Apr 1, 2001"), CardIssued = Convert.ToDateTime("Apr 2, 2010"), Contact = "09123294756", CurrentBalance = 3000, Email = "diana@gmail.com", Sex="Female", TotalPoints="300", ImageLink = "default_pic.png", Status="Member"}
             //};
-            
 
+            string cmd2 = @"
+                SELECT * FROM Products
+            ";
+
+            GetItems<Product>(cmd2, (dataRecord, product) =>
+            {
+                product.ID = dataRecord.GetInt32(0);
+                product.Name = dataRecord.GetString(1);
+                product.Description = dataRecord.GetString(2);
+                product.UnitPrice = dataRecord.GetDecimal(3);
+                product.ImageLink = "default_menu.png";
+                products.Add(product);
+            });
             //{
             //    new Product { Id = Guid.NewGuid().ToString(), Name = "Apple", Description = "The apple is red, plump, and fresh", ImageLink = "default_pic.png", Price = 45.50 },
             //    new Product { Id = Guid.NewGuid().ToString(), Name = "Beans", Description = "The bean is green, long, and fresh", ImageLink = "default_pic.png", Price = 95.50 },
@@ -64,6 +76,8 @@ namespace AutoBarBar.Services
             //    new Product { Id = Guid.NewGuid().ToString(), Name = "Egg", Description = "The egg is big, dark orange, and fresh", ImageLink = "default_pic.png", Price = 10.00 },
             //    new Product { Id = Guid.NewGuid().ToString(), Name = "Egg", Description = "The egg is big, dark orange, and fresh", ImageLink = "default_pic.png", Price = 10.00 },
             //};
+
+
 
             //
             //{
@@ -82,12 +96,42 @@ namespace AutoBarBar.Services
             //    new Order { Id = "11", OpenedOn = DateTime.Today, ClosedOn = DateTime.Today, CustomerName="Bam Carousel", TotalPrice=227.5, PointsEarned = 0, OrderStatus=false, CustomerId="2", BartenderName="Bartender Three", Reward="No Reward"}
             //};
 
+            string cmd5 = @"
+                SELECT * FROM Rewards
+            ";
+
+            GetItems<Reward>(cmd5, (dataRecord, r) =>
+            {
+                r.ID = dataRecord.GetInt32(0);
+                r.Name = dataRecord.GetString(1);
+                r.Description = dataRecord.GetString(2);
+                r.Points = dataRecord.GetDecimal(3);
+                r.ImageLink = "default_reward.png";
+                rewards.Add(r);
+            });
             //rewards = new List<Reward>()
             //{
             //    new Reward { Id = Guid.NewGuid().ToString(), Name = "Egg", Description = "The egg is big, dark orange, and fresh", ImageLink = "default_pic.png", Points = 100.00 },
             //    new Reward { Id = Guid.NewGuid().ToString(), Name = "Apple", Description = "The apple is red, plump, and fresh", ImageLink = "default_pic.png", Points = 400.00 }
             //};
 
+            string cmd6 = @"
+                SELECT b.Id, CONCAT(u.FirstName,"" "",u.LastName),u.Email,u.Birthday,u.Sex 
+                FROM Bartenders b, Users u
+                WHERE b.UserID=u.ID;
+            ";
+
+            GetItems<Bartender>(cmd6, (dataRecord, b) =>
+            {
+                b.Id = dataRecord.GetInt32(0).ToString();
+                b.Name = dataRecord.GetString(1);
+                b.Email = dataRecord.GetString(2);
+                b.Contact = dataRecord.GetString(3);
+                b.Birthday = dataRecord.GetDateTime(4);
+                b.Sex = dataRecord.GetString(5);
+                b.ImageLink = "default_pic.png";
+                bartenders.Add(b);
+            });
             //bartenders = new List<Bartender>()
             //{
             //    new Bartender { Id = Guid.NewGuid().ToString(), Name = "Bartender One", Birthday = Convert.ToDateTime("Jan 1, 2001"), Contact = "09123294756", Email = "one@gmail.com", Sex="Male", ImageLink = "default_pic.png"},
