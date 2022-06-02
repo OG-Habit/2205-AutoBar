@@ -9,5 +9,7 @@ namespace AutoBarBar.Services
     public interface IProductService
     {
         Task<IEnumerable<Product>> GetProducts();
+
+        Task<Product> GetProduct(int productID);
     }
 }

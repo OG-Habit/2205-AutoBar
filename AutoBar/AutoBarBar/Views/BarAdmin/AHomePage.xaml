@@ -14,7 +14,7 @@
         <StackLayout>
             <Grid BackgroundColor="#3f3f4e" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand"
                   ColumnDefinitions="2" Padding="15">
-                <Frame Padding="13,0,0,0"  BackgroundColor="#3f3f4e" Grid.Column="1">
+                <Frame Padding="13,0,0,25"  BackgroundColor="#3f3f4e" Grid.Column="1">
                     <StackLayout HorizontalOptions="Start" Padding="0,0,0,0">
                         <Image Source="AutobarLogo_Horizontal.png" HeightRequest="30"/>
                         <Label Text="{Binding Today, StringFormat='{0:MMMM dd, yyyy}'}" FontSize="25" TextColor="White" Padding="7,0,0,35"/>
@@ -23,21 +23,39 @@
                 <SearchBar Placeholder="Search" Grid.Column="2"
                            TextChanged="SearchBarChange"/>
             </Grid>
+            <Grid ColumnDefinitions="4">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Label Text="Total orders today" FontSize="20" HorizontalTextAlignment="Center" Grid.Column="1" Grid.Row="0"/>
+                <Label Text="{Binding OrderToday, StringFormat='{0}'}" FontSize="25" HorizontalTextAlignment="Center"
+                       Grid.Column="1" Grid.Row="1"/>
+                <Label Text="Total revenue today" FontSize="20" HorizontalTextAlignment="Center" Grid.Column="2" Grid.Row="0"/>
+                <Label Text="{Binding RevenueToday, StringFormat='PHP {0:#.00}'}" FontSize="25" HorizontalTextAlignment="Center"
+                       Grid.Column="2" Grid.Row="1"/>
+                <Label Text="Total orders this week" FontSize="20" HorizontalTextAlignment="Center" Grid.Column="3" Grid.Row="0"/>
+                <Label Text="{Binding OrderWeek, StringFormat='{0}'}" FontSize="25" HorizontalTextAlignment="Center"
+                       Grid.Column="3" Grid.Row="1"/>
+                <Label Text="Total revenue this week" FontSize="20" HorizontalTextAlignment="Center" Grid.Column="4" Grid.Row="0"/>
+                <Label Text="{Binding RevenueWeek, StringFormat='PHP {0:#.00}'}" FontSize="25" HorizontalTextAlignment="Center"
+                       Grid.Column="4" Grid.Row="1"/>
+            </Grid>
             <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="StartAndExpand" Padding="30,0">
                 <Label Padding="8,12,0,5" Text="ORDER REPORT" LineBreakMode="NoWrap" FontSize="25" TextDecorations="Underline"/>
                 <Grid RowDefinitions="Auto">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="10"/>
-                        <ColumnDefinition Width="277"/>
+                        <ColumnDefinition Width="225"/>
+                        <ColumnDefinition Width="220"/>
                         <ColumnDefinition Width="150"/>
-                        <ColumnDefinition Width="150"/>
-                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition Width="125"/>
                     </Grid.ColumnDefinitions>
                     <Label Text="Customer" LineBreakMode="NoWrap" FontSize="20" Grid.Column="1"/>
-                    <Label Text="Date" LineBreakMode="NoWrap" FontSize="20" Grid.Column="2" HorizontalTextAlignment="Center"/>
-                    <Label Text="Points" LineBreakMode="NoWrap" FontSize="20" Grid.Column="3" HorizontalTextAlignment="Center"/>
-                    <Label Text="Total Payment" LineBreakMode="NoWrap" FontSize="20" Grid.Column="4" HorizontalTextAlignment="Center"/>
-                    <Label Text="Status" LineBreakMode="NoWrap" FontSize="20" Grid.Column="5" HorizontalTextAlignment="Center"/>
+                    <Label Text="Bartender" LineBreakMode="NoWrap" FontSize="20" Grid.Column="2"/>
+                    <Label Text="Date" LineBreakMode="NoWrap" FontSize="20" Grid.Column="3" HorizontalTextAlignment="Center"/>
+                    <Label Text="Points" LineBreakMode="NoWrap" FontSize="20" Grid.Column="4" HorizontalTextAlignment="Center" />
+                    <Label Text="Total Payment" LineBreakMode="NoWrap" FontSize="20" Grid.Column="5" HorizontalTextAlignment="Center"/>
                 </Grid>
             </StackLayout>
             <RefreshView x:DataType="vm:AHomeViewModel" Command="{Binding LoadCustomerCommand}" 
@@ -50,34 +68,25 @@
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="10"/>
-                                            <ColumnDefinition Width="270"/>
+                                            <ColumnDefinition Width="220"/>
+                                            <ColumnDefinition Width="220"/>
                                             <ColumnDefinition Width="150"/>
-                                            <ColumnDefinition Width="150"/>
-                                            <ColumnDefinition Width="200"/>
+                                            <ColumnDefinition Width="125"/>
                                         </Grid.ColumnDefinitions>
                                         <Label Text="{Binding CustomerName}" LineBreakMode="NoWrap" FontSize="16" Grid.Column="1"
                                                VerticalOptions="Center"/>
-                                        <Grid Grid.Column="2" RowDefinitions="2" VerticalOptions="Center">
+                                        <Label Text="{Binding BartenderName}" LineBreakMode="NoWrap" FontSize="16" Grid.Column="2"
+                                               VerticalOptions="Center"/>
+                                        <Grid Grid.Column="3" RowDefinitions="2" VerticalOptions="Center">
                                             <Label Text="{Binding ClosedOn, StringFormat='{0:MMM dd, yyyy}'}" LineBreakMode="NoWrap" 
                                                FontSize="16" Grid.Row="1" HorizontalTextAlignment="Center"/>
                                             <Label Text="{Binding ClosedOn, StringFormat='{0:h:mm tt}'}" LineBreakMode="NoWrap" 
                                                FontSize="12" Grid.Row="2" HorizontalTextAlignment="Center"/>
                                         </Grid>
-                                        <Label Text="{Binding PointsEarned}" LineBreakMode="NoWrap" FontSize="16" Grid.Column="3"
+                                        <Label Text="{Binding PointsEarned}" LineBreakMode="NoWrap" FontSize="16" Grid.Column="4"
                                                VerticalOptions="Center" HorizontalTextAlignment="Center"/>
-                                        <Label Text="{Binding TotalPrice, StringFormat='PHP {0:#.00}'}" LineBreakMode="NoWrap" FontSize="16" Grid.Column="4"
+                                        <Label Text="{Binding TotalPrice, StringFormat='PHP {0:#.00}'}" LineBreakMode="NoWrap" FontSize="16" Grid.Column="5"
                                                VerticalOptions="Center" HorizontalTextAlignment="Center"/>
-                                        <Label Text="{Binding OrderStatus}" LineBreakMode="NoWrap" FontSize="16" Grid.Column="5"
-                                               VerticalOptions="Center" HorizontalTextAlignment="Center">
-                                            <Label.Triggers>
-                                                <DataTrigger TargetType="Label" Value="True" Binding="{Binding OrderStatus}">
-                                                    <Setter Property="Text"  Value="Active" />
-                                                </DataTrigger>
-                                                <DataTrigger TargetType="Label" Value="False" Binding="{Binding OrderStatus}">
-                                                    <Setter Property="Text"  Value="Not Active" />
-                                                </DataTrigger>
-                                            </Label.Triggers>
-                                        </Label>
                                     </Grid>
                                 </Frame>
                                 <StackLayout.GestureRecognizers>

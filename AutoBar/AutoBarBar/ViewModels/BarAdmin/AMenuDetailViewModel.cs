@@ -9,13 +9,14 @@ namespace AutoBarBar.ViewModels
     [QueryProperty(nameof(ItemId), nameof(ItemId))]
     public class AMenuDetailViewModel : BaseViewModel
     {
-        private string itemId;
+        private int itemId;
         private string name;
         private decimal price;
         private string description;
         private ImageSource image;
+        private int frequency;
 
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         public Command CancelCommand { get; }
         public Command SaveCommand { get; }
@@ -54,7 +55,13 @@ namespace AutoBarBar.ViewModels
             set => SetProperty(ref image, value);
         }
 
-        public string ItemId
+        public int Frequency
+        {
+            get => frequency;
+            set => SetProperty(ref frequency, value);
+        }
+
+        public int ItemId
         {
             get
             {
@@ -67,7 +74,7 @@ namespace AutoBarBar.ViewModels
             }
         }
 
-        public async void LoadItemId(string itemId)
+        public async void LoadItemId(int itemId)
         {
             /*
             try
@@ -123,7 +130,7 @@ namespace AutoBarBar.ViewModels
             bool retryBool = await App.Current.MainPage.DisplayAlert("Delete", "Would you like to delete item?", "Yes", "No");
             if (retryBool)
             {
-                await ProductDataStore.DeleteItemAsync(ItemId);
+                //await ProductDataStore.DeleteItemAsync(ItemId);
                 await Shell.Current.GoToAsync("..");
             }
         }

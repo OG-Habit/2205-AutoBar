@@ -14,6 +14,7 @@ namespace AutoBarBar.ViewModels
         private double point;
         private string description;
         private ImageSource image;
+        private int frequency;
 
         public string Id { get; set; }
 
@@ -52,6 +53,12 @@ namespace AutoBarBar.ViewModels
         {
             get => image;
             set => SetProperty(ref image, value);
+        }
+
+        public int Frequency
+        {
+            get => frequency;
+            set => SetProperty(ref frequency, value);
         }
 
         public string ItemId

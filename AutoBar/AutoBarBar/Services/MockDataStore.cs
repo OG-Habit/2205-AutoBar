@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AutoBarBar.Services
 {
-    public class MockDataStore : IDataStore<Customer>, IDataStore<Product>, IDataStore<OrderLine>, IDataStore<Order>, IDataStore<Reward>, IDataStore<Bartender>
+    public class MockDataStore : IDataStore<Customer>, IDataStore<Product>, IDataStore<OrderLine>, IDataStore<Order>, IDataStore<Reward>, IDataStore<Bartender>, IDataStore<Revenue>
     {
         readonly List<Customer> customers;
         readonly List<Product> products;
@@ -15,6 +15,7 @@ namespace AutoBarBar.Services
         readonly List<Order> orders;
         readonly List<Reward> rewards;
         readonly List<Bartender> bartenders;
+        readonly List<Revenue> revenues;
 
         public MockDataStore()
         {
@@ -68,6 +69,12 @@ namespace AutoBarBar.Services
                 new Bartender { Id = Guid.NewGuid().ToString(), Name = "Bartender Two", Birthday = Convert.ToDateTime("Feb 1, 2001"), Contact = "09123864756", Email = "two@gmail.com", Sex="Male", ImageLink = "default_pic.png"},
                 new Bartender { Id = Guid.NewGuid().ToString(), Name = "Bartender Three", Birthday = Convert.ToDateTime("Mar 1, 2001"), Contact = "09123294756", Email = "three@gmail.com", Sex="Female", ImageLink = "default_pic.png"},
                 new Bartender { Id = Guid.NewGuid().ToString(), Name = "Bartender Four", Birthday = Convert.ToDateTime("Apr 1, 2001"), Contact = "09123294756", Email = "four@gmail.com", Sex="Female", ImageLink = "default_pic.png"}
+            };
+
+            revenues = new List<Revenue>()
+            {
+                new Revenue { TotalOrders = 10, TotalWeekOrders = 30, TotalRevenue = (decimal) 20000.00, TotalWeekRevenue = (decimal) 50000.00},
+                new Revenue { TotalOrders = 10, TotalWeekOrders = 30, TotalRevenue = (decimal) 20000.00, TotalWeekRevenue = (decimal) 50000.00}
             };
         }
 
@@ -300,6 +307,39 @@ namespace AutoBarBar.Services
         {
             query = query.ToLowerInvariant();
             return await Task.FromResult(bartenders.Where(c => c.Name.ToLowerInvariant().Contains(query)));
+        }
+        #endregion
+
+        #region Revenue
+        public async Task<bool> AddItemAsync(Revenue item)
+        {
+            return await Task.FromResult(true);
+        }
+
+        public async Task<bool> UpdateItemAsync(Revenue item)
+        {
+            return await Task.FromResult(true);
+        }
+
+        async Task<bool> IDataStore<Revenue>.DeleteItemAsync(string id)
+        {
+            return await Task.FromResult(true);
+        }
+
+        async Task<Revenue> IDataStore<Revenue>.GetItemAsync(string id)
+        {
+            return await Task.FromResult(revenues.First());
+        }
+
+        async Task<IEnumerable<Revenue>> IDataStore<Revenue>.GetItemsAsync(bool forceRefresh)
+        {
+            return await Task.FromResult(revenues);
+        }
+
+        async Task<IEnumerable<Revenue>> IDataStore<Revenue>.GetSearchResults(string query)
+        {
+            query = query.ToLowerInvariant();
+            return await Task.FromResult(revenues);
         }
         #endregion
     }

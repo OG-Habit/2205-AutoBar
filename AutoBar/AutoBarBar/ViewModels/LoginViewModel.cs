@@ -42,7 +42,7 @@ namespace AutoBarBar.ViewModels
             {
                 await Xamarin.Essentials.SecureStorage.SetAsync($"{KEY_ISLOGGED}", "1");
                 await Xamarin.Essentials.SecureStorage.SetAsync($"{PARAM_USER}", $"{userObj}");
-                await Shell.Current.GoToAsync($"//{nameof(AHomePage)}");
+                await Shell.Current.GoToAsync($"//{nameof(AHomePage)}?{PARAM_USER}={userObj}");
             }
             else // u.UserType == 2
             {

@@ -17,15 +17,48 @@ namespace AutoBarBar.ViewModels
         public Command<Order> CustomerTapped { get; }
         public DateTime Today { get; set; }
 
+        int orderToday;
+        int orderWeek;
+        decimal revenueToday;
+        decimal revenueWeek;
+
+        public int OrderToday
+        {
+            get => orderToday;
+            set => SetProperty(ref orderToday, value);
+        }
+
+        public int OrderWeek
+        {
+            get => orderWeek;
+            set => SetProperty(ref orderWeek, value);
+        }
+        
+        public decimal RevenueToday
+        {
+            get => revenueToday;
+            set => SetProperty(ref revenueToday, value);
+        }
+
+        public decimal RevenueWeek
+        {
+            get => revenueWeek;
+            set => SetProperty(ref revenueWeek, value);
+        }
+
         public AHomeViewModel()
         {
             Title = "Home";
             Today = DateTime.Today;
             Customer = new ObservableCollection<Order>();
-            
             LoadCustomerCommand = new Command(async () => await ExecuteLoadItemsCommand());
-            
             CustomerTapped = new Command<Order>(OnCustomerSelected);
+
+            var order = RevenueDataStore.GetItemAsync("test");
+            OrderToday = order.Result.TotalOrders;
+            OrderWeek = order.Result.TotalWeekOrders;
+            RevenueToday = order.Result.TotalRevenue;
+            RevenueWeek = order.Result.TotalWeekRevenue;
         }
 
         async Task ExecuteLoadItemsCommand()
@@ -71,7 +104,7 @@ namespace AutoBarBar.ViewModels
             if (item == null)
                 return;
 
-            //await Shell.Current.GoToAsync($"{nameof(AOrderDetailPage)}?{nameof(AOrderDetailViewModel.ItemId)}={item.Id}");
+            await Shell.Current.GoToAsync($"{nameof(AOrderDetailPage)}?{nameof(AOrderDetailViewModel.ItemId)}={item.ID}");
         }
 
         public async void SearchBar_Change(object sender, TextChangedEventArgs e)

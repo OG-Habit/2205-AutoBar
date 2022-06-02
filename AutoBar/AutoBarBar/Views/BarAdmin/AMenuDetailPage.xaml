@@ -9,7 +9,7 @@
             <Frame Padding="0" HorizontalOptions="Center" WidthRequest="150" HasShadow="False" IsClippedToBounds="True" Grid.Row="0">
                 <Image x:Name="ProfilePic" Source="{Binding Image}" Aspect="AspectFit"/>
             </Frame>
-            <Grid RowDefinitions="3" Padding="0,20">
+            <Grid RowDefinitions="4" Padding="0,20">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="150"/>
                     <ColumnDefinition Width="250"/>
@@ -20,6 +20,8 @@
                 <Label Text="{Binding Price, StringFormat='PHP {0:#.00}'}" FontSize="20" Grid.Column="1" Grid.Row="2"/>
                 <Label Text="Description: " FontSize="20" Grid.Column="0" Grid.Row="3"/>
                 <Label Text="{Binding Description}" FontSize="20" Grid.Column="1" Grid.Row="3"/>
+                <Label Text="Purchase Frequency: " FontSize="20" Grid.Column="0" Grid.Row="4"/>
+                <Label Text="{Binding Frequency}" FontSize="20" Grid.Column="1" Grid.Row="4"/>
             </Grid>
             <Button Text="Delete" WidthRequest="250" CornerRadius="100" Command="{Binding DeleteCommand}"/>
         </StackLayout>
