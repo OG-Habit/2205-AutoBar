@@ -392,7 +392,7 @@ namespace AutoBarBar.Services
             });
 
             string cmd3 = $@"
-                    SELECT SUM(Quantity) FROM OrderLine  
+                    SELECT COUNT(ID) FROM UsedRewards   
                     WHERE ProductID = {id} AND DATE(CreatedOn) {FROM_PAST_7_DAYS}
              ";
             GetItem(cmd3, ref p, (dataRecord, user) =>
@@ -401,7 +401,7 @@ namespace AutoBarBar.Services
             });
 
             string cmd4 = $@"
-                    SELECT SUM(Quantity) FROM OrderLine  
+                    SELECT COUNT(ID) FROM UsedRewards   
                     WHERE ProductID = {id}
              ";
             GetItem(cmd4, ref p, (dataRecord, user) =>

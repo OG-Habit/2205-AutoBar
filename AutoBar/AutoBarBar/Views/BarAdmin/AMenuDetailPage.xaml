@@ -5,30 +5,32 @@
              x:DataType="viewmodels:AMenuDetailViewModel"
              x:Class="AutoBarBar.Views.AMenuDetailPage">
     <ContentPage.Content>
-        <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
-            <Frame Padding="0" HorizontalOptions="Center" WidthRequest="150" HasShadow="False" IsClippedToBounds="True" Grid.Row="0">
-                <Image x:Name="ProfilePic" Source="{Binding Image}" Aspect="AspectFit"/>
-            </Frame>
-            <Grid RowDefinitions="4" Padding="0,20">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="150"/>
-                    <ColumnDefinition Width="250"/>
-                </Grid.ColumnDefinitions>
-                <Label Text="Name: " FontSize="20" Grid.Column="0" Grid.Row="0"/>
-                <Label Text="{Binding Name}" FontSize="20" Grid.Column="1" Grid.Row="0"/>
-                <Label Text="Price: " FontSize="20" Grid.Column="0" Grid.Row="1"/>
-                <Label Text="{Binding Price, StringFormat='PHP {0:#.00}'}" FontSize="20" Grid.Column="1" Grid.Row="1"/>
-                <Label Text="Description: " FontSize="20" Grid.Column="0" Grid.Row="2"/>
-                <Label Text="{Binding Description}" FontSize="20" Grid.Column="1" Grid.Row="2"/>
+        <ScrollView x:Name="scrollview">
+            <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+                <Frame Padding="0" HorizontalOptions="Center" WidthRequest="150" HasShadow="False" IsClippedToBounds="True" Grid.Row="0">
+                    <Image x:Name="ProfilePic" Source="{Binding Image}" Aspect="AspectFit"/>
+                </Frame>
+                <Grid RowDefinitions="*,*,*,*,*,*" Padding="0,20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150"/>
+                        <ColumnDefinition Width="250"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Text="Name: " FontSize="20" Grid.Column="0" Grid.Row="0"/>
+                    <Label Text="{Binding Name}" FontSize="20" Grid.Column="1" Grid.Row="0"/>
+                    <Label Text="Price: " FontSize="20" Grid.Column="0" Grid.Row="1"/>
+                    <Label Text="{Binding Price, StringFormat='PHP {0:#.00}'}" FontSize="20" Grid.Column="1" Grid.Row="1"/>
+                    <Label Text="Description: " FontSize="20" Grid.Column="0" Grid.Row="2"/>
+                    <Label Text="{Binding Description}" FontSize="20" Grid.Column="1" Grid.Row="2"/>
 
-                <Label Text="Order frequency Today: " FontSize="20" Grid.Column="0" Grid.Row="3" Margin="0,5,0,0"/>
-                <Label Text="{Binding OrderFrequencyToday}" FontAttributes="Bold" FontSize="20" Grid.Column="1" Grid.Row="3" Margin="0,5,0,0"/>
-                <Label Text="Order frequency Past 7 days: " FontSize="20" Grid.Column="0" Grid.Row="4"/>
-                <Label Text="{Binding OrderFrequencyPast7Days}" FontAttributes="Bold" FontSize="20" Grid.Column="1" Grid.Row="4"/>
-                <Label Text="Total order frequency: " FontSize="20" Grid.Column="0" Grid.Row="5"/>
-                <Label Text="{Binding OrderFrequencyOverall}" FontAttributes="Bold" FontSize="20" Grid.Column="1" Grid.Row="5"/>
-            </Grid>
-            <Button Text="Delete" WidthRequest="250" CornerRadius="100" Command="{Binding DeleteCommand}"/>
-        </StackLayout>
+                    <Label Text="Order frequency Today: " FontSize="20" Grid.Column="0" Grid.Row="3" Margin="0,5,0,0"/>
+                    <Label Text="{Binding OrderFrequencyToday}" FontAttributes="Bold" FontSize="20" Grid.Column="1" Grid.Row="3" Margin="0,5,0,0"/>
+                    <Label Text="Order frequency Past 7 days: " FontSize="20" Grid.Column="0" Grid.Row="4"/>
+                    <Label Text="{Binding OrderFrequencyPast7Days}" FontAttributes="Bold" FontSize="20" Grid.Column="1" Grid.Row="4"/>
+                    <Label Text="Total order frequency: " FontSize="20" Grid.Column="0" Grid.Row="5"/>
+                    <Label Text="{Binding OrderFrequencyOverall}" FontAttributes="Bold" FontSize="20" Grid.Column="1" Grid.Row="5"/>
+                </Grid>
+                <Button Text="Delete" WidthRequest="250" CornerRadius="100" Command="{Binding DeleteCommand}"/>
+            </StackLayout>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>
