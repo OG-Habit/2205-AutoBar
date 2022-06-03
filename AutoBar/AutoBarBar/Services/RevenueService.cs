@@ -30,7 +30,7 @@ namespace AutoBarBar.Services
              ";
             GetItem<Revenue>(cmd2, ref r, (dataRecord, user) =>
             {
-                r.TotalRevenue = dataRecord.GetInt32(0);
+                r.TotalRevenue = dataRecord.GetDouble(0);
             });
 
             string cmd3 = $@"
@@ -48,7 +48,7 @@ namespace AutoBarBar.Services
              ";
             GetItem<Revenue>(cmd4, ref r, (dataRecord, user) =>
             {
-                r.TotalWeekRevenue = dataRecord.GetInt32(0);
+                r.TotalWeekRevenue = dataRecord.GetDouble(0);
             });
 
             return await Task.FromResult(r);

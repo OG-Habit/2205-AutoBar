@@ -58,11 +58,16 @@ namespace AutoBarBar.ViewModels
             CustomerTapped = new Command<Order>(OnCustomerSelected);
             revenueService = DependencyService.Get<IRevenueService>();
 
-            var order = revenueService.GetRevenues();
-            OrderToday = order.Result.TotalOrders;
-            OrderWeek = order.Result.TotalWeekOrders;
-            RevenueToday = order.Result.TotalRevenue;
-            RevenueWeek = order.Result.TotalWeekRevenue;
+            SetStats();
+        }
+
+        private async void SetStats()
+        {
+            Revenue order = await revenueService.GetRevenues();
+            OrderToday = order.TotalOrders;
+            OrderWeek = order.TotalWeekOrders;
+            RevenueToday = order.TotalRevenue;
+            RevenueWeek = order.TotalWeekRevenue;
         }
 
         async Task ExecuteLoadItemsCommand()

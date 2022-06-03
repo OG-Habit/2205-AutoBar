@@ -26,7 +26,7 @@ namespace AutoBarBar.Services
                 SELECT c.ID, CONCAT(u.FirstName,"" "",u.LastName) AS ""Name"", u.Email, u.MobileNumber, u.Birthday, u.Sex, u.ImageLink,
                 c.Balance, c.Points
                 FROM Customers c, Users u
-                WHERE b.UserID = u.ID AND b.IsRemoved=0;
+                WHERE c.UserID = u.ID
             ";
             GetItems<CustomerForAdmin>(cmd1, (dataRecord, c) =>
             {

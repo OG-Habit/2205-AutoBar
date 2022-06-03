@@ -45,17 +45,17 @@
                 <Label Padding="8,12,0,5" Text="ORDER REPORT" LineBreakMode="NoWrap" FontSize="25" TextDecorations="Underline"/>
                 <Grid RowDefinitions="Auto">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="150"/>
                         <ColumnDefinition Width="225"/>
                         <ColumnDefinition Width="220"/>
                         <ColumnDefinition Width="150"/>
                         <ColumnDefinition Width="125"/>
                     </Grid.ColumnDefinitions>
-                    <Label Text="Customer" LineBreakMode="NoWrap" FontSize="20" Grid.Column="1"/>
-                    <Label Text="Bartender" LineBreakMode="NoWrap" FontSize="20" Grid.Column="2"/>
-                    <Label Text="Date" LineBreakMode="NoWrap" FontSize="20" Grid.Column="3" HorizontalTextAlignment="Center"/>
-                    <Label Text="Points" LineBreakMode="NoWrap" FontSize="20" Grid.Column="4" HorizontalTextAlignment="Center" />
-                    <Label Text="Total Payment" LineBreakMode="NoWrap" FontSize="20" Grid.Column="5" HorizontalTextAlignment="Center"/>
+                    <Label Text="Customer" LineBreakMode="NoWrap" FontSize="20" Grid.Column="0"/>
+                    <Label Text="Bartender" LineBreakMode="NoWrap" FontSize="20" Grid.Column="1"/>
+                    <Label Text="Date" LineBreakMode="NoWrap" FontSize="20" Grid.Column="2" HorizontalTextAlignment="Center"/>
+                    <Label Text="Points" LineBreakMode="NoWrap" FontSize="20" Grid.Column="3" HorizontalTextAlignment="Center" />
+                    <Label Text="Total Payment" LineBreakMode="NoWrap" FontSize="20" Grid.Column="4" HorizontalTextAlignment="Center"/>
                 </Grid>
             </StackLayout>
             <RefreshView x:DataType="vm:AHomeViewModel" Command="{Binding LoadCustomerCommand}" 
@@ -67,7 +67,7 @@
                                 <Frame HasShadow="True" CornerRadius="20" Padding="7">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="10"/>
+                                            <ColumnDefinition Width="150"/>
                                             <ColumnDefinition Width="220"/>
                                             <ColumnDefinition Width="220"/>
                                             <ColumnDefinition Width="150"/>
