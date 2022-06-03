@@ -5,7 +5,7 @@ using AutoBar.Models;
 
 namespace AutoBar.Models
 {
-    public class CustomerForAdmin
+    public class Customer
     {
         public int ID { get; set; }
         public string QRKey { get; set; }

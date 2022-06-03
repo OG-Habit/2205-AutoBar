@@ -19,7 +19,7 @@ namespace AutoBarBar.Services
                     SELECT COUNT(ID) AS a FROM Orders 
                     WHERE OrderStatus = 2 AND ClosedOn IS NOT NULL AND DATE(ClosedOn) {FROM_TODAY}
              ";
-            GetItem<Revenue>(cmd1, ref r, (dataRecord, user) =>
+            GetItem<Revenue>(cmd1, ref r, (dataRecord, r) =>
             {
                 r.TotalOrders = dataRecord.GetInt32(0);
             });
@@ -28,7 +28,7 @@ namespace AutoBarBar.Services
                     SELECT SUM(TotalPrice) AS b FROM Orders 
                     WHERE OrderStatus = 2 AND ClosedOn IS NOT NULL AND DATE(ClosedOn) {FROM_TODAY}
              ";
-            GetItem<Revenue>(cmd2, ref r, (dataRecord, user) =>
+            GetItem<Revenue>(cmd2, ref r, (dataRecord, r) =>
             {
                 r.TotalRevenue = dataRecord.GetDouble(0);
             });
@@ -37,7 +37,7 @@ namespace AutoBarBar.Services
                     SELECT COUNT(ID) AS c FROM Orders 
                     WHERE OrderStatus = 2 AND ClosedOn IS NOT NULL AND DATE(ClosedOn) {FROM_PAST_7_DAYS}
              ";
-            GetItem<Revenue>(cmd3, ref r, (dataRecord, user) =>
+            GetItem<Revenue>(cmd3, ref r, (dataRecord, r) =>
             {
                 r.TotalWeekOrders = dataRecord.GetInt32(0);
             });
@@ -46,7 +46,7 @@ namespace AutoBarBar.Services
                     SELECT SUM(TotalPrice) AS d FROM Orders 
                     WHERE OrderStatus = 2 AND ClosedOn IS NOT NULL AND DATE(ClosedOn) {FROM_PAST_7_DAYS}
              ";
-            GetItem<Revenue>(cmd4, ref r, (dataRecord, user) =>
+            GetItem<Revenue>(cmd4, ref r, (dataRecord, r) =>
             {
                 r.TotalWeekRevenue = dataRecord.GetDouble(0);
             });

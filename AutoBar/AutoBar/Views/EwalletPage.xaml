@@ -35,14 +35,13 @@
                 </Grid>
             </StackLayout>
             <RefreshView x:DataType="vm:EwalletViewModel" Command="{Binding LoadItemCommand}" 
-                         x:Name="TransactionList" IsEnabled="False">
-                <!--IsRefreshing="{Binding IsBusy, Mode=TwoWay}" - App crashes on refresh, so I disabled-->
+                         x:Name="TransactionList" IsRefreshing="{Binding IsBusy, Mode=TwoWay}" >
                 <CollectionView x:Name="ListView1" ItemsSource="{Binding Item1}" SelectionMode="None">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <StackLayout Padding="5,5,5,5" x:DataType="model:TransactionHistory">
                                 <Grid ColumnDefinitions="*,*,*">
-                                    <Label Text="{Binding TimeStamp, StringFormat='{0:MMM dd, yyyy HH:MM}'}" LineBreakMode="NoWrap" FontSize="12" Grid.Column="0"
+                                    <Label Text="{Binding TimeStamp, StringFormat='{0:MMM dd, yyyy HH:mm}'}" LineBreakMode="NoWrap" FontSize="12" Grid.Column="0"
                                                VerticalOptions="Center" HorizontalTextAlignment="Center"/>
                                     <Label Text="{Binding Type}" LineBreakMode="NoWrap" FontSize="12" Grid.Column="1"
                                                VerticalOptions="Center" HorizontalTextAlignment="Center"/>
@@ -63,8 +62,7 @@
                 </Grid>
             </StackLayout>
             <RefreshView x:DataType="vm:EwalletViewModel" Command="{Binding LoadItemCommand}" 
-                         x:Name="PointsList" IsEnabled="False">
-                <!--IsRefreshing="{Binding IsBusy, Mode=TwoWay}" - App crashes on refresh, so I disabled-->
+                         x:Name="PointsList" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
                 <CollectionView x:Name="ListView2" ItemsSource="{Binding Item2}" SelectionMode="None">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
