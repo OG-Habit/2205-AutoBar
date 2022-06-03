@@ -5,7 +5,7 @@
              x:DataType="viewmodels:ABartenderDetailViewModel"
              x:Class="AutoBarBar.Views.ABartenderDetailPage">
     <ContentPage.Content>
-        <StackLayout Padding="300,0" VerticalOptions="Center" HorizontalOptions="Center">
+        <StackLayout Padding="300,0" VerticalOptions="StartAndExpand" HorizontalOptions="Center">
             <Frame Padding="0" HorizontalOptions="Center" CornerRadius="200" WidthRequest="150" 
                    HasShadow="False" IsClippedToBounds="True" Grid.Row="0">
                 <Image x:Name="ProfilePic" Source="{Binding Image}" Aspect="AspectFit"/>

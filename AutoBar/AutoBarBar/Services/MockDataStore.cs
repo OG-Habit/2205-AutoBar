@@ -136,6 +136,7 @@ namespace AutoBarBar.Services
                 bartender.Id = dataRecord.GetInt32(0);
                 bartender.FirstName = dataRecord.GetString(1);
                 bartender.LastName = dataRecord.GetString(2);
+                bartender.Name = bartender.FirstName + " " + bartender.LastName;
                 bartender.Email = dataRecord.GetString(3);
                 bartender.Contact = dataRecord.GetString(4);
                 bartender.Birthday = dataRecord.GetDateTime(5);
@@ -236,7 +237,7 @@ namespace AutoBarBar.Services
 
         async Task<Product> IDataStore<Product>.GetItemAsync(int id)
         {
-            Product p = await Task.FromResult(products.FirstOrDefault(s => s.ID == id));
+            Product p = products.FirstOrDefault(s => s.ID == id);
             string cmd2 = $@"
                     SELECT SUM(Quantity) FROM OrderLine 
                     WHERE ProductID = {id} AND DATE(CreatedOn) {FROM_TODAY}
@@ -380,7 +381,7 @@ namespace AutoBarBar.Services
 
         async Task<Reward> IDataStore<Reward>.GetItemAsync(int id)
         {
-            Reward p = await Task.FromResult(rewards.FirstOrDefault(s => s.ID == id));
+            Reward p = rewards.FirstOrDefault(s => s.ID == id);
             string cmd2 = $@"
                     SELECT COUNT(ID) FROM UsedRewards 
                     WHERE RewardID = {id} AND DATE(CreatedOn) {FROM_TODAY}
@@ -477,10 +478,10 @@ namespace AutoBarBar.Services
 
         async Task<Bartender> IDataStore<Bartender>.GetItemAsync(int id)
         {
-            Bartender p = await Task.FromResult(bartenders.FirstOrDefault(s => s.Id == id));
+            Bartender p = bartenders.FirstOrDefault(s => s.Id == id);
             string cmd2 = $@"
                     SELECT SUM(Quantity*UnitPrice) FROM OrderLine 
-                    WHERE BartenderID = {id} AND DATE(CreatedOn) {FROM_TODAY}
+                    WHERE CreatedBy = {id} AND DATE(CreatedOn) {FROM_TODAY}
              ";
             GetItem(cmd2, ref p, (dataRecord, user) =>
             {
@@ -489,7 +490,7 @@ namespace AutoBarBar.Services
 
             string cmd3 = $@"
                     SELECT SUM(Quantity*UnitPrice) FROM OrderLine   
-                    WHERE BartenderID = {id} AND DATE(CreatedOn) {FROM_PAST_7_DAYS}
+                    WHERE CreatedBy = {id} AND DATE(CreatedOn) {FROM_PAST_7_DAYS}
              ";
             GetItem(cmd3, ref p, (dataRecord, user) =>
             {
@@ -498,7 +499,7 @@ namespace AutoBarBar.Services
 
             string cmd4 = $@"
                     SELECT SUM(Quantity*UnitPrice) FROM OrderLine  
-                    WHERE BartenderID = {id}
+                    WHERE CreatedBy = {id}
              ";
             GetItem(cmd4, ref p, (dataRecord, user) =>
             {
