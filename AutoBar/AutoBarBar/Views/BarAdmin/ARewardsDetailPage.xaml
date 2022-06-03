@@ -14,14 +14,19 @@
                     <ColumnDefinition Width="150"/>
                     <ColumnDefinition Width="250"/>
                 </Grid.ColumnDefinitions>
-                <Label Text="Name: " FontSize="20" Grid.Column="0" Grid.Row="1"/>
-                <Label Text="{Binding Name}" FontSize="20" Grid.Column="1" Grid.Row="1"/>
-                <Label Text="Points: " FontSize="20" Grid.Column="0" Grid.Row="2"/>
-                <Label Text="{Binding Point}" FontSize="20" Grid.Column="1" Grid.Row="2"/>
-                <Label Text="Description: " FontSize="20" Grid.Column="0" Grid.Row="3"/>
-                <Label Text="{Binding Description}" FontSize="20" Grid.Column="1" Grid.Row="3"/>
-                <Label Text="Purchase Frequency: " FontSize="20" Grid.Column="0" Grid.Row="4"/>
-                <Label Text="{Binding Frequency}" FontSize="20" Grid.Column="1" Grid.Row="4"/>
+                <Label Text="Name: " FontSize="20" Grid.Column="0" Grid.Row="0"/>
+                <Label Text="{Binding Name}" FontSize="20" Grid.Column="1" Grid.Row="0"/>
+                <Label Text="Points: " FontSize="20" Grid.Column="0" Grid.Row="1"/>
+                <Label Text="{Binding Point}" FontSize="20" Grid.Column="1" Grid.Row="1"/>
+                <Label Text="Description: " FontSize="20" Grid.Column="0" Grid.Row="2"/>
+                <Label Text="{Binding Description}" FontSize="20" Grid.Column="1" Grid.Row="2"/>
+
+                <Label Text="Claim frequency: " FontSize="20" Grid.Column="0" Grid.Row="3" Margin="0,5,0,0"/>
+                <Label Text="{Binding ClaimFrequencyToday}" FontAttributes="Bold" FontSize="20" Grid.Column="1" Grid.Row="3" Margin="0,5,0,0"/>
+                <Label Text="Claim frequency: " FontSize="20" Grid.Column="0" Grid.Row="4"/>
+                <Label Text="{Binding ClaimFrequencyPast7Days}" FontAttributes="Bold" FontSize="20" Grid.Column="1" Grid.Row="4"/>
+                <Label Text="Total claim frequency: " FontSize="20" Grid.Column="0" Grid.Row="5"/>
+                <Label Text="{Binding ClaimFrequencyOverall}" FontAttributes="Bold" FontSize="20" Grid.Column="1" Grid.Row="5"/>
             </Grid>
             <Button Text="Delete" WidthRequest="250" CornerRadius="100" Command="{Binding DeleteCommand}"/>
         </StackLayout>

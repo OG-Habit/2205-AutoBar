@@ -75,7 +75,7 @@
                                             </Grid.RowDefinitions>
                                             <Label Text="Total" LineBreakMode="NoWrap" FontSize="12" Grid.Row="1" TextColor="White"
                                                    HorizontalTextAlignment="Center"/>
-                                            <Label Text="{Binding SubTotal, StringFormat='PHP {0:#.00}'}" LineBreakMode="NoWrap" 
+                                            <Label Text="{Binding SubTotal, StringFormat='P{0:#.00}'}" LineBreakMode="NoWrap" 
                                                    FontSize="18" Grid.Row="2" TextColor="White" HorizontalTextAlignment="Center"/>
                                         </Grid>
                                     </Grid>

@@ -8,7 +8,8 @@ namespace AutoBarBar.ViewModels
 {
     public class ABartenderAddViewModel : BaseViewModel
     {
-        private string name;
+        private string firstName;
+        private string lastName;
         private string email;
         private string contact;
         private DateTime birthday;
@@ -27,11 +28,16 @@ namespace AutoBarBar.ViewModels
             ImageCommand = new Command(OnImageClicked);
         }
 
-        public string Name
+        public string FirstName
         {
-            get => name;
-            set => SetProperty(ref name, value);
+            get => firstName;
+            set => SetProperty(ref firstName, value);
+        }
 
+        public string LastName
+        {
+            get => lastName;
+            set => SetProperty(ref lastName, value);
         }
 
         public string Email
@@ -77,28 +83,38 @@ namespace AutoBarBar.ViewModels
 
         private async void OnAddClicked()
         {
-            bool retryBool = await App.Current.MainPage.DisplayAlert("Add", "Would you like to add as bartender?", "Yes", "No");
-            if (retryBool)
+
+            if (FirstName != null && LastName != null && Email != null && Contact != null && Sex != null && Birthday != null)
             {
-                if (Name != null && Email != null && Contact != null && Sex != null && Birthday != null)
+                bool retryBool = await App.Current.MainPage.DisplayAlert("Add", "Would you like to add as bartender?", "Yes", "No");
+                if (retryBool)
                 {
                     Bartender item = new Bartender
                     {
-                        Id = Guid.NewGuid().ToString(),
-                        Name = Name,
+                        FirstName = FirstName,
+                        LastName = LastName,
                         Email = Email,
                         Contact = Contact,
                         Birthday = Birthday,
                         Sex = Sex,
-                        ImageLink = (Image is FileImageSource source) ? source.File : "default_pic"
+                        ImageLink = (Image is FileImageSource source) ? source.File : "default_pic.png"
                     };
-                    await BartenderDataStore.AddItemAsync(item);
-                    await Shell.Current.GoToAsync("..");
+                    bool success = await BartenderDataStore.AddItemAsync(item);
+                    if (success == true)
+                    {
+                        await App.Current.MainPage.DisplayAlert("Success", "Bartender added!", "OK");
+                        await Shell.Current.GoToAsync("..");
+                    }
+                    else
+                    {
+                        await App.Current.MainPage.DisplayAlert("Failed", "This email has been used by another user.", "Retry");
+                    }
+                    
                 }
-                else
-                {
-                    await App.Current.MainPage.DisplayAlert("Error", "Field/s are empty", "Okay");
-                }                
+            }
+            else
+            {
+                await App.Current.MainPage.DisplayAlert("Error", "Field/s are empty", "Okay");                
             }
         }
 

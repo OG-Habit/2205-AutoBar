@@ -16,30 +16,36 @@ namespace AutoBar.ViewModels
         public ObservableCollection<OrderLine> Order { get; }
         public Command LoadOrderCommand { get; }
         public Command<OrderLine> ItemTapped { get; }
+        public Command SwitchTapped { get; }
 
-        public double Balance { get; }
+        public decimal Balance { get; set; }
 
-        private string itemId;
-        private int points;
+        private int itemId;
+        private decimal points;
         private string reward;
         private DateTime time;
         private double total;
 
         public PastOrderDetailViewModel()
         {
-            Balance = 1200.00;
+            SetBalance();
             Order = new ObservableCollection<OrderLine>();
             LoadOrderCommand = new Command(async () => await ExecuteLoadItemsCommand());
             ItemTapped = new Command<OrderLine>(OnItemSelected);
+            SwitchTapped = new Command(OnSwitchSelected);
         }
-
+        async void SetBalance()
+        {
+            decimal bal = Convert.ToDecimal(await Xamarin.Essentials.SecureStorage.GetAsync("balance"));
+            Balance = bal;
+        }
         public double Total
         {
             get => total;
             set => SetProperty(ref total, value);
         }
 
-        public int Points
+        public decimal Points
         {
             get => points;
             set => SetProperty(ref points, value);
@@ -57,7 +63,7 @@ namespace AutoBar.ViewModels
             set => SetProperty(ref time, value);
         }
 
-        public string ItemId
+        public int ItemId
         {
             get
             {
@@ -77,7 +83,7 @@ namespace AutoBar.ViewModels
             {
                 Order.Clear();
                 var past = await OrderDataStore.GetItemAsync(ItemId);
-                var items = await OrderLineDataStore.GetSearchResults(ItemId);
+                var items = await OrderLineDataStore.GetSearchResults(ItemId.ToString());
                 foreach (var item in items.OrderByDescending(x => x.CreatedOn))
                 {
                     Order.Add(item);
@@ -99,7 +105,7 @@ namespace AutoBar.ViewModels
 
         async void OnSwitchSelected()
         {
-            await Shell.Current.GoToAsync($"{nameof(PastOrderPage)}");
+            await Shell.Current.GoToAsync($"..");
         }
 
         public OrderLine SelectedItem

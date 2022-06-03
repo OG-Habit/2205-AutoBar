@@ -9,7 +9,7 @@ namespace AutoBarBar
     {
         public static string GetPHTimeForDB()
         {
-            return DateTime.UtcNow.AddHours(8).ToString("yyyy-MM-dd HH:mm:ss");
+            return DateTime.UtcNow.AddHours(8).ToString("yyyy-MM-dd HH:mm:ss.fff"); //updated to augment with sql datatype
         }
 
         public static string GetPHTimeForUI()
@@ -22,7 +22,7 @@ namespace AutoBarBar
             DateTime dt = DateTime.UtcNow.AddHours(8);
             return new Dictionary<string, string>() 
             {
-                {KEY_DB, dt.ToString("yyyy-MM-dd HH:mm:ss")},
+                {KEY_DB, dt.ToString("yyyy-MM-dd HH:mm:ss.fff")},
                 {KEY_UI, dt.ToString()}
             };
         }

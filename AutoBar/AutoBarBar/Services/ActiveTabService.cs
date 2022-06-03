@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using System.Diagnostics;
 
 [assembly: Dependency(typeof(ActiveTabService))]
 namespace AutoBarBar.Services

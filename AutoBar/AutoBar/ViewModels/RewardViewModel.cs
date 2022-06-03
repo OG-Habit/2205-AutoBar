@@ -1,5 +1,6 @@
 ﻿using AutoBar.Models;
 using AutoBar.Views;
+using AutoBar.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -16,16 +17,28 @@ namespace AutoBar.ViewModels
         public Command LoadItemCommand { get; }
         public Command<Reward> ItemTapped { get; }
 
-        public double Balance { get; }
+        public decimal Points { get; set; }
+        public Command ItemSort { get; }
+        public int state { get; set; }
+
+        IToastService toastService;
 
         public RewardViewModel()
         {
-            Balance = 500.00;
+            SetPoints();
+            state = 1;
             Item = new ObservableCollection<Reward>();
             LoadItemCommand = new Command(async () => await ExecuteLoadItemsCommand());
             ItemTapped = new Command<Reward>(OnItemSelected);
+            ItemSort = new Command(OnItemSort);
+            toastService = DependencyService.Get<IToastService>();
         }
 
+        async void SetPoints()
+        {
+            decimal p = Convert.ToDecimal(await Xamarin.Essentials.SecureStorage.GetAsync("points"));
+            Points = p;
+        }
         async Task ExecuteLoadItemsCommand()
         {
             IsBusy = true;
@@ -47,6 +60,42 @@ namespace AutoBar.ViewModels
             {
                 IsBusy = false;
             }
+        }
+
+        private void OnItemSort()
+        {
+            ObservableCollection<Reward> Item2 = new ObservableCollection<Reward>();
+            IsBusy = true;
+
+            switch (state)
+            {
+                case 1:
+                    state = 2;
+                    Item2 = new ObservableCollection<Reward>(Item.OrderByDescending(x => x.Name));
+                    toastService.ShowShortMessage("Sorted by name (Descending)");
+                    break;
+                case 2:
+                    state = 3;
+                    Item2 = new ObservableCollection<Reward>(Item.OrderBy(x => x.Points));
+                    toastService.ShowShortMessage("Sorted by points (Ascending)");
+                    break;
+                case 3:
+                    state = 4;
+                    Item2 = new ObservableCollection<Reward>(Item.OrderByDescending(x => x.Points));
+                    toastService.ShowShortMessage("Sorted by points (Descending)");
+                    break;
+                case 4:
+                    state = 1;
+                    Item2 = new ObservableCollection<Reward>(Item.OrderBy(x => x.Name));
+                    toastService.ShowShortMessage("Sorted by name (Ascending)");
+                    break;
+            }
+            Item.Clear();
+            foreach (var item in Item2)
+            {
+                Item.Add(item);
+            }
+            IsBusy = false;
         }
 
         public void OnAppearing()

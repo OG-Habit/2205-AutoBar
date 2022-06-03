@@ -128,7 +128,7 @@ namespace AutoBarBar.ViewModels
             }
             catch(Exception e)
             {
-                var a = e.Message;
+                var a = e.Message; Debug.Write(a); Debug.Write(a);
             }
         }
 

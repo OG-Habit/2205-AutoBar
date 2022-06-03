@@ -1,5 +1,7 @@
 ﻿using AutoBarBar.Models;
 using AutoBarBar.Views;
+using AutoBarBar.Services;
+
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -16,11 +18,12 @@ namespace AutoBarBar.ViewModels
         public Command LoadCustomerCommand { get; }
         public Command<Order> CustomerTapped { get; }
         public DateTime Today { get; set; }
+        IRevenueService revenueService;
 
         int orderToday;
         int orderWeek;
-        decimal revenueToday;
-        decimal revenueWeek;
+        double revenueToday;
+        double revenueWeek;
 
         public int OrderToday
         {
@@ -34,13 +37,13 @@ namespace AutoBarBar.ViewModels
             set => SetProperty(ref orderWeek, value);
         }
         
-        public decimal RevenueToday
+        public double RevenueToday
         {
             get => revenueToday;
             set => SetProperty(ref revenueToday, value);
         }
 
-        public decimal RevenueWeek
+        public double RevenueWeek
         {
             get => revenueWeek;
             set => SetProperty(ref revenueWeek, value);
@@ -53,8 +56,9 @@ namespace AutoBarBar.ViewModels
             Customer = new ObservableCollection<Order>();
             LoadCustomerCommand = new Command(async () => await ExecuteLoadItemsCommand());
             CustomerTapped = new Command<Order>(OnCustomerSelected);
+            revenueService = DependencyService.Get<IRevenueService>();
 
-            var order = RevenueDataStore.GetItemAsync("test");
+            var order = revenueService.GetRevenues();
             OrderToday = order.Result.TotalOrders;
             OrderWeek = order.Result.TotalWeekOrders;
             RevenueToday = order.Result.TotalRevenue;

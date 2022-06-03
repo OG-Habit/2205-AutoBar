@@ -7,6 +7,9 @@
         public string Description { get; set; }
         public string ImageLink { get; set; }
         public decimal Points { get; set; }
+        public int ClaimFrequencyToday { get; set; } //bar admin
+        public int ClaimFrequencyPast7Days { get; set; } //bar admin
+        public int ClaimFrequencyOverall { get; set; } //bar admin
 
         public string NamePoints
         {

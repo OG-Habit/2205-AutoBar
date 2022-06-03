@@ -44,7 +44,12 @@ namespace AutoBar.ViewModels
             await Xamarin.Essentials.SecureStorage.SetAsync("isLogged", "1");
             await Xamarin.Essentials.SecureStorage.SetAsync("qr", $"{u.QRKey}");
             await Xamarin.Essentials.SecureStorage.SetAsync("user", $"{userObj}");
+            await Xamarin.Essentials.SecureStorage.SetAsync("balance", $"{u.Balance}");
+            await Xamarin.Essentials.SecureStorage.SetAsync("id", $"{u.UserDetails.ID}");
+            await Xamarin.Essentials.SecureStorage.SetAsync("points", $"{u.Points}");
             await Shell.Current.GoToAsync($"//{nameof(HomePage)}");
+            //issue in this code, to be fixed - is that balance and points dont update real time 
+            //since its only retrieved once which is only here.
         }
 
         public void OnAppearing()

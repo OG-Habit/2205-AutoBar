@@ -20,7 +20,7 @@
                 <Image Source="AutobarLogo_Horizontal.png" HeightRequest="20" Grid.Column="1"/>
                 <Frame Grid.Column="2" Grid.Row="0" HasShadow="False" CornerRadius="20" Padding="10" BackgroundColor="gray"
                        VerticalOptions="Center" HorizontalOptions="End">
-                    <Label Text="{Binding Balance, StringFormat='Total Points: {0}'}" FontSize="15"  TextColor="White"/>
+                    <Label Text="{Binding Points, StringFormat='Points: {0}'}" FontSize="15"  TextColor="White"/>
                 </Frame>
                 <SearchBar Placeholder="Search" BackgroundColor="White" Grid.ColumnSpan="3" Grid.Row="1"
                            TextChanged="SearchBarChange"/>

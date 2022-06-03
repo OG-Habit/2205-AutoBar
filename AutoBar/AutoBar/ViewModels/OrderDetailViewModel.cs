@@ -7,17 +7,17 @@ namespace AutoBar.ViewModels
     [QueryProperty(nameof(ItemId), nameof(ItemId))]
     public class OrderDetailViewModel : BaseViewModel
     {
-        private string itemId;
+        private int itemId;
         private string name;
-        private double price;
+        private decimal price;
         private string description;
         private string image;
         private int quantity;
         private DateTime created;
-        private double total;
+        private decimal total;
         private string bartender;
 
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         public string Name
         {
@@ -25,7 +25,7 @@ namespace AutoBar.ViewModels
             set => SetProperty(ref name, value);
         }
 
-        public double Price
+        public decimal Price
         {
             get => price;
             set => SetProperty(ref price, value);
@@ -55,7 +55,7 @@ namespace AutoBar.ViewModels
             set => SetProperty(ref created, value);
         }
 
-        public double Total
+        public decimal Total
         {
             get => total;
             set => SetProperty(ref total, value);
@@ -67,7 +67,7 @@ namespace AutoBar.ViewModels
             set => SetProperty(ref bartender, value);
         }
 
-        public string ItemId
+        public int ItemId
         {
             get
             {
@@ -80,7 +80,7 @@ namespace AutoBar.ViewModels
             }
         }
 
-        public async void LoadItemId(string itemId)
+        public async void LoadItemId(int itemId)
         {
             try
             {

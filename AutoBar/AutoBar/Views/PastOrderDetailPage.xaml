@@ -29,7 +29,7 @@
                 </Grid.RowDefinitions>
                 <Label Text="{Binding Time, StringFormat='{0:MMM dd, yyyy}'}" LineBreakMode="NoWrap" FontSize="20" Grid.Column="1"
                        HorizontalOptions="Start" VerticalOptions="Center"/>
-                <Button Text="=" CornerRadius="100" Grid.Column="2" HorizontalOptions="End" VerticalOptions="Center"
+                <Button Text="Back" CornerRadius="100" Grid.Column="2" HorizontalOptions="End" VerticalOptions="Center"
                         CommandParameter="{Binding .}" Command="{Binding Source={RelativeSource AncestorType={x:Type vm:PastOrderDetailViewModel}},
                         Path=SwitchTapped}"/>
             </Grid>
@@ -75,7 +75,7 @@
                                             </Grid.RowDefinitions>
                                             <Label Text="Total" LineBreakMode="NoWrap" FontSize="12" Grid.Row="1" TextColor="White"
                                                    HorizontalTextAlignment="Center"/>
-                                            <Label Text="{Binding SubTotal, StringFormat='PHP {0:#.00}'}" LineBreakMode="NoWrap" 
+                                            <Label Text="{Binding SubTotal, StringFormat='P{0:#.00}'}" LineBreakMode="NoWrap" 
                                                    FontSize="18" Grid.Row="2" TextColor="White" HorizontalTextAlignment="Center"/>
                                         </Grid>
                                     </Grid>

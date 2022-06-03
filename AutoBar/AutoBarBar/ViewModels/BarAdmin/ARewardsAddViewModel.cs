@@ -8,7 +8,7 @@ namespace AutoBarBar.ViewModels
     public class ARewardsAddViewModel : BaseViewModel
     {
         private string name;
-        private double point;
+        private decimal point;
         private string description;
         private ImageSource image;
 
@@ -18,7 +18,7 @@ namespace AutoBarBar.ViewModels
 
         public ARewardsAddViewModel()
         {
-            image = "default_pic.png";
+            image = "default_reward.png";
             CancelCommand = new Command(OnCancelClicked);
             AddCommand = new Command(OnAddClicked);
             ImageCommand = new Command(OnImageClicked);
@@ -30,7 +30,7 @@ namespace AutoBarBar.ViewModels
             set => SetProperty(ref name, value);
         }
 
-        public double Point
+        public decimal Point
         {
             get => point;
             set => SetProperty(ref point, value);
@@ -55,26 +55,26 @@ namespace AutoBarBar.ViewModels
 
         private async void OnAddClicked()
         {
-            bool retryBool = await App.Current.MainPage.DisplayAlert("Add", "Would you like to add to rewards?", "Yes", "No");
-            if (retryBool)
+
+            if (Name != null && Description != null)
             {
-                if (Name != null && Description != null)
+                bool retryBool = await App.Current.MainPage.DisplayAlert("Add", "Would you like to add to rewards?", "Yes", "No");
+                if (retryBool)
                 {
                     Reward item = new Reward
                     {
-                        ID = 1,
                         Name = Name,
-                        //Points = Point,
+                        Points = Point,
                         Description = Description,
-                        ImageLink = (Image is FileImageSource source) ? source.File : "default_reward"
+                        ImageLink = (Image is FileImageSource source) ? source.File : "default_reward.png"
                     };
                     await RewardDataStore.AddItemAsync(item);
                     await Shell.Current.GoToAsync("..");
-                    }
-                else
-                {
-                    await App.Current.MainPage.DisplayAlert("Error", "Field/s are empty", "Okay");
-                } 
+                }
+            }
+            else
+            {
+                await App.Current.MainPage.DisplayAlert("Error", "Field/s are empty", "Okay");             
             }
         }
 

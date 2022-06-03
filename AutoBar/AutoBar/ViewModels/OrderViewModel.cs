@@ -18,22 +18,28 @@ namespace AutoBar.ViewModels
         public Command<OrderLine> ItemTapped { get; }
         public Command SwitchTapped { get; }
 
-        public double Balance { get; }
+        public decimal Balance { get; set; }
         public DateTime Today { get; }
 
-        private int points;
+        private decimal points;
         private string reward;
         private DateTime time;
         private double total;
 
         public OrderViewModel()
         {
-            Balance = 1200.00;
+            SetBalance();
             Today = DateTime.Now;
             Order = new ObservableCollection<OrderLine>();
             LoadOrderCommand = new Command(async () => await ExecuteLoadItemsCommand());
             ItemTapped = new Command<OrderLine>(OnItemSelected);
             SwitchTapped = new Command(OnSwitchSelected);
+        }
+
+        async void SetBalance()
+        {
+            decimal bal = Convert.ToDecimal(await Xamarin.Essentials.SecureStorage.GetAsync("balance"));
+            Balance = bal;
         }
 
 
@@ -43,7 +49,7 @@ namespace AutoBar.ViewModels
             set => SetProperty(ref total, value);
         }
 
-        public int Points
+        public decimal Points
         {
             get => points;
             set => SetProperty(ref points, value);
@@ -69,7 +75,7 @@ namespace AutoBar.ViewModels
             {
                 Order.Clear();
                 var today = await OrderDataStore.GetTodayResults(Today);
-                var items = await OrderLineDataStore.GetSearchResults(today.Id);
+                var items = await OrderLineDataStore.GetSearchResults(today.Id.ToString());
                 foreach (var item in items.OrderByDescending(x => x.CreatedOn))
                 {
                     Order.Add(item);

@@ -18,7 +18,7 @@ namespace AutoBarBar.ViewModels
 
         public AMenuAddViewModel()
         {
-            image = "default_pic.png";
+            image = "default_menu.png";
             CancelCommand = new Command(OnCancelClicked);
             AddCommand = new Command(OnAddClicked);
             ImageCommand = new Command(OnImageClicked);
@@ -55,29 +55,28 @@ namespace AutoBarBar.ViewModels
 
         private async void OnAddClicked()
         {
-            /*
-            bool retryBool = await App.Current.MainPage.DisplayAlert("Add", "Would you like to add to menu?", "Yes", "No");
-            if (retryBool)
+            if (Name != null && Description != null && price != null)
             {
-                if (Name != null && Description != null)
+                bool retryBool = await App.Current.MainPage.DisplayAlert("Add", "Would you like to add to menu?", "Yes", "No");
+                if (retryBool)
                 {
+
                     Product item = new Product
                     {
-                        ID = 1,
                         Name = Name,
                         UnitPrice = Price,
                         Description = Description,
-                        ImageLink = (Image is FileImageSource source) ? source.File : "default_pic"
+                        ImageLink = (Image is FileImageSource source) ? source.File : "default_menu.png"
                     };
                     await ProductDataStore.AddItemAsync(item);
                     await Shell.Current.GoToAsync("..");
                 }
-                else
-                {
-                    await App.Current.MainPage.DisplayAlert("Error", "Field/s are empty", "Okay");
-                }
             }
-            */
+            else
+            {
+                await App.Current.MainPage.DisplayAlert("Error", "Field/s are empty", "Okay");
+            }
+
         }
 
         async void OnImageClicked()

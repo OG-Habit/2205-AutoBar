@@ -27,6 +27,9 @@ namespace AutoBarBar
         public static readonly string PARAM_USER = "user";
         public static readonly string PARAM_NEW_TAB = "newTab";
 
+        public static readonly string FROM_TODAY = "= DATE(TIMESTAMPADD(HOUR, 8, CURRENT_TIMESTAMP()))";
+        public static readonly string FROM_PAST_7_DAYS = "BETWEEN DATE(TIMESTAMPADD(HOUR,-184, CURRENT_TIMESTAMP())) AND DATE(TIMESTAMPADD(HOUR,-16, CURRENT_TIMESTAMP()))";
+
         public static readonly int IMG_QR_LENGTH = 500;
     }
 }

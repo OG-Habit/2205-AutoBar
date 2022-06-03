@@ -14,7 +14,9 @@ namespace AutoBarBar.ViewModels
         private decimal price;
         private string description;
         private ImageSource image;
-        private int frequency;
+        private int orderFrequencyToday;
+        private int orderFrequencyPast7Days;
+        private int orderFrequencyOverall;
 
         public int Id { get; set; }
 
@@ -55,11 +57,6 @@ namespace AutoBarBar.ViewModels
             set => SetProperty(ref image, value);
         }
 
-        public int Frequency
-        {
-            get => frequency;
-            set => SetProperty(ref frequency, value);
-        }
 
         public int ItemId
         {
@@ -74,9 +71,25 @@ namespace AutoBarBar.ViewModels
             }
         }
 
+
+        public int OrderFrequencyToday
+        {
+            get => orderFrequencyToday;
+            set => SetProperty(ref orderFrequencyToday, value);
+        }
+        public int OrderFrequencyPast7Days
+        {
+            get => orderFrequencyPast7Days;
+            set => SetProperty(ref orderFrequencyPast7Days, value);
+        }
+        public int OrderFrequencyOverall
+        {
+            get => orderFrequencyOverall;
+            set => SetProperty(ref orderFrequencyOverall, value);
+        }
+
         public async void LoadItemId(int itemId)
         {
-            /*
             try
             {
                 var item = await ProductDataStore.GetItemAsync(itemId);
@@ -85,12 +98,15 @@ namespace AutoBarBar.ViewModels
                 Price = item.UnitPrice;
                 Description = item.Description;
                 Image = item.ImageLink;
+
+                OrderFrequencyToday = item.OrderFrequencyToday;
+                OrderFrequencyPast7Days = item.OrderFrequencyPast7Days;
+                OrderFrequencyOverall = item.OrderFrequencyOverall;
             }
             catch (Exception)
             {
                 Debug.WriteLine("Failed to Load Item");
             }
-            */
         }
 
         private async void OnCancelClicked()
@@ -103,7 +119,6 @@ namespace AutoBarBar.ViewModels
             bool retryBool = await App.Current.MainPage.DisplayAlert("Save", "Would you like to save changes?", "Yes", "No");
             if (retryBool)
             {
-                /*
                 if (Name != null && Description != null)
                 {
                     Product item = new Product
@@ -112,7 +127,7 @@ namespace AutoBarBar.ViewModels
                         Name = Name,
                         UnitPrice = Price,
                         Description = Description,
-                        ImageLink = (Image is FileImageSource source) ? source.File : "default_pic"
+                        ImageLink = (Image is FileImageSource source) ? source.File : "default_pic.png"
                     };
                     await ProductDataStore.UpdateItemAsync(item);
                     await Shell.Current.GoToAsync("..");
@@ -121,7 +136,6 @@ namespace AutoBarBar.ViewModels
                 {
                     await App.Current.MainPage.DisplayAlert("Error", "Field/s are empty", "Okay");
                 }
-                */
             }
         }
 

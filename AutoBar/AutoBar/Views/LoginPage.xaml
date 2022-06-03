@@ -17,9 +17,9 @@
                 <Image Source="AutobarLogo_White.png" HeightRequest="200"/>
             </Frame>
             <Label Text="Email" TextColor="White"/>
-            <Entry TextColor="White" x:Name="EntryEmail"/>
+            <Entry TextColor="White" x:Name="EntryEmail" Keyboard="Email"/>
             <Label Text="Password" TextColor="White"/>
-            <Entry x:Name="EntryPass" TextColor="White"/>
+            <Entry x:Name="EntryPass" TextColor="White" IsPassword="True"/>
             <Button Text="Login"  WidthRequest="400" CornerRadius="100" Command="{Binding LoginCommand}" BackgroundColor="gray">
                 <Button.CommandParameter>
                     <MultiBinding Converter="{StaticResource loginCredentialsConverter}">

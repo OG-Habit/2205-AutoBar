@@ -9,14 +9,18 @@ namespace AutoBarBar.ViewModels
     [QueryProperty(nameof(ItemId), nameof(ItemId))]
     public class ARewardsDetailViewModel : BaseViewModel
     {
-        private string itemId;
+        private int itemId;
         private string name;
-        private double point;
+        private decimal point;
         private string description;
         private ImageSource image;
         private int frequency;
 
-        public string Id { get; set; }
+        private int claimFrequencyToday;
+        private int claimFrequencyPast7Days;
+        private int claimFrequencyOverall;
+
+        public int Id { get; set; }
 
         public Command CancelCommand { get; }
         public Command SaveCommand { get; }
@@ -37,7 +41,7 @@ namespace AutoBarBar.ViewModels
             set => SetProperty(ref name, value);
         }
 
-        public double Point
+        public decimal Point
         {
             get => point;
             set => SetProperty(ref point, value);
@@ -61,7 +65,7 @@ namespace AutoBarBar.ViewModels
             set => SetProperty(ref frequency, value);
         }
 
-        public string ItemId
+        public int ItemId
         {
             get
             {
@@ -74,17 +78,37 @@ namespace AutoBarBar.ViewModels
             }
         }
 
-        public async void LoadItemId(string itemId)
+        public int ClaimFrequencyToday
+        {
+            get => claimFrequencyToday;
+            set => SetProperty(ref claimFrequencyToday, value);
+        }
+        public int ClaimFrequencyPast7Days
+        {
+            get => claimFrequencyPast7Days;
+            set => SetProperty(ref claimFrequencyPast7Days, value);
+        }
+        public int ClaimFrequencyOverall
+        {
+            get => claimFrequencyOverall;
+            set => SetProperty(ref claimFrequencyOverall, value);
+        }
+
+        public async void LoadItemId(int itemId)
         {
             try
             {
-                //var item = await RewardDataStore.GetItemAsync(itemId);
-                //Id = item.Id;
-                //Name = item.Name;
-                //Point = item.Points;
-                //Description = item.Description;
-                //Image = item.ImageLink;
-            }
+                var item = await RewardDataStore.GetItemAsync(itemId);
+                Id = item.ID;
+                Name = item.Name;
+                Point = item.Points;
+                Description = item.Description;
+                Image = item.ImageLink;
+
+                ClaimFrequencyToday = item.ClaimFrequencyToday;
+                ClaimFrequencyPast7Days = item.ClaimFrequencyPast7Days;
+                ClaimFrequencyOverall = item.ClaimFrequencyOverall;
+    }
             catch (Exception)
             {
                 Debug.WriteLine("Failed to Load Item");
@@ -102,14 +126,14 @@ namespace AutoBarBar.ViewModels
             if (retryBool)
             {
                 if (Name != null && Description != null) 
-                { 
+                {
                     Reward item = new Reward
                     {
-                        ID = 1,
+                        ID = ItemId,
                         Name = Name,
-                        //Points = Point,
+                        Points = Point,
                         Description = Description,
-                        ImageLink = (Image is FileImageSource source) ? source.File : "default_reward"
+                        ImageLink = (Image is FileImageSource source) ? source.File : "default_reward.png"
                     };
                     await RewardDataStore.UpdateItemAsync(item);
                     await Shell.Current.GoToAsync("..");

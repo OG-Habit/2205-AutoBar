@@ -10,7 +10,7 @@ namespace AutoBarBar.ViewModels
     [QueryProperty(nameof(ItemId), nameof(ItemId))]
     public class AOrderDetailViewModel : BaseViewModel
     {
-        private string itemId;
+        private int itemId;
         private string name;
         private DateTime time;
         private double payment;
@@ -21,14 +21,14 @@ namespace AutoBarBar.ViewModels
         private string sex;
         private string contact;
         private string email;
-        private int points;
+        private decimal points;
         private string bartender;
         private string reward;
 
         public ObservableCollection<OrderLine> Items{ get; }
         public Command LoadItemsCommand { get; }
 
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         public AOrderDetailViewModel()
         {
@@ -96,7 +96,7 @@ namespace AutoBarBar.ViewModels
             set => SetProperty(ref email, value);
         }
 
-        public int Points
+        public decimal Points
         {
             get => points;
             set => SetProperty(ref points, value);
@@ -114,7 +114,7 @@ namespace AutoBarBar.ViewModels
             set => SetProperty(ref reward, value);
         }
 
-        public string ItemId
+        public int ItemId
         {
             get
             {
@@ -127,26 +127,26 @@ namespace AutoBarBar.ViewModels
             }
         }
 
-        public async void LoadItemId(string itemId)
+        public async void LoadItemId(int itemId)
         {
             try
             {
-                //var item = await OrderDataStore.GetItemAsync(itemId);
-                //var customer = await CustomerDataStore.GetItemAsync(item.CustomerId);
-                //Id = customer.Id;
-                //Name = customer.Name;
-                //Status = customer.Status;
-                //Image = customer.ImageLink;
-                //Birthday = customer.Birthday;
-                //CardIssued = customer.CardIssued;
-                //Sex = customer.Sex;
-                //Contact = customer.Contact;
-                //Email = customer.Email;
-                //Time = item.ClosedOn;
-                //Price = item.TotalPrice;
-                //Points = item.PointsEarned;
-                //Bartender = item.BartenderName;
-                //Reward = item.Reward;
+                var item = await OrderDataStore.GetItemAsync(itemId);
+                var customer = await CustomerForAdminDataStore.GetItemAsync(item.CustomerID);
+                Id = customer.Id;
+                Name = customer.Name;
+                Status = customer.Status;
+                Image = customer.ImageLink;
+                Birthday = customer.Birthday;
+                CardIssued = customer.CardIssued;
+                Sex = customer.Sex;
+                Contact = customer.Contact;
+                Email = customer.Email;
+                Time = Convert.ToDateTime(item.ClosedOn);
+                Price = item.TotalPrice;
+                Points = item.PointsEarned;
+                Bartender = item.BartenderName;
+                Reward = item.Reward;
             }
             catch (Exception)
             {
@@ -161,7 +161,7 @@ namespace AutoBarBar.ViewModels
             try
             {
                 Items.Clear();
-                var items = await OrderLineDataStore.GetSearchResults(itemId);
+                var items = await OrderLineDataStore.GetSearchResults(itemId.ToString());
                 foreach (var item in items)
                 {
                     Items.Add(item);

@@ -11,12 +11,21 @@
     
     <ContentPage.Content>
         <StackLayout Padding="10,0" HorizontalOptions="Center">
-            <Frame Padding="0,20,0,0" HorizontalOptions="Center" CornerRadius="200" HeightRequest="200" WidthRequest="200" 
+            <Frame Padding="0,20,0,0" HorizontalOptions="Center" CornerRadius="200" HeightRequest="300" WidthRequest="300" 
                    HasShadow="False" IsClippedToBounds="True" BackgroundColor="Transparent">
                 <Image Source="{Binding ImageLink}" Aspect="AspectFit"/>
             </Frame>
-            <Label Text="{Binding Balance, StringFormat='PHP {0:#.00}'}" HorizontalTextAlignment="Center" FontSize="20"/>
-            <Label Text="Available Balance" HorizontalTextAlignment="Center" FontSize="12" Margin="0,0,0,20"/>
+            <Grid ColumnDefinitions="*,*" Margin="0,0,0,50">
+                <StackLayout Grid.Column="0" HorizontalOptions="Center">
+                    <Label Text="{Binding Balance, StringFormat='PHP {0:#.00}'}" HorizontalTextAlignment="Center" FontSize="20"/>
+                    <Label Text="Available Balance" HorizontalTextAlignment="Center" FontSize="12" />
+                </StackLayout>
+                <StackLayout Grid.Column="1" HorizontalOptions="Center">
+                    <Label Text="{Binding Points, StringFormat='{0:#.00}'}" HorizontalTextAlignment="Center" FontSize="20"/>
+                    <Label Text="Available Points" HorizontalTextAlignment="Center" FontSize="12" />
+                </StackLayout>
+            </Grid>
+            
             <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="StartAndExpand" Margin="5,10,5,0">
                 <Label Padding="0,0,0,0" Text="TRANSACTION HISTORY" LineBreakMode="NoWrap" FontSize="18" TextDecorations="Underline"/>
                 <Grid RowDefinitions="Auto" ColumnDefinitions="*,*,*">
@@ -26,7 +35,8 @@
                 </Grid>
             </StackLayout>
             <RefreshView x:DataType="vm:EwalletViewModel" Command="{Binding LoadItemCommand}" 
-                         IsRefreshing="{Binding IsBusy, Mode=TwoWay}" x:Name="TransactionList">
+                         x:Name="TransactionList" IsEnabled="False">
+                <!--IsRefreshing="{Binding IsBusy, Mode=TwoWay}" - App crashes on refresh, so I disabled-->
                 <CollectionView x:Name="ListView1" ItemsSource="{Binding Item1}" SelectionMode="None">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
@@ -36,7 +46,7 @@
                                                VerticalOptions="Center" HorizontalTextAlignment="Center"/>
                                     <Label Text="{Binding Type}" LineBreakMode="NoWrap" FontSize="12" Grid.Column="1"
                                                VerticalOptions="Center" HorizontalTextAlignment="Center"/>
-                                    <Label Text="{Binding Amount, StringFormat='{0:#.00}'}" LineBreakMode="NoWrap" FontSize="12" Grid.Column="2"
+                                    <Label Text="{Binding Amount, StringFormat='P {0:#.00}'}" LineBreakMode="NoWrap" FontSize="12" Grid.Column="2"
                                                VerticalOptions="Center" HorizontalTextAlignment="Center"/>
                                 </Grid>
                             </StackLayout>
@@ -53,13 +63,14 @@
                 </Grid>
             </StackLayout>
             <RefreshView x:DataType="vm:EwalletViewModel" Command="{Binding LoadItemCommand}" 
-                         IsRefreshing="{Binding IsBusy, Mode=TwoWay}"  x:Name="PointsList">
+                         x:Name="PointsList" IsEnabled="False">
+                <!--IsRefreshing="{Binding IsBusy, Mode=TwoWay}" - App crashes on refresh, so I disabled-->
                 <CollectionView x:Name="ListView2" ItemsSource="{Binding Item2}" SelectionMode="None">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <StackLayout Padding="5,5,5,5" x:DataType="model:PointsHistory">
                                 <Grid ColumnDefinitions="*,*,*">
-                                    <Label Text="{Binding TimeStamp, StringFormat='{0:MMM dd, yyyy HH:MM}'}" LineBreakMode="NoWrap" FontSize="12" Grid.Column="0"
+                                    <Label Text="{Binding TimeStamp, StringFormat='{0:MMM dd, yyyy HH:mm}'}" LineBreakMode="NoWrap" FontSize="12" Grid.Column="0"
                                                VerticalOptions="Center" HorizontalTextAlignment="Center"/>
                                     <Label Text="{Binding Type}" LineBreakMode="NoWrap" FontSize="12" Grid.Column="1"
                                                VerticalOptions="Center" HorizontalTextAlignment="Center"/>

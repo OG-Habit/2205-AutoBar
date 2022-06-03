@@ -21,7 +21,7 @@ namespace AutoBarBar.Services
         public async Task<IEnumerable<Product>> GetProducts()
         {
             string cmd = @"
-                SELECT * FROM Products
+                SELECT * FROM Products WHERE IsDeleted = 0;
             ";
 
             // The second argument of the GetItems() is a function. The function is what you want to do with the query result
@@ -43,10 +43,9 @@ namespace AutoBarBar.Services
 
         public async Task<Product> GetProduct(int productID)
         {
-            string cmd = @"
-                SELECT * FROM Products;
-
-                WHERE ID = {productID};
+            string cmd = $@"
+                SELECT * FROM Products
+                WHERE ID = {productID} AND IsDeleted = 0;
             ";
 
             // The second argument of the GetItems() is a function. The function is what you want to do with the query result

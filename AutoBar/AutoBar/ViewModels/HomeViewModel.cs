@@ -1,5 +1,6 @@
 ﻿using AutoBar.Models;
 using AutoBar.Views;
+using AutoBar.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -11,19 +12,34 @@ namespace AutoBar.ViewModels
 {
     public class HomeViewModel : BaseViewModel
     {
+
         private Product _selectedItem;
         public ObservableCollection<Product> Item { get; }
         public Command LoadItemCommand { get; }
         public Command<Product> ItemTapped { get; }
+        public Command ItemSort { get; }
+        public int state { get; set; }
 
-        public double Balance { get; }
+        IToastService toastService;
+
+        public decimal Balance { get; set; }
 
         public HomeViewModel()
         {
-            Balance = 1200.00;
+            SetBalance();
+            state = 1;
             Item = new ObservableCollection<Product>();
             LoadItemCommand = new Command(async () => await ExecuteLoadItemsCommand());
             ItemTapped = new Command<Product>(OnItemSelected);
+            ItemSort = new Command(OnItemSort);
+            toastService = DependencyService.Get<IToastService>();
+
+        }
+
+        async void SetBalance()
+        {
+            decimal bal = Convert.ToDecimal(await Xamarin.Essentials.SecureStorage.GetAsync("balance"));
+            Balance = bal;
         }
 
         async Task ExecuteLoadItemsCommand()
@@ -64,6 +80,41 @@ namespace AutoBar.ViewModels
             }
         }
 
+        private void OnItemSort()
+        {
+            ObservableCollection<Product> Item2 = new ObservableCollection<Product>();
+            IsBusy = true;
+
+            switch (state)
+            {
+                case 1:
+                    state = 2;
+                    Item2 = new ObservableCollection<Product>(Item.OrderByDescending(x => x.Name));
+                    toastService.ShowShortMessage("Sorted by name (Descending)");
+                    break;
+                case 2:
+                    state = 3;
+                    Item2 = new ObservableCollection<Product>(Item.OrderBy(x => x.Price));
+                    toastService.ShowShortMessage("Sorted by price (Ascending)");
+                    break;
+                case 3:
+                    state = 4;
+                    Item2 = new ObservableCollection<Product>(Item.OrderByDescending(x => x.Price));
+                    toastService.ShowShortMessage("Sorted by price (Descending)");
+                    break;
+                case 4:
+                    state = 1;
+                    Item2 = new ObservableCollection<Product>(Item.OrderBy(x => x.Name));
+                    toastService.ShowShortMessage("Sorted by name (Ascending)");
+                    break;
+            }
+            Item.Clear();
+            foreach (var item in Item2)
+            {
+                Item.Add(item);
+            }
+            IsBusy = false;
+        }
         async void OnItemSelected(Product item)
         {
             if (item == null)

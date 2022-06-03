@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Text;
 using static AutoBarBar.Constants;
+using System.Diagnostics;
 
 namespace AutoBarBar.Services
 {
@@ -39,7 +40,7 @@ namespace AutoBarBar.Services
             // Tip: If the app breaks down, place the red dot on the "var a = e.Message" line.
             catch (Exception e)
             {
-                var a = e.Message;
+                var a = e.Message; Debug.Write(a);
             }
         }
 
@@ -69,7 +70,7 @@ namespace AutoBarBar.Services
             // Tip: If the app breaks down, place the red dot on the "var a = e.Message" line.
             catch (Exception e)
             {
-                var a = e.Message;
+                var a = e.Message; Debug.Write(a);
             }
         }
 
@@ -92,7 +93,7 @@ namespace AutoBarBar.Services
             }
             catch (Exception e)
             {
-                var a = e.Message;
+                var a = e.Message; Debug.Write(a);
             }
         }
 
@@ -120,7 +121,7 @@ namespace AutoBarBar.Services
             }
             catch (Exception e)
             {
-                var a = e.Message;
+                var a = e.Message; Debug.Write(a);
             }
         }
     }

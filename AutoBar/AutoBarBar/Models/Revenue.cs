@@ -5,15 +5,15 @@
         public int TotalOrders { get; set; }
         public int TotalWeekOrders { get; set; }
 
-        decimal _totalRevenue;
-        public decimal TotalRevenue
+        double _totalRevenue;
+        public double TotalRevenue
         {
             get => _totalRevenue;
             set => SetProperty(ref _totalRevenue, value);
         }
 
-        decimal _totalWeekRevenue;
-        public decimal TotalWeekRevenue
+        double _totalWeekRevenue;
+        public double TotalWeekRevenue
         {
             get => _totalWeekRevenue;
             set => SetProperty(ref _totalWeekRevenue, value);

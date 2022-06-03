@@ -7,13 +7,13 @@ namespace AutoBar.ViewModels
     [QueryProperty(nameof(ItemId), nameof(ItemId))]
     public class RewardDetailViewModel : BaseViewModel
     {
-        private string itemId;
+        private int itemId;
         private string name;
-        private double points;
+        private int points;
         private string description;
         private string image;
 
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         public string Name
         {
@@ -21,7 +21,7 @@ namespace AutoBar.ViewModels
             set => SetProperty(ref name, value);
         }
 
-        public double Points
+        public int Points
         {
             get => points;
             set => SetProperty(ref points, value);
@@ -39,7 +39,7 @@ namespace AutoBar.ViewModels
             set => SetProperty(ref image, value);
         }
 
-        public string ItemId
+        public int ItemId
         {
             get
             {
@@ -52,7 +52,7 @@ namespace AutoBar.ViewModels
             }
         }
 
-        public async void LoadItemId(string itemId)
+        public async void LoadItemId(int itemId)
         {
             try
             {

@@ -16,7 +16,7 @@ namespace AutoBar.Services
         {
             string cmd = $@"
                 SELECT Users.ID, Users.FirstName, Users.LastName, Users.Email, Users.ImageLink, 
-                Customers.QRKey
+                Customers.QRKey, Customers.Balance, Customers.Points
                 FROM Users
                 INNER JOIN Customers
                 ON Users.ID = Customers.UserID
@@ -35,9 +35,16 @@ namespace AutoBar.Services
                 c.UserDetails.Email = dataRecord.GetString(3);
                 c.UserDetails.ImageLink = dataRecord.GetValue(4).ToString();
                 c.QRKey = dataRecord.GetString(5);
+                c.Balance = dataRecord.GetDecimal(6);
+                c.Points = dataRecord.GetDecimal(7);
             });
 
             return await Task.FromResult(c);
+        }
+
+        public async Task<User> SignUpCustomer(string FirstName, string LastName, string Email, string Password, string Contact, string Birthday, string Sex)
+        {
+            throw new NotImplementedException();
         }
     }
 }

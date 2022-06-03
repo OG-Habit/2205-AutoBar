@@ -17,21 +17,25 @@ namespace AutoBar.ViewModels
         public Command<Order> ItemTapped { get; }
         public Command SwitchTapped { get; }
 
-        public double Balance { get; }
+        public decimal Balance { get; set; }
         public DateTime Today { get; }
-        public string UserID { get; }
+        public int UserID { get; set; }
 
         public PastOrderViewModel()
         {
-            Balance = 1200.00;
+            SetBalanceAndID();
             Today = DateTime.Now;
-            UserID = "1";
             Order = new ObservableCollection<Order>();
             LoadOrderCommand = new Command(async () => await ExecuteLoadItemsCommand());
             ItemTapped = new Command<Order>(OnItemSelected);
             SwitchTapped = new Command(OnSwitchSelected);
         }
-
+        async void SetBalanceAndID()
+        {
+            decimal bal = Convert.ToDecimal(await Xamarin.Essentials.SecureStorage.GetAsync("balance"));
+            Balance = bal;
+            UserID = Convert.ToInt32(await Xamarin.Essentials.SecureStorage.GetAsync("id"));
+        }
         async Task ExecuteLoadItemsCommand()
         {
             IsBusy = true;
@@ -39,7 +43,7 @@ namespace AutoBar.ViewModels
             try
             {
                 Order.Clear();
-                var items = await OrderDataStore.GetSearchResults(UserID);
+                var items = await OrderDataStore.GetSearchResults(UserID.ToString());
                 foreach (var item in items.OrderByDescending(x => x.ClosedOn.Date))
                 {
                     if (item.OpenedOn.Date != Today.Date)
@@ -60,7 +64,7 @@ namespace AutoBar.ViewModels
 
         async void OnSwitchSelected()
         {
-            await Shell.Current.GoToAsync("..");
+            await Shell.Current.GoToAsync($"..");
         }
 
         public Order SelectedItem

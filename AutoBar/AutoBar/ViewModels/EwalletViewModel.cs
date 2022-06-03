@@ -11,19 +11,29 @@ namespace AutoBar.ViewModels
 {
     public class EwalletViewModel : BaseViewModel
     {
-        public double Balance { get; }
+        public decimal Balance { get; set; }
+        public decimal Points { get; set; }
         public string ImageLink { get; }
         public ObservableCollection<TransactionHistory> Item1 { get; }
         public ObservableCollection<PointsHistory> Item2 { get; }
         public Command LoadItemCommand { get; }
 
+
         public EwalletViewModel()
         {
-            Balance = 1200.00;
+            SetBalancePoints();
             ImageLink = "default_pic";
             Item1 = new ObservableCollection<TransactionHistory>();
             Item2 = new ObservableCollection<PointsHistory>();
             LoadItemCommand = new Command(async () => await ExecuteLoadItemsCommand());
+        }
+
+        async void SetBalancePoints()
+        {
+            decimal bal = Convert.ToDecimal(await Xamarin.Essentials.SecureStorage.GetAsync("balance"));
+            decimal points = Convert.ToDecimal(await Xamarin.Essentials.SecureStorage.GetAsync("points"));
+            Balance = bal;
+            Points = points;
         }
 
         async Task ExecuteLoadItemsCommand()

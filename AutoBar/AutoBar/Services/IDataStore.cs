@@ -7,7 +7,7 @@ namespace AutoBar.Services
 {
     public interface IDataStore<T>
     {
-        Task<T> GetItemAsync(string id);
+        Task<T> GetItemAsync(int id);
         Task<T> GetTodayResults(DateTime today);
         Task<IEnumerable<T>> GetItemsAsync(bool forceRefresh = false);
         Task<IEnumerable<T>> GetSearchResults(string query);

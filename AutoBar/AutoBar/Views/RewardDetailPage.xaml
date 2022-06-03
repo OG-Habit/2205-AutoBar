@@ -22,8 +22,8 @@
                     <ColumnDefinition Width="100"/>
                     <ColumnDefinition Width="250"/>
                 </Grid.ColumnDefinitions>
-                <Label Text="Points" FontSize="15" TextColor="White" Grid.Row="0" Grid.Column="1"/>
-                <Label Text="{Binding Points}" FontSize="25" TextColor="White" Grid.Row="1" Grid.Column="1"/>
+                <Label Text="Points" FontSize="15" TextColor="White" Grid.Row="0" Grid.ColumnSpan="2" HorizontalTextAlignment="Center"/>
+                <Label Text="{Binding Points, StringFormat='{0:#.00}'}" FontSize="25" TextColor="White" Grid.Row="1" Grid.ColumnSpan="2" HorizontalTextAlignment="Center"/>
             </Grid>
         </StackLayout>
     </ContentPage.Content>
