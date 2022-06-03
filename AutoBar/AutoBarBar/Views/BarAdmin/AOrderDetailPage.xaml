@@ -13,7 +13,7 @@
     
     <ContentPage.Content>
         <StackLayout>
-            <Grid VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand" Padding="10">
+            <Grid VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand" Padding="10" Margin="10" BackgroundColor="WhiteSmoke">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="10"/>
                     <ColumnDefinition Width="200"/>
@@ -58,7 +58,10 @@
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="20" />
-                                            <RowDefinition Height="25" />
+                                            <RowDefinition Height="20" />
+                                            <RowDefinition Height="20" />
+                                            <RowDefinition Height="20" />
+                                            <RowDefinition Height="20" />
                                         </Grid.RowDefinitions>
                                         <Frame Padding="0" HorizontalOptions="Center" WidthRequest="100" HasShadow="False" 
                                                IsClippedToBounds="True" Grid.Row="0">
@@ -67,6 +70,9 @@
                                         <!--<Label Text="{Binding Price, StringFormat='PHP {0:#.00}'}" LineBreakMode="NoWrap" FontSize="18" Grid.Row="1"
                                                FontAttributes="Bold"/>-->
                                         <Label Text="{Binding ProductName}" LineBreakMode="NoWrap" FontSize="16" Grid.Row="2"/>
+                                        <Label Text="{Binding UnitPrice, StringFormat='P {0:#0.00}'}" LineBreakMode="NoWrap" FontSize="16" Grid.Row="3"/>
+                                        <Label Text="{Binding QuantityString}" LineBreakMode="NoWrap" FontSize="16" Grid.Row="4"/>
+                                        <Label Text="{Binding CreatedOnForUI, StringFormat='{0:h:mm tt}'}" LineBreakMode="NoWrap" FontSize="16" Grid.Row="5"/>
                                     </Grid>
                                 </Frame>
                             </StackLayout>

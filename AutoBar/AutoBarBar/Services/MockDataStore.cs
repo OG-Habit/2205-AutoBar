@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using static AutoBarBar.Constants;
+using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace AutoBarBar.Services
 {
@@ -17,17 +19,24 @@ namespace AutoBarBar.Services
         readonly List<Reward> rewards;
         readonly List<Bartender> bartenders;
 
+        private int StaffID;
+        private int count;
+
         //to fix: cannot update immediately after insert because we didnt obtain last insert id yet from db
+        //  '->  fixed 6/4/22. LAST_INSERT_ID() used to retrieve latest ID
 
         public MockDataStore()
         {
+            GetStaffID();
+
             customers = new List<CustomerForAdmin>();
             string cmd1 = @"
-                SELECT c.ID, CONCAT(u.FirstName,"" "",u.LastName) AS ""Name"", u.Email, u.MobileNumber, u.Birthday, u.Sex, u.ImageLink,
+                SELECT c.ID, CONCAT(u.FirstName,"" "",u.LastName) AS ""Name"", u.Email, u.MobileNumber, u.Birthday, u.Sex, IFNULL(u.ImageLink,""default_pic.png""),
                 c.Balance, c.Points
                 FROM Customers c, Users u
                 WHERE c.UserID = u.ID
             ";
+            count = 0;
             GetItems<CustomerForAdmin>(cmd1, (dataRecord, c) =>
             {
                 c.Id = dataRecord.GetInt32(0);
@@ -41,15 +50,16 @@ namespace AutoBarBar.Services
                 c.TotalPoints = dataRecord.GetDecimal(8);
                 c.Status = "Member"; //temp
                 c.CardIssued = Convert.ToDateTime("May 25, 2022"); //temp
-
                 customers.Add(c);
+                count++;
+                Debug.WriteLine($"Customer {count} retrieved. ID={c.Id}");
             });
 
             products = new List<Product>();
             string cmd2 = @"
                 SELECT * FROM Products WHERE IsDeleted = 0;
             ";
-
+            count = 0;
             GetItems<Product>(cmd2, (dataRecord, product) =>
             {
                 product.ID = dataRecord.GetInt32(0);
@@ -58,16 +68,18 @@ namespace AutoBarBar.Services
                 product.UnitPrice = dataRecord.GetDecimal(3);
                 product.ImageLink = "default_menu.png";
                 products.Add(product);
+                count++;
+                Debug.WriteLine($"Product {count} retrieved. ID={product.ID}");
             });
 
             orderLines = new List<OrderLine>();
             string cmd3 = @"
                 SELECT ol.ID, CONCAT(u.FirstName,"" "",u.LastName) AS ""Name"", p.Name, ol.UnitPrice, ol.Quantity, 
-                ol.CreatedOn, ol.OrderID, p.ImageLink
+                ol.CreatedOn, ol.OrderID, IFNULL(p.ImageLink,""default_menu.png"")
                 FROM OrderLine ol, Orders o, Customers c, Users u, Products p
-                WHERE ol.OrderID = o.ID AND ol.ProductID = p.ID AND o.CustomerID = c.ID AND c.UserID = u.ID
+                WHERE ol.OrderID = o.ID AND o.OrderStatus = 2 AND ol.ProductID = p.ID AND o.CustomerID = c.ID AND c.UserID = u.ID
             ";
-
+            count = 0;
             GetItems<OrderLine>(cmd3, (dataRecord, ol) =>
             {
                 ol.ID = dataRecord.GetInt32(0);
@@ -78,22 +90,25 @@ namespace AutoBarBar.Services
                 ol.CreatedOnForUI = dataRecord.GetDateTime(5).ToString();
                 ol.OrderID = dataRecord.GetInt32(6);
                 ol.ProductImgUrl = dataRecord.GetString(7);
+                ol.QuantityString = $"Quantity: {ol.Quantity}";
                 orderLines.Add(ol);
+                count++;
+                Debug.WriteLine($"Orderline {count} retrieved. ID={ol.ID}");
             });
 
             orders = new List<Order>();
             string cmd4 = $@"
-                SELECT o.ID, o.OpenedOn, o.ClosedOn, CONCAT(u.FirstName,"" "",u.LastName) AS ""Name"", o.TotalPrice, o.PointsEarned,
-                        o.OrderStatus, u.ID, 
+                SELECT o.ID, o.OpenedOn, IFNULL(o.ClosedOn,TIMESTAMPADD(HOUR, 8, CURRENT_TIMESTAMP())), CONCAT(u.FirstName,"" "",u.LastName) AS ""Name"", o.TotalPrice, o.PointsEarned,
+                        o.OrderStatus, c.ID, 
                     CASE o.HasReward
                         WHEN 0 THEN ""No Reward""
                         WHEN 1 THEN r.Name
                     END AS ""Reward""
                 FROM Orders o, Customers c, Users u, UsedRewards ur, Rewards r
-                WHERE o.CustomerID = c.ID AND c.UserID = u.ID OR (ur.OrderID = o.ID AND ur.RewardID = r.ID)
+                WHERE o.OrderStatus = 2 AND o.CustomerID = c.ID AND c.UserID = u.ID OR (ur.OrderID = o.ID AND ur.RewardID = r.ID)
                 GROUP BY o.ID;
             ";
-
+            count = 0;
             GetItems<Order>(cmd4, (dataRecord, order) =>
             {
                 order.ID = dataRecord.GetInt32(0);
@@ -107,6 +122,8 @@ namespace AutoBarBar.Services
                 order.BartenderName = "Ivan Woogue"; //temp
                 order.Reward = dataRecord.GetString(8);
                 orders.Add(order);
+                count++;
+                Debug.WriteLine($"Order {count} retrieved. ID={order.ID}");
             });
 
 
@@ -114,7 +131,7 @@ namespace AutoBarBar.Services
             string cmd5 = @"
                 SELECT * FROM Rewards WHERE IsDeleted = 0;
             ";
-
+            count = 0;
             GetItems<Reward>(cmd5, (dataRecord, reward) =>
             {
                 reward.ID = dataRecord.GetInt32(0);
@@ -123,6 +140,8 @@ namespace AutoBarBar.Services
                 reward.Points = dataRecord.GetDecimal(3);
                 reward.ImageLink = "default_reward.png";
                 rewards.Add(reward);
+                count++;
+                Debug.WriteLine($"Reward {count} retrieved. ID={reward.ID}");
             });
 
             bartenders = new List<Bartender>();
@@ -131,6 +150,7 @@ namespace AutoBarBar.Services
                 FROM Bartenders b, Users u
                 WHERE b.UserID = u.ID AND b.IsRemoved=0;
             ";
+            count = 0;
             GetItems<Bartender>(cmd6, (dataRecord, bartender) =>
             {
                 bartender.Id = dataRecord.GetInt32(0);
@@ -143,8 +163,18 @@ namespace AutoBarBar.Services
                 bartender.Sex = dataRecord.GetString(6);
                 bartender.ImageLink = "default_pic.png";
                 bartenders.Add(bartender);
+                count++;
+                Debug.WriteLine($"Bartender {count} retrieved. ID={bartender.Id}");
             });
 
+        }
+
+        async void GetStaffID()
+        {
+            string UserString = await Xamarin.Essentials.SecureStorage.GetAsync($"{PARAM_USER}");
+            User user = JsonConvert.DeserializeObject<User>(UserString);
+            StaffID = user.StaffID;
+            Debug.WriteLine($"Staff ID obtained is {StaffID}");
         }
 
         #region Customer
@@ -192,21 +222,35 @@ namespace AutoBarBar.Services
         #region Product
         public async Task<bool> AddItemAsync(Product item)
         {
-            
+            //check for duplicates
+            var duplicate = products.Where((Product arg) => String.Equals(arg.Name, item.Name, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+            if (duplicate != null) //duplicated
+                return await Task.FromResult(false);
+
             string cmd = $@"
-                INSERT INTO Products(`Name`,`UnitPrice`, `Description`, `CreatedBy`)
-                VALUES (""{item.Name}"",{item.UnitPrice},""{item.Description}"",1);
+                INSERT INTO Products(`Name`,`UnitPrice`, `Description`, `ImageLink`,`CreatedBy`)
+                VALUES (""{item.Name}"",{item.UnitPrice},""{item.Description}"",""{item.ImageLink}"",{StaffID});
             ";
             AddItem(cmd);
 
-            item.ID = products.Count + 1;
+            string cmd2 = "SELECT LAST_INSERT_ID() FROM Products";
+            GetItem(cmd2, ref item, (dataRecord, result) =>
+            {
+                item.ID = dataRecord.GetInt32(0);
+            });
             products.Add(item);
+            Debug.WriteLine($"Product added. New obtained ID is {item.ID}");
 
             return await Task.FromResult(true);
         }
 
         public async Task<bool> UpdateItemAsync(Product item)
         {
+            //check for duplicates
+            var duplicate = products.Where((Product arg) => (String.Equals(arg.Name,item.Name,StringComparison.OrdinalIgnoreCase) && arg.ID != item.ID)).FirstOrDefault();
+            if (duplicate != null) //duplicated
+                return await Task.FromResult(false);
+
             string cmd = $@"
                 UPDATE Products 
                 SET `Name`=""{item.Name}"",`UnitPrice`={item.UnitPrice}, `Description`=""{item.Description}""
@@ -217,12 +261,13 @@ namespace AutoBarBar.Services
             var oldItem = products.Where((Product arg) => arg.ID == item.ID).FirstOrDefault();
             products.Remove(oldItem);
             products.Add(item);
+            Debug.WriteLine($"Product with ID {item.ID} updated");
 
             return await Task.FromResult(true);
         }
 
         async Task<bool> IDataStore<Product>.DeleteItemAsync(int id)
-        {
+        {   
             string cmd = $@"
                 UPDATE Products 
                 SET IsDeleted = 1
@@ -231,6 +276,7 @@ namespace AutoBarBar.Services
             AddItem(cmd);
             var oldItem = products.Where((Product arg) => arg.ID == id).FirstOrDefault();
             products.Remove(oldItem);
+            Debug.WriteLine($"Product with ID {id} deleted");
 
             return await Task.FromResult(true);
         }
@@ -244,8 +290,10 @@ namespace AutoBarBar.Services
              ";
             GetItem(cmd2, ref p, (dataRecord, user) =>
             {
-                p.OrderFrequencyToday = dataRecord.GetInt32(0);
+                p.OrderFrequencyToday = Convert.ToInt32(dataRecord.GetValue(0));
+                Debug.WriteLine($"Loaded product {p.ID} order frequency today");
             });
+            
 
             string cmd3 = $@"
                     SELECT SUM(Quantity) FROM OrderLine  
@@ -253,8 +301,10 @@ namespace AutoBarBar.Services
              ";
             GetItem(cmd3, ref p, (dataRecord, user) =>
             {
-                p.OrderFrequencyPast7Days = dataRecord.GetInt32(0);
+                p.OrderFrequencyPast7Days = Convert.ToInt32(dataRecord.GetValue(0));
+                Debug.WriteLine($"Loaded product {p.ID} order frequency past 7 days");
             });
+            
 
             string cmd4 = $@"
                     SELECT SUM(Quantity) FROM OrderLine  
@@ -262,8 +312,10 @@ namespace AutoBarBar.Services
              ";
             GetItem(cmd4, ref p, (dataRecord, user) =>
             {
-                p.OrderFrequencyOverall = dataRecord.GetInt32(0);
+                p.OrderFrequencyOverall = Convert.ToInt32(dataRecord.GetValue(0));
+                Debug.WriteLine($"Loaded product {p.ID} order frequency overall");
             });
+            
 
             return await Task.FromResult(p);
         }
@@ -332,27 +384,43 @@ namespace AutoBarBar.Services
         async Task<IEnumerable<Order>> IDataStore<Order>.GetSearchResults(string query)
         {
             query = query.ToLowerInvariant();
-            return await Task.FromResult(orders.Where(c => c.CustomerName.ToLowerInvariant().Contains(query)));
+            //updated to include bartender name
+            return await Task.FromResult(orders.Where(c => (c.CustomerName.ToLowerInvariant().Contains(query) || c.BartenderName.ToLowerInvariant().Contains(query))));
         }
         #endregion
 
         #region Reward
         public async Task<bool> AddItemAsync(Reward item)
         {
+            //check for duplicates
+            var duplicate = rewards.Where((Reward arg) => String.Equals(arg.Name, item.Name, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+            if (duplicate != null) //duplicated
+                return await Task.FromResult(false); 
+            
             string cmd = $@"
-                INSERT INTO Rewards(`Name`,`Points`, `Description`, `CreatedBy`)
-                VALUES (""{item.Name}"",{item.Points},""{item.Description}"",1);
+                INSERT INTO Rewards(`Name`,`Points`, `Description`, `ImageLink`,`CreatedBy`)
+                VALUES (""{item.Name}"",{item.Points},""{item.Description}"",""{item.ImageLink}"",{StaffID});
             ";
             AddItem(cmd);
 
-            item.ID = rewards.Count + 1;
+            string cmd2 = "SELECT LAST_INSERT_ID() FROM Rewards";
+            GetItem(cmd2, ref item, (dataRecord, result) =>
+            {
+               item.ID = dataRecord.GetInt32(0);
+            });
             rewards.Add(item);
+            Debug.WriteLine($"Reward added. Newe obtained ID is {item.ID}.");
 
             return await Task.FromResult(true);
         }
 
         public async Task<bool> UpdateItemAsync(Reward item)
         {
+            //check for duplicates
+            var duplicate = rewards.Where((Reward arg) => (String.Equals(arg.Name, item.Name, StringComparison.OrdinalIgnoreCase) && arg.ID != item.ID)).FirstOrDefault();
+            if (duplicate != null) //duplicated
+                return await Task.FromResult(false);
+
             string cmd = $@"
                 UPDATE Rewards 
                 SET `Name`=""{item.Name}"",`Points`={item.Points}, `Description`=""{item.Description}""
@@ -362,6 +430,7 @@ namespace AutoBarBar.Services
             var oldItem = rewards.Where((Reward arg) => arg.ID == item.ID).FirstOrDefault();
             rewards.Remove(oldItem);
             rewards.Add(item);
+            Debug.WriteLine($"Reward with ID {item.ID} updated");
 
             return await Task.FromResult(true);
         }
@@ -375,6 +444,7 @@ namespace AutoBarBar.Services
             ";
             var oldItem = rewards.Where((Reward arg) => arg.ID == id).FirstOrDefault();
             rewards.Remove(oldItem);
+            Debug.WriteLine($"Reward item {id} deleted");
 
             return await Task.FromResult(true);
         }
@@ -388,25 +458,29 @@ namespace AutoBarBar.Services
              ";
             GetItem(cmd2, ref p, (dataRecord, user) =>
             {
-                p.ClaimFrequencyToday = dataRecord.GetInt32(0);
+                p.ClaimFrequencyToday = Convert.ToInt32(dataRecord.GetValue(0));
+                Debug.WriteLine($"Loaded reward {p.ID} claim frequency today");
             });
+            
 
             string cmd3 = $@"
                     SELECT COUNT(ID) FROM UsedRewards   
-                    WHERE ProductID = {id} AND DATE(CreatedOn) {FROM_PAST_7_DAYS}
+                    WHERE RewardID = {id} AND DATE(CreatedOn) {FROM_PAST_7_DAYS}
              ";
             GetItem(cmd3, ref p, (dataRecord, user) =>
             {
-                p.ClaimFrequencyPast7Days = dataRecord.GetInt32(0);
+                p.ClaimFrequencyPast7Days = Convert.ToInt32(dataRecord.GetValue(0));
+                Debug.WriteLine($"Loaded rewrd {p.ID} claim frequency past 7 days");
             });
 
             string cmd4 = $@"
                     SELECT COUNT(ID) FROM UsedRewards   
-                    WHERE ProductID = {id}
+                    WHERE RewardID = {id}
              ";
             GetItem(cmd4, ref p, (dataRecord, user) =>
             {
-                p.ClaimFrequencyOverall = dataRecord.GetInt32(0);
+                p.ClaimFrequencyOverall = Convert.ToInt32(dataRecord.GetValue(0));
+                Debug.WriteLine($"Loaded rewrd {p.ID} claim frequency overall");
             });
 
             return await Task.FromResult(p);
@@ -427,6 +501,11 @@ namespace AutoBarBar.Services
         #region Bartender
         public async Task<bool> AddItemAsync(Bartender item)
         {
+            //check for duplicates
+            var duplicate = bartenders.Where((Bartender arg) => String.Equals(arg.Email, item.Email, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+            if (duplicate != null) //duplicated
+                return await Task.FromResult(false);
+
             //temporary code: to be fix with propper encryption
             string temp = item.FirstName.ToLowerInvariant();
             string password = temp + temp; //fnamefname
@@ -439,14 +518,24 @@ namespace AutoBarBar.Services
             ";
             AddItem(cmd0);
 
-            item.Id = bartenders.Count + 1;
+            string cmd2 = "SELECT LAST_INSERT_ID() FROM Bartenders";
+            GetItem(cmd2, ref item, (dataRecord, result) =>
+            {
+                item.Id = dataRecord.GetInt32(0);
+            });
             bartenders.Add(item);
+            Debug.WriteLine($"Bartender added. New obtained ID is {item.Id}");
 
             return await Task.FromResult(true);
         }
 
         public async Task<bool> UpdateItemAsync(Bartender item)
         {
+            //check for duplicates
+            var duplicate = bartenders.Where((Bartender arg) => (String.Equals(arg.Email, item.Email, StringComparison.OrdinalIgnoreCase) && arg.Id != item.Id)).FirstOrDefault();
+            if (duplicate != null) //duplicated
+                return await Task.FromResult(false); 
+            
             string temp = item.FirstName.ToLowerInvariant();
             string password = temp + temp; //fnamefname
             string cmd0 = $@"
@@ -459,7 +548,7 @@ namespace AutoBarBar.Services
             var oldItem = bartenders.Where((Bartender arg) => arg.Id == item.Id).FirstOrDefault();
             bartenders.Remove(oldItem);
             bartenders.Add(item);
-
+            Debug.WriteLine($"Bartender ID {item.Id} updated");
             return await Task.FromResult(true);
         }
 
@@ -472,6 +561,7 @@ namespace AutoBarBar.Services
             ";
             var oldItem = bartenders.Where((Bartender arg) => arg.Id == id).FirstOrDefault();
             bartenders.Remove(oldItem);
+            Debug.WriteLine($"Bartender ID {id} removed");
 
             return await Task.FromResult(true);
         }
@@ -485,7 +575,8 @@ namespace AutoBarBar.Services
              ";
             GetItem(cmd2, ref p, (dataRecord, user) =>
             {
-                p.RevenueGeneratedToday = dataRecord.GetDecimal(0);
+                p.RevenueGeneratedToday = Convert.ToDecimal(dataRecord.GetValue(0));
+                Debug.WriteLine($"Loaded bartender {p.Id} revenue today");
             });
 
             string cmd3 = $@"
@@ -494,7 +585,8 @@ namespace AutoBarBar.Services
              ";
             GetItem(cmd3, ref p, (dataRecord, user) =>
             {
-                p.RevenueGeneratedPast7Days = dataRecord.GetDecimal(0);
+                p.RevenueGeneratedPast7Days = Convert.ToDecimal(dataRecord.GetValue(0));
+                Debug.WriteLine($"Loaded bartender {p.Id} revenue past 7 days");
             });
 
             string cmd4 = $@"
@@ -503,7 +595,8 @@ namespace AutoBarBar.Services
              ";
             GetItem(cmd4, ref p, (dataRecord, user) =>
             {
-                p.RevenueGeneratedOverall = dataRecord.GetDecimal(0);
+                p.RevenueGeneratedOverall = Convert.ToDecimal(dataRecord.GetValue(0));
+                Debug.WriteLine($"Loaded bartender {p.Id} revenue total");
             });
 
             return await Task.FromResult(p);

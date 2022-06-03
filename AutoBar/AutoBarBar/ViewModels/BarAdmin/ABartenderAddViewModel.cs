@@ -84,37 +84,41 @@ namespace AutoBarBar.ViewModels
         private async void OnAddClicked()
         {
 
-            if (FirstName != null && LastName != null && Email != null && Contact != null && Sex != null && Birthday != null)
+            if (FirstName == null || LastName == null || Email == null || Contact == null || Sex == null || Birthday == null)
             {
-                bool retryBool = await App.Current.MainPage.DisplayAlert("Add", "Would you like to add as bartender?", "Yes", "No");
-                if (retryBool)
-                {
-                    Bartender item = new Bartender
-                    {
-                        FirstName = FirstName,
-                        LastName = LastName,
-                        Email = Email,
-                        Contact = Contact,
-                        Birthday = Birthday,
-                        Sex = Sex,
-                        ImageLink = (Image is FileImageSource source) ? source.File : "default_pic.png"
-                    };
-                    bool success = await BartenderDataStore.AddItemAsync(item);
-                    if (success == true)
-                    {
-                        await App.Current.MainPage.DisplayAlert("Success", "Bartender added!", "OK");
-                        await Shell.Current.GoToAsync("..");
-                    }
-                    else
-                    {
-                        await App.Current.MainPage.DisplayAlert("Failed", "This email has been used by another user.", "Retry");
-                    }
-                    
-                }
+                await App.Current.MainPage.DisplayAlert("Error", "Field/s are empty", "Okay");
+                return;
             }
-            else
+            if (Birthday > DateTime.UtcNow)
             {
-                await App.Current.MainPage.DisplayAlert("Error", "Field/s are empty", "Okay");                
+                await App.Current.MainPage.DisplayAlert("Error", "You cannot enter a birthday later than today's date", "Okay");
+                return;
+            }
+
+            bool retryBool = await App.Current.MainPage.DisplayAlert("Add", "Would you like to add as bartender?", "Yes", "No");
+            if (retryBool)
+            {
+                Bartender item = new Bartender
+                {
+                    FirstName = FirstName,
+                    LastName = LastName,
+                    Email = Email,
+                    Contact = Contact,
+                    Birthday = Birthday,
+                    Sex = Sex,
+                    ImageLink = "default_pic.png" //(Image is FileImageSource source) ? source.File : 
+                };
+                bool success = await BartenderDataStore.AddItemAsync(item);
+                if (success == true)
+                {
+                    await App.Current.MainPage.DisplayAlert("Success", "Bartender added!", "OK");
+                    await Shell.Current.GoToAsync("..");
+                }
+                else
+                {
+                    await App.Current.MainPage.DisplayAlert("Failed", "This email has been used by another user.", "Retry");
+                }
+
             }
         }
 

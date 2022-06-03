@@ -30,5 +30,6 @@ namespace AutoBarBar.Models
             set => SetProperty(ref subTotal, value);
         }
         public string ProductImgUrl { get; set; }
+        public string QuantityString { get; set; }
     }
 }

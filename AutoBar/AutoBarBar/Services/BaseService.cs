@@ -40,7 +40,7 @@ namespace AutoBarBar.Services
             // Tip: If the app breaks down, place the red dot on the "var a = e.Message" line.
             catch (Exception e)
             {
-                var a = e.Message; Debug.Write(a);
+                var a = e.Message; Debug.WriteLine(a);
             }
         }
 
@@ -70,7 +70,7 @@ namespace AutoBarBar.Services
             // Tip: If the app breaks down, place the red dot on the "var a = e.Message" line.
             catch (Exception e)
             {
-                var a = e.Message; Debug.Write(a);
+                var a = e.Message; Debug.WriteLine(a);
             }
         }
 
@@ -93,7 +93,7 @@ namespace AutoBarBar.Services
             }
             catch (Exception e)
             {
-                var a = e.Message; Debug.Write(a);
+                var a = e.Message; Debug.WriteLine(a);
             }
         }
 
@@ -121,7 +121,7 @@ namespace AutoBarBar.Services
             }
             catch (Exception e)
             {
-                var a = e.Message; Debug.Write(a);
+                var a = e.Message; Debug.WriteLine(a);
             }
         }
     }

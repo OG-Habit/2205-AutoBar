@@ -21,7 +21,7 @@
                     </StackLayout>
                 </Frame>
                 <SearchBar Placeholder="Search" Grid.Column="2"
-                           TextChanged="SearchBarChange"/>
+                           TextChanged="SearchBarChange" BackgroundColor="WhiteSmoke"/>
             </Grid>
             <Grid ColumnDefinitions="2" Padding="30,5">
                 <Grid.RowDefinitions>

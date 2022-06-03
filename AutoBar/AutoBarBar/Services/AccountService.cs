@@ -23,9 +23,9 @@ namespace AutoBarBar.Services
                 FROM Users, Bartenders, Admins
                 WHERE
                 (Users.Email = ""{email}"" AND Users.Password = ""{password}"") AND
-                (Users.ID = Bartenders.UserID OR Users.ID = Admins.UserID)
+                ((Users.ID = Bartenders.UserID AND Bartenders.IsRemoved=0) OR Users.ID = Admins.UserID)
                 LIMIT 1
-            ";
+            "; //modified code to not access deleted bartender
 
             GetItem<User>(cmd, ref u, (dataRecord, user) =>
             {

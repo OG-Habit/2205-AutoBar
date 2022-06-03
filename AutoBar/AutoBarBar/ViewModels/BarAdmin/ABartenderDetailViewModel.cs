@@ -134,7 +134,7 @@ namespace AutoBarBar.ViewModels
                 RevenueGeneratedPast7Days = item.RevenueGeneratedPast7Days;
                 RevenueGeneratedOverall = item.RevenueGeneratedOverall;
 
-    }
+            }
             catch (Exception)
             {
                 Debug.WriteLine("Failed to Load Item");
@@ -148,37 +148,42 @@ namespace AutoBarBar.ViewModels
 
         private async void OnSaveClicked()
         {
+            if (FirstName == null || LastName == null || Email == null || Contact == null || Sex == null || Birthday == null)
+            {
+                await App.Current.MainPage.DisplayAlert("Error", "Field/s are empty", "Okay");
+                return;
+            }
+            if (Birthday > DateTime.UtcNow)
+            {
+                await App.Current.MainPage.DisplayAlert("Error", "You cannot enter a birthday later than today's date", "Okay");
+                return;
+            }
+
             bool retryBool = await App.Current.MainPage.DisplayAlert("Save", "Would you like to save changes?", "Yes", "No");
             if (retryBool)
             {
-                if (FirstName != null && LastName != null && Email != null && Contact != null && Sex != null && Birthday != null)
+                Bartender item = new Bartender
                 {
-                    Bartender item = new Bartender
-                    {
-                        Id = ItemId,
-                        FirstName = FirstName,
-                        LastName = LastName,
-                        Email = Email,
-                        Contact = Contact,
-                        Birthday = Birthday,
-                        Sex = Sex,
-                        ImageLink = (Image is FileImageSource source) ? source.File : "default_menu.png"
-                    };
-                    bool success = await BartenderDataStore.UpdateItemAsync(item);
-                    if (success == true)
-                    {
-                        await App.Current.MainPage.DisplayAlert("Success", "Bartender updated!", "OK");
-                        await Shell.Current.GoToAsync("..");
-                    }
-                    else
-                    {
-                        await App.Current.MainPage.DisplayAlert("Failed", "This email has been used by another user.", "Retry");
-                    }
+                    Id = ItemId,
+                    FirstName = FirstName,
+                    LastName = LastName,
+                    Email = Email,
+                    Contact = Contact,
+                    Birthday = Birthday,
+                    Sex = Sex,
+                    ImageLink = "default_pic.png" //(Image is FileImageSource source) ? source.File : 
+                };
+                bool success = await BartenderDataStore.UpdateItemAsync(item);
+                if (success == true)
+                {
+                    await App.Current.MainPage.DisplayAlert("Success", "Bartender updated!", "OK");
+                    await Shell.Current.GoToAsync("..");
                 }
                 else
                 {
-                    await App.Current.MainPage.DisplayAlert("Error", "Field/s are empty", "Okay");
+                    await App.Current.MainPage.DisplayAlert("Failed", "This email has been used by another user.", "Retry");
                 }
+
             }
         }
 

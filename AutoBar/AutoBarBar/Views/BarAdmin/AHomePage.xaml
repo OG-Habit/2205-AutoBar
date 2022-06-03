@@ -21,41 +21,43 @@
                     </StackLayout>
                 </Frame>
                 <SearchBar Placeholder="Search" Grid.Column="2"
-                           TextChanged="SearchBarChange"/>
+                           TextChanged="SearchBarChange" BackgroundColor="WhiteSmoke"/>
             </Grid>
-            <Grid ColumnDefinitions="4">
+            <Label Padding="30,12,0,5" Text="ORDER REPORT" LineBreakMode="NoWrap" FontSize="25" TextDecorations="Underline"/>
+            <Grid ColumnDefinitions="4" BackgroundColor="WhiteSmoke" Margin="30,0" Padding="8,8,8,8">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <Label Text="Total orders today" FontSize="20" HorizontalTextAlignment="Center" Grid.Column="1" Grid.Row="0"/>
-                <Label Text="{Binding OrderToday, StringFormat='{0}'}" FontSize="24" FontAttributes="Bold" HorizontalTextAlignment="Center"
+                <Label Text="Orders today" FontSize="20" HorizontalTextAlignment="Center" Grid.Column="1" Grid.Row="0"/>
+                <Label Text="{Binding OrderToday, StringFormat='{0}'}" TextColor="DarkGreen" FontSize="24" FontAttributes="Bold" HorizontalTextAlignment="Center"
                        Grid.Column="1" Grid.Row="1"/>
-                <Label Text="Total revenue today" FontSize="20" HorizontalTextAlignment="Center" Grid.Column="2" Grid.Row="0"/>
-                <Label Text="{Binding RevenueToday, StringFormat='P {0:#.00}'}" FontAttributes="Bold" FontSize="24" HorizontalTextAlignment="Center"
+                <Label Text="Revenue today" FontSize="20" HorizontalTextAlignment="Center" Grid.Column="2" Grid.Row="0"/>
+                <Label Text="{Binding RevenueToday, StringFormat='P {0:#0.00}'}" TextColor="DarkGreen" FontAttributes="Bold" FontSize="24" HorizontalTextAlignment="Center"
                        Grid.Column="2" Grid.Row="1"/>
-                <Label Text="Total orders (past 7 days)" FontSize="20" HorizontalTextAlignment="Center" Grid.Column="3" Grid.Row="0"/>
-                <Label Text="{Binding OrderWeek, StringFormat='{0}'}" FontAttributes="Bold" FontSize="24" HorizontalTextAlignment="Center"
+                <Label Text="Orders past 7 days" FontSize="20" HorizontalTextAlignment="Center" Grid.Column="3" Grid.Row="0"/>
+                <Label Text="{Binding OrderWeek, StringFormat='{0}'}" TextColor="DarkBlue" FontAttributes="Bold" FontSize="24" HorizontalTextAlignment="Center"
                        Grid.Column="3" Grid.Row="1"/>
-                <Label Text="Total revenue (past 7 days)" FontSize="20" HorizontalTextAlignment="Center" Grid.Column="4" Grid.Row="0"/>
-                <Label Text="{Binding RevenueWeek, StringFormat='P {0:#.00}'}" FontAttributes="Bold" FontSize="24" HorizontalTextAlignment="Center"
+                <Label Text="Revenue past 7 days" FontSize="20" HorizontalTextAlignment="Center" Grid.Column="4" Grid.Row="0"/>
+                <Label Text="{Binding RevenueWeek, StringFormat='P {0:#0.00}'}" TextColor="DarkBlue" FontAttributes="Bold" FontSize="24" HorizontalTextAlignment="Center"
                        Grid.Column="4" Grid.Row="1"/>
             </Grid>
             <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="StartAndExpand" Padding="30,0">
-                <Label Padding="8,12,0,5" Text="ORDER REPORT" LineBreakMode="NoWrap" FontSize="25" TextDecorations="Underline"/>
+                <Label Padding="8,12,0,5" Text="RECENT ORDERS" LineBreakMode="NoWrap" FontSize="25" TextDecorations="Underline"/>
                 <Grid RowDefinitions="Auto">
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="10"/>
                         <ColumnDefinition Width="150"/>
                         <ColumnDefinition Width="225"/>
                         <ColumnDefinition Width="220"/>
                         <ColumnDefinition Width="150"/>
                         <ColumnDefinition Width="125"/>
                     </Grid.ColumnDefinitions>
-                    <Label Text="Customer" LineBreakMode="NoWrap" FontSize="20" Grid.Column="0"/>
-                    <Label Text="Bartender" LineBreakMode="NoWrap" FontSize="20" Grid.Column="1"/>
-                    <Label Text="Date" LineBreakMode="NoWrap" FontSize="20" Grid.Column="2" HorizontalTextAlignment="Center"/>
-                    <Label Text="Points" LineBreakMode="NoWrap" FontSize="20" Grid.Column="3" HorizontalTextAlignment="Center" />
-                    <Label Text="Total Payment" LineBreakMode="NoWrap" FontSize="20" Grid.Column="4" HorizontalTextAlignment="Center"/>
+                    <Label Text="Customer" LineBreakMode="NoWrap" FontSize="20" Grid.Column="1"/>
+                    <Label Text="Bartender" LineBreakMode="NoWrap" FontSize="20" Grid.Column="2"/>
+                    <Label Text="Date" LineBreakMode="NoWrap" FontSize="20" Grid.Column="3" HorizontalTextAlignment="Center"/>
+                    <Label Text="Points" LineBreakMode="NoWrap" FontSize="20" Grid.Column="4" HorizontalTextAlignment="Center" />
+                    <Label Text="Total Payment" LineBreakMode="NoWrap" FontSize="20" Grid.Column="5" HorizontalTextAlignment="Center"/>
                 </Grid>
             </StackLayout>
             <RefreshView x:DataType="vm:AHomeViewModel" Command="{Binding LoadCustomerCommand}" 
@@ -67,25 +69,26 @@
                                 <Frame HasShadow="True" CornerRadius="20" Padding="7">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="10"/>
                                             <ColumnDefinition Width="150"/>
                                             <ColumnDefinition Width="220"/>
                                             <ColumnDefinition Width="220"/>
                                             <ColumnDefinition Width="150"/>
                                             <ColumnDefinition Width="125"/>
                                         </Grid.ColumnDefinitions>
-                                        <Label Text="{Binding CustomerName}" LineBreakMode="NoWrap" FontSize="16" Grid.Column="0"
+                                        <Label Text="{Binding CustomerName}" LineBreakMode="NoWrap" FontSize="16" Grid.Column="1"
                                                VerticalOptions="Center"/>
-                                        <Label Text="{Binding BartenderName}" LineBreakMode="NoWrap" FontSize="16" Grid.Column="1"
+                                        <Label Text="{Binding BartenderName}" LineBreakMode="NoWrap" FontSize="16" Grid.Column="2"
                                                VerticalOptions="Center"/>
-                                        <Grid Grid.Column="2" RowDefinitions="2" VerticalOptions="Center">
+                                        <Grid Grid.Column="3" RowDefinitions="2" VerticalOptions="Center">
                                             <Label Text="{Binding ClosedOn, StringFormat='{0:MMM dd, yyyy}'}" LineBreakMode="NoWrap" 
                                                FontSize="16" Grid.Row="0" HorizontalTextAlignment="Center"/>
                                             <Label Text="{Binding ClosedOn, StringFormat='{0:h:mm tt}'}" LineBreakMode="NoWrap" 
                                                FontSize="12" Grid.Row="1" HorizontalTextAlignment="Center"/>
                                         </Grid>
-                                        <Label Text="{Binding PointsEarned}" LineBreakMode="NoWrap" FontSize="16" Grid.Column="3"
+                                        <Label Text="{Binding PointsEarned}" LineBreakMode="NoWrap" FontSize="16" Grid.Column="4"
                                                VerticalOptions="Center" HorizontalTextAlignment="Center"/>
-                                        <Label Text="{Binding TotalPrice, StringFormat='PHP {0:#.00}'}" LineBreakMode="NoWrap" FontSize="16" Grid.Column="4"
+                                        <Label Text="{Binding TotalPrice, StringFormat='PHP {0:#0.00}'}" LineBreakMode="NoWrap" FontSize="16" Grid.Column="5"
                                                VerticalOptions="Center" HorizontalTextAlignment="Center"/>
                                     </Grid>
                                 </Frame>

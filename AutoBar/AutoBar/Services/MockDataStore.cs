@@ -18,6 +18,7 @@ namespace AutoBar.Services
         readonly List<PointsHistory> pHistory;
 
         private int UserID;
+        private int count; //for debug
 
         public MockDataStore()
         {
@@ -27,7 +28,7 @@ namespace AutoBar.Services
             string cmd = $@"
                 SELECT * FROM Products WHERE IsDeleted = 0
             ";
-
+            count = 0;
             GetItems<Product>(cmd, (dataRecord, product) =>
             {
                 product.Id = dataRecord.GetInt32(0);
@@ -36,6 +37,8 @@ namespace AutoBar.Services
                 product.Price = dataRecord.GetDecimal(3);
                 product.ImageLink = dataRecord.GetString(4);
                 products.Add(product);
+                count++;
+                Debug.WriteLine($@"Product {count} retrieved. ID={product.Id}");
             });
 
             orderLines = new List<OrderLine>();
@@ -45,7 +48,7 @@ namespace AutoBar.Services
                 FROM OrderLine ol, Orders o, Customers c, Users u, Products p
                 WHERE ol.OrderID = o.ID AND ol.ProductID = p.ID AND o.CustomerID = c.ID AND c.UserID = u.ID AND u.ID = {UserID}
             ";
-
+            count = 0;
             GetItems<OrderLine>(cmd2, (dataRecord, orderLine) =>
             {
                 orderLine.Id = dataRecord.GetInt32(0);
@@ -59,21 +62,25 @@ namespace AutoBar.Services
                 orderLine.ProductId = dataRecord.GetInt32(8);
                 orderLine.SubTotal = orderLine.Price * orderLine.Quantity;
                 orderLines.Add(orderLine);
+                count++;
+                Debug.WriteLine($@"Orderline {count} retrieved. ID={orderLine.Id}");
             });
 
             orders = new List<Order>();
             string cmd3 = $@"
-                SELECT o.ID, o.OpenedOn, o.ClosedOn, CONCAT(u.FirstName,"" "",u.LastName) AS ""Name"", o.TotalPrice, o.PointsEarned,
+                SELECT o.ID, o.OpenedOn, IFNULL(o.ClosedOn,TIMESTAMPADD(HOUR, 8, CURRENT_TIMESTAMP())),
+                        CONCAT(u.FirstName,"" "",u.LastName) AS ""Name"", o.TotalPrice, o.PointsEarned,
                         o.OrderStatus, u.ID, 
                     CASE o.HasReward
                         WHEN 0 THEN ""No Reward""
                         WHEN 1 THEN r.Name
                     END AS ""Reward""
                 FROM Orders o, Customers c, Users u, UsedRewards ur, Rewards r
-                WHERE o.CustomerID = c.ID AND c.UserID = u.ID AND u.ID = {UserID} OR (ur.OrderID = o.ID AND ur.RewardID = r.ID)
+                WHERE o.CustomerID = c.ID AND c.UserID = u.ID AND u.ID = {UserID} OR 
+                    (ur.OrderID = o.ID AND ur.RewardID = r.ID AND u.ID = {UserID})
                 GROUP BY o.ID;
             ";
-
+            count = 0;
             GetItems<Order>(cmd3, (dataRecord, order) =>
             {
                 order.Id = dataRecord.GetInt32(0);
@@ -82,18 +89,20 @@ namespace AutoBar.Services
                 order.CustomerName = dataRecord.GetString(3);
                 order.TotalPrice = dataRecord.GetDouble(4);
                 order.PointsEarned = dataRecord.GetDecimal(5);
-                order.OrderStatus = dataRecord.GetInt32(6) == 1 ? true : false;
+                order.OrderStatus = dataRecord.GetInt32(6) == 1;
                 order.CustomerId = dataRecord.GetInt32(7);
                 order.BartenderName = "Ivan Woogue"; //temp
                 order.Reward = dataRecord.GetString(8);
                 orders.Add(order);
+                count++;
+                Debug.WriteLine($@"Order {count} retrieved. ID={order.Id}");
             });
 
             rewards = new List<Reward>();
             string cmd4 = $@"
                 SELECT * FROM Rewards WHERE IsDeleted = 0
             ";
-
+            count = 0;
             GetItems<Reward>(cmd4, (dataRecord, reward) =>
             {
                 reward.Id = dataRecord.GetInt32(0);
@@ -102,6 +111,9 @@ namespace AutoBar.Services
                 reward.Points = Convert.ToInt32(dataRecord.GetDecimal(3));
                 reward.ImageLink = dataRecord.GetString(4);
                 rewards.Add(reward);
+
+                count++;
+                Debug.WriteLine($@"Reward item {count} retrieved. ID={reward.Id}");
             });
 
             tHistory = new List<TransactionHistory>();
@@ -115,13 +127,15 @@ namespace AutoBar.Services
                 AS Results 
                 ORDER BY x DESC LIMIT 0,20
             ";
-
+            count = 0;
             GetItems<TransactionHistory>(cmd5, (dataRecord, th) =>
             {
                 th.TimeStamp = dataRecord.GetDateTime(0);
                 th.Type = dataRecord.GetString(1);
                 th.Amount = String.Equals(th.Type,"Order") ? Convert.ToDecimal((dataRecord.GetDouble(2))*(-1)) : Convert.ToDecimal(dataRecord.GetDouble(2));
                 tHistory.Add(th);
+                count++;
+                Debug.WriteLine($@"Transaction entry {count} retrieved - {th.TimeStamp}");
             });
 
             pHistory = new List<PointsHistory>();
@@ -137,19 +151,22 @@ namespace AutoBar.Services
                 AS Results 
                 ORDER BY x DESC LIMIT 0,20
             ";
-
+            count = 0;
             GetItems<PointsHistory>(cmd6, (dataRecord, ph) =>
             {
                 ph.TimeStamp = dataRecord.GetDateTime(0);
                 ph.Type = dataRecord.GetString(1);
                 ph.Points = dataRecord.GetDecimal(2);
                 pHistory.Add(ph);
+                count++;
+                Debug.WriteLine($@"Points history {count} retrieved - {ph.TimeStamp}");
             });
         }
 
         async void SetUserID()
         {
             UserID = Convert.ToInt32(await Xamarin.Essentials.SecureStorage.GetAsync("id"));
+            Debug.WriteLine($"Customer ID obtained is {UserID}");
         }
 
         #region Product

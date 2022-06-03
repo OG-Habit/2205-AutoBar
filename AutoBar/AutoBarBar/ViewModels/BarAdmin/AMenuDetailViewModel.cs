@@ -116,26 +116,38 @@ namespace AutoBarBar.ViewModels
 
         private async void OnSaveClicked()
         {
+            if (Name == null || Description == null)
+            {
+                await App.Current.MainPage.DisplayAlert("Error", "Field/s are empty", "Okay");
+                return;
+            }
+            if (price <= 0)
+            {
+                await App.Current.MainPage.DisplayAlert("Error", "Please enter a value greater than 0 for price", "Okay");
+                return;
+            }
             bool retryBool = await App.Current.MainPage.DisplayAlert("Save", "Would you like to save changes?", "Yes", "No");
             if (retryBool)
             {
-                if (Name != null && Description != null)
+                Product item = new Product
                 {
-                    Product item = new Product
-                    {
-                        ID = ItemId,
-                        Name = Name,
-                        UnitPrice = Price,
-                        Description = Description,
-                        ImageLink = (Image is FileImageSource source) ? source.File : "default_pic.png"
-                    };
-                    await ProductDataStore.UpdateItemAsync(item);
+                    ID = ItemId,
+                    Name = Name,
+                    UnitPrice = Price,
+                    Description = Description,
+                    ImageLink = "default_menu.png" //(Image is FileImageSource source) ? source.File : 
+                };
+                bool success = await ProductDataStore.UpdateItemAsync(item);
+                if (success == true)
+                {
+                    await App.Current.MainPage.DisplayAlert("Success", "Product item updated!", "OK");
                     await Shell.Current.GoToAsync("..");
                 }
                 else
                 {
-                    await App.Current.MainPage.DisplayAlert("Error", "Field/s are empty", "Okay");
+                    await App.Current.MainPage.DisplayAlert("Failed", "Product name already exists.", "Retry");
                 }
+
             }
         }
 

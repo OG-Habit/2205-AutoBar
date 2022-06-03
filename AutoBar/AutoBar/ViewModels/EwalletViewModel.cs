@@ -45,12 +45,12 @@ namespace AutoBar.ViewModels
                 Item1.Clear();
                 Item2.Clear();
                 var items1 = await TransactionHistoryDataStore.GetItemsAsync(true);
-                foreach (var item in items1.OrderBy(x => x.TimeStamp))
+                foreach (var item in items1.OrderByDescending(x => x.TimeStamp))
                 {
                     Item1.Add(item);
                 }
                 var items2 = await PointsHistoryDataStore.GetItemsAsync(true);
-                foreach (var item in items2.OrderBy(x => x.TimeStamp))
+                foreach (var item in items2.OrderByDescending(x => x.TimeStamp))
                 {
                     Item2.Add(item);
                 }

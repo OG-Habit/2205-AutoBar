@@ -55,27 +55,40 @@ namespace AutoBarBar.ViewModels
 
         private async void OnAddClicked()
         {
-            if (Name != null && Description != null && price != null)
-            {
-                bool retryBool = await App.Current.MainPage.DisplayAlert("Add", "Would you like to add to menu?", "Yes", "No");
-                if (retryBool)
-                {
-
-                    Product item = new Product
-                    {
-                        Name = Name,
-                        UnitPrice = Price,
-                        Description = Description,
-                        ImageLink = (Image is FileImageSource source) ? source.File : "default_menu.png"
-                    };
-                    await ProductDataStore.AddItemAsync(item);
-                    await Shell.Current.GoToAsync("..");
-                }
-            }
-            else
+            if (Name == null || Description == null)
             {
                 await App.Current.MainPage.DisplayAlert("Error", "Field/s are empty", "Okay");
+                return;
             }
+            if (price <= 0)
+            {
+                await App.Current.MainPage.DisplayAlert("Error", "Please enter a value greater than 0 for price", "Okay");
+                return;
+            }
+
+            bool retryBool = await App.Current.MainPage.DisplayAlert("Add", "Would you like to add to menu?", "Yes", "No");
+            if (retryBool)
+            {
+
+                Product item = new Product
+                {
+                    Name = Name,
+                    UnitPrice = Price,
+                    Description = Description,
+                    ImageLink = "default_menu.png" //(Image is FileImageSource source) ? source.File :
+                };
+                bool success = await ProductDataStore.AddItemAsync(item);
+                if (success == true)
+                {
+                    await App.Current.MainPage.DisplayAlert("Success", "Product item added!", "OK");
+                    await Shell.Current.GoToAsync("..");
+                }
+                else
+                {
+                    await App.Current.MainPage.DisplayAlert("Failed", "Product name already exists.", "Retry");
+                }
+            }
+
 
         }
 

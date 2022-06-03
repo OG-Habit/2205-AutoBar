@@ -2,8 +2,19 @@
 {
     public class Revenue : BaseModel
     {
-        public int TotalOrders { get; set; }
-        public int TotalWeekOrders { get; set; }
+        int _totalOrders;
+        public int TotalOrders 
+        {
+            get => _totalOrders;
+            set => SetProperty(ref _totalOrders, value);
+        }
+
+        int _totalWeekOrders;
+        public int TotalWeekOrders 
+        {
+            get => _totalWeekOrders;
+            set => SetProperty(ref _totalWeekOrders, value);
+        }
 
         double _totalRevenue;
         public double TotalRevenue

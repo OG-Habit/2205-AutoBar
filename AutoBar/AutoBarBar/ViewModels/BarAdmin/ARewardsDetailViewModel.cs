@@ -108,7 +108,7 @@ namespace AutoBarBar.ViewModels
                 ClaimFrequencyToday = item.ClaimFrequencyToday;
                 ClaimFrequencyPast7Days = item.ClaimFrequencyPast7Days;
                 ClaimFrequencyOverall = item.ClaimFrequencyOverall;
-    }
+            }
             catch (Exception)
             {
                 Debug.WriteLine("Failed to Load Item");
@@ -122,26 +122,38 @@ namespace AutoBarBar.ViewModels
 
         private async void OnSaveClicked()
         {
+            if (Name == null || Description == null)
+            {
+                await App.Current.MainPage.DisplayAlert("Error", "Field/s are empty", "Okay");
+                return;
+            }
+            if (Point <= 0)
+            {
+                await App.Current.MainPage.DisplayAlert("Error", "Please enter a value greater than 0 for points", "Okay");
+                return;
+            }
             bool retryBool = await App.Current.MainPage.DisplayAlert("Save", "Would you like to save changes?", "Yes", "No");
             if (retryBool)
             {
-                if (Name != null && Description != null) 
+                Reward item = new Reward
                 {
-                    Reward item = new Reward
-                    {
-                        ID = ItemId,
-                        Name = Name,
-                        Points = Point,
-                        Description = Description,
-                        ImageLink = (Image is FileImageSource source) ? source.File : "default_reward.png"
-                    };
-                    await RewardDataStore.UpdateItemAsync(item);
+                    ID = ItemId,
+                    Name = Name,
+                    Points = Point,
+                    Description = Description,
+                    ImageLink = "default_reward.png" //(Image is FileImageSource source) ? source.File : 
+                };
+                bool success = await RewardDataStore.UpdateItemAsync(item);
+                if (success == true)
+                {
+                    await App.Current.MainPage.DisplayAlert("Success", "Item updated!", "OK");
                     await Shell.Current.GoToAsync("..");
-                    }
+                }
                 else
                 {
-                    await App.Current.MainPage.DisplayAlert("Error", "Field/s are empty", "Okay");
+                    await App.Current.MainPage.DisplayAlert("Failed", "Reward name already exists.", "Retry");
                 }
+
             }
         }
 

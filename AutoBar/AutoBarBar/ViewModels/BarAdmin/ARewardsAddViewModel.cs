@@ -55,26 +55,38 @@ namespace AutoBarBar.ViewModels
 
         private async void OnAddClicked()
         {
-
-            if (Name != null && Description != null)
+            if (Name == null || Description == null)
             {
-                bool retryBool = await App.Current.MainPage.DisplayAlert("Add", "Would you like to add to rewards?", "Yes", "No");
-                if (retryBool)
+                await App.Current.MainPage.DisplayAlert("Error", "Field/s are empty", "Okay");
+                return;
+            }
+            if (Point <= 0)
+            {
+                await App.Current.MainPage.DisplayAlert("Error", "Please enter a value greater than 0 for points", "Okay");
+                return;
+            }
+
+            bool retryBool = await App.Current.MainPage.DisplayAlert("Add", "Would you like to add to rewards?", "Yes", "No");
+            if (retryBool)
+            {
+                Reward item = new Reward
                 {
-                    Reward item = new Reward
-                    {
-                        Name = Name,
-                        Points = Point,
-                        Description = Description,
-                        ImageLink = (Image is FileImageSource source) ? source.File : "default_reward.png"
-                    };
-                    await RewardDataStore.AddItemAsync(item);
+                    Name = Name,
+                    Points = Point,
+                    Description = Description,
+                    ImageLink = "default_reward.png" // (Image is FileImageSource source) ? source.File :
+                };
+                bool success = await RewardDataStore.AddItemAsync(item);
+                if (success == true)
+                {
+                    await App.Current.MainPage.DisplayAlert("Success", "Reward item added!", "OK");
                     await Shell.Current.GoToAsync("..");
                 }
-            }
-            else
-            {
-                await App.Current.MainPage.DisplayAlert("Error", "Field/s are empty", "Okay");             
+                else
+                {
+                    await App.Current.MainPage.DisplayAlert("Failed", "Reward name already exists.", "Retry");
+                }
+
             }
         }
 
